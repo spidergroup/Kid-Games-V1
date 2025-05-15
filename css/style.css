@@ -1,0 +1,41 @@
+/* Import Tailwind's base, components, and utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* You can add custom base styles or component classes here if needed */
+body {
+    /* Example: Apply a fun, kid-friendly font.
+       Make sure to import these fonts if they are not system fonts,
+       e.g., using Google Fonts. */
+    font-family: 'Nunito', 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif;
+    /* Using Nunito as a more modern, rounded, and freely available option.
+       You'd add <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+       to your <head> in index.html if you choose a Google Font like Nunito.
+       For now, the Tailwind config font setting or system defaults will apply.
+    */
+}
+
+/* Example of a custom utility (if you prefer not to do it in JS config) */
+/* .game-card-link:hover .game-card-image {
+    transform: scale(1.05);
+} */
+
+/* Additional subtle animations for game cards if desired beyond Tailwind hover utilities */
+.game-card-link .bg-white { /* Target the div inside the link */
+    /* Can add more complex transitions or animations here if CSS is preferred */
+}
+
+/* Adding a subtle background pattern for the body if desired */
+/* body {
+    background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+} */
+
+
+/* In pets_game.html <style> or css/style.css */
+.board-preview .card {
+    pointer-events: none; /* Disables clicks on cards during preview */
+}
+.card.preview .card-inner { /* Style for initially open cards */
+    transform: rotateY(180deg);
+}

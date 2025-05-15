@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play & Learn Pals - Fun Kids Games</title>
+    <!-- Tailwind CSS (using v3 CDN, adapt if v4 is different) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Link to your custom CSS file (for Tailwind directives & minor custom styles) -->
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        // Optional: Tailwind Config (if you need to customize themes, etc.)
+        // For simplicity, we're using default Tailwind here.
+        // If you have a tailwind.config.js, you'd typically build your CSS.
+        tailwind.config = {
+          theme: {
+            extend: {
+              fontFamily: {
+                // Example of adding a custom font family
+                // 'funky': ['Comic Sans MS', 'Chalkboard SE', 'Marker Felt', 'sans-serif'],
+              },
+              colors: {
+                brand: {
+                  primary: '#3498db', // A friendly blue
+                  secondary: '#f1c40f', // A sunny yellow
+                  accent: '#e74c3c', // A playful red
+                  lightbg: '#ecf0f1', // Light, clean background
+                }
+              },
+              animation: {
+                'bounce-slow': 'bounce 3s infinite',
+                'wiggle': 'wiggle 1s ease-in-out infinite alternate',
+                'float': 'float 3s ease-in-out infinite alternate',
+              },
+              keyframes: {
+                wiggle: {
+                  '0%, 100%': { transform: 'rotate(-3deg)' },
+                  '50%': { transform: 'rotate(3deg)' },
+                },
+                float: {
+                  '0%, 100%': { transform: 'translateY(0px)' },
+                  '50%': { transform: 'translateY(-10px)' },
+                }
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-brand-lightbg text-gray-800 antialiased">
+
+    <!-- Header -->
+    <header class="bg-brand-primary shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-bold text-white hover:text-brand-secondary transition-colors">
+                <!-- Simple SVG Logo - replace with your own image/SVG if you have one -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 inline-block mr-2 animate-bounce-slow" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                Play & Learn Pals
+            </a>
+            <!-- Navigation (if any) could go here - kept simple for kids -->
+        </div>
+    </header>
+
+    <!-- Main Content - Game Gallery -->
+    <main class="container mx-auto px-6 py-12">
+        <h1 class="text-4xl md:text-5xl font-bold text-center text-brand-primary mb-12">
+            Choose a Game!
+        </h1>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+            <!-- Game Card Example 1: Pets -->
+            <a href="games/pets_game.html" class="game-card-link group">
+                <div class="bg-white rounded-xl shadow-xl hover:shadow-2xl overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-105 hover:-rotate-1">
+                    <img src="https://placehold.co/600x400/3498db/ffffff?text=Cute+Pets" alt="Pet Memory Game" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h2 class="text-2xl font-semibold text-brand-primary group-hover:text-brand-secondary transition-colors">Pet Pals Memory</h2>
+                        <p class="text-gray-600 mt-2 text-sm">Match the cute pet pairs!</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Game Card Example 2: Wild Animals -->
+            <a href="games/wild_animals_game.html" class="game-card-link group">
+                <div class="bg-white rounded-xl shadow-xl hover:shadow-2xl overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-105 hover:rotate-1">
+                    <img src="https://placehold.co/600x400/2ecc71/ffffff?text=Wild+Animals" alt="Wild Animal Memory Game" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h2 class="text-2xl font-semibold text-green-600 group-hover:text-green-400 transition-colors">Jungle Journey</h2>
+                        <p class="text-gray-600 mt-2 text-sm">Find amazing wild animals!</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Game Card Example 3: Fruits -->
+            <a href="games/fruits_game.html" class="game-card-link group">
+                <div class="bg-white rounded-xl shadow-xl hover:shadow-2xl overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-105 hover:-rotate-1">
+                    <img src="https://placehold.co/600x400/e74c3c/ffffff?text=Yummy+Fruits" alt="Fruit Memory Game" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h2 class="text-2xl font-semibold text-red-500 group-hover:text-red-400 transition-colors">Fruity Fun Match</h2>
+                        <p class="text-gray-600 mt-2 text-sm">Match delicious fruits!</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Game Card Example 4: Shapes -->
+            <a href="games/shapes_game.html" class="game-card-link group">
+                <div class="bg-white rounded-xl shadow-xl hover:shadow-2xl overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-105 hover:rotate-1">
+                    <img src="https://placehold.co/600x400/9b59b6/ffffff?text=Cool+Shapes" alt="Shapes Memory Game" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h2 class="text-2xl font-semibold text-purple-600 group-hover:text-purple-400 transition-colors">Shape Shifters</h2>
+                        <p class="text-gray-600 mt-2 text-sm">Learn shapes by matching!</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Game Card Example 5: Alphabet -->
+            <a href="games/alphabet_game.html" class="game-card-link group">
+                <div class="bg-white rounded-xl shadow-xl hover:shadow-2xl overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-105 hover:-rotate-1">
+                    <img src="https://placehold.co/600x400/f1c40f/333333?text=ABC+Fun" alt="Alphabet Memory Game" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h2 class="text-2xl font-semibold text-yellow-500 group-hover:text-yellow-400 transition-colors">Alpha-Match Up</h2>
+                        <p class="text-gray-600 mt-2 text-sm">Match letters of the alphabet!</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Game Card Example 6: Numbers -->
+            <a href="games/numbers_game.html" class="game-card-link group">
+                <div class="bg-white rounded-xl shadow-xl hover:shadow-2xl overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-105 hover:rotate-1">
+                    <img src="https://placehold.co/600x400/1abc9c/ffffff?text=123+Count" alt="Numbers Memory Game" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h2 class="text-2xl font-semibold text-teal-500 group-hover:text-teal-400 transition-colors">Number Ninjas</h2>
+                        <p class="text-gray-600 mt-2 text-sm">Count and match numbers!</p>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-200 text-slate-700 mt-16">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p class="text-sm">© <span id="currentYear"></span> Play & Learn Pals. All rights reserved.</p>
+            <p class="text-xs mt-1">Made with <span class="text-red-500">♥</span> for little learners.</p>
+        </div>
+    </footer>
+
+    <!-- Your main JavaScript file -->
+    <script src="js/main.js"></script>
+</body>
+</html>
