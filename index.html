@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playful Wonders - Cozy Game Corner</title>
+    <!-- Tailwind CSS via CDN (using latest v3 as v4 CDN isn't widely propagated for all features yet) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap');
+        body {
+            font-family: 'Fredoka', sans-serif;
+            /* Slightly darker, cozy background gradient */
+            background-image: linear-gradient(145deg, #e9defa 0%, #d9e4f5 100%); /* Soft lavender to soft powder blue */
+            /* Alternative: A simple muted background: bg-slate-100 (applied via class if preferred) */
+            color: #374151; /* Tailwind's gray-700, good contrast on the new background */
+            overflow-x: hidden;
+        }
+
+        .menu-item {
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        }
+        .menu-item:hover {
+            transform: translateY(-2px) scale(1.03); /* Slightly less dramatic hover */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+        }
+
+        .game-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.02); } /* Subtler pulse */
+        }
+        .title-pulse {
+            animation: pulse 3.5s infinite ease-in-out;
+        }
+
+        .aspect-square { position: relative; width: 100%; }
+        .aspect-square::before { content: ""; display: block; padding-bottom: 100%; }
+        .aspect-square > img, .aspect-square > div { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    </style>
+	
+	
+	
+	
+	  <script>  
+
+
+
+</script>
+
+
+	
+</head>
+<body class="antialiased min-h-screen flex flex-col items-center pt-6"> 
+	<!-- <!-- {/* Body top padding reduced */} -->
+
+    <!-- Header & Menu (Not Sticky) -->
+    <header class="w-full mb-6 sm:mb-10"> <!-- {/* Header bottom margin reduced */} -->
+        <nav class="container mx-auto flex justify-center items-center px-4">
+            <!-- {/* Menu pill padding and item spacing reduced */} -->
+            <ul class="flex space-x-3 sm:space-x-6 bg-white/80 backdrop-blur-md p-2 rounded-full shadow-lg">
+                <li>
+                    <!-- {/* Menu item padding reduced */} -->
+                    <a href="#home" class="menu-item text-sm sm:text-base font-semibold text-pink-500 hover:text-pink-600 px-3 py-1.5 sm:px-5 sm:py-2 rounded-full hover:bg-pink-50 transition-colors duration-200">
+                        🏠 Home
+                    </a>
+                </li>
+                <li>
+                    <a href="#gallery" class="menu-item text-sm sm:text-base font-semibold text-sky-500 hover:text-sky-600 px-3 py-1.5 sm:px-5 sm:py-2 rounded-full hover:bg-sky-50 transition-colors duration-200">
+                        🎮 Games
+                    </a>
+                </li>
+                <li>
+                    <a href="#about" class="menu-item text-sm sm:text-base font-semibold text-amber-500 hover:text-amber-600 px-3 py-1.5 sm:px-5 sm:py-2 rounded-full hover:bg-amber-50 transition-colors duration-200">
+                        🌟 About
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6 flex-grow"> <!-- {/* Main content padding slightly adjusted */} -->
+        <section id="home" class="text-center mb-8 sm:mb-12"> <!-- {/* Section bottom margin reduced */} -->
+            <h1 class="title-pulse text-4xl sm:text-6xl font-bold mb-3 sm:mb-4"> <!-- {/* Title bottom margin reduced, font size slightly adjusted for compactness */} -->
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-red-500">Playful</span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-teal-500 to-emerald-500">Wonders</span>
+            </h1>
+            <p class="text-base sm:text-lg text-gray-600 max-w-xl mx-auto"> <!-- {/* Font size slightly adjusted */} -->
+                Dive into a universe of enchanting games, crafted for smiles and giggles!
+            </p>
+        </section>
+
+        <!-- Game Gallery Grid -->
+        <section id="gallery">
+            <!-- {/* Grid gap reduced */} -->
+            <div id="gameGallery" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-5">
+                <!-- Game Card Template (JS will populate this) -->
+            </div>
+        </section>
+
+        <!-- About Section (Placeholder for menu link) -->
+        <section id="about" class="text-center mt-12 py-6 bg-white/60 rounded-2xl shadow-md"> <!-- {/* Top margin and padding reduced */} -->
+            <h2 class="text-2xl sm:text-3xl font-semibold text-gray-700 mb-3">About Us!</h2> <!-- {/* Bottom margin reduced */} -->
+            <p class="text-gray-600 text-sm sm:text-base max-w-lg mx-auto px-4">
+                We love creating magical digital playgrounds for kids to explore, learn, and have a blast!
+                All our games are designed to be fun, safe, and spark imagination. ✨
+            </p>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-6 text-center mt-8"> <!-- {/* Top margin and padding reduced */} -->
+        <p class="text-gray-500 text-xs sm:text-sm">© 2024 Playful Wonders. Hooray for Play! 🎉</p>
+    </footer>
+ 
+    <script src="js/games-data.js"></script> <!-- LOAD GAME DATA FIRST -->
+    <script src="js/main.js"></script>
+
+</body>
+</html>

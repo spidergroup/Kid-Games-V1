@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match Mania! - Starry Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap');
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background-image: linear-gradient(to bottom, #2c3e50, #4ca1af);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+        .game-title {
+            font-size: 2.8rem; font-weight: 600; color: #f1c40f;
+            margin-bottom: 15px; text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .menus-wrapper {
+            display: flex; flex-direction: column; gap: 10px;
+            width: 100%; max-width: 650px;
+            margin-bottom: 15px;
+        }
+        .menu-container {
+            padding: 10px 15px; border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .menu-title {
+            font-size: 1.1rem; font-weight: 600; text-align: center;
+            margin-bottom: 10px; color: #f0e68c;
+        }
+        .category-menu, .level-menu { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+        .menu-button {
+            padding: 8px 15px; border-radius: 20px; border: 2px solid transparent;
+            font-size: 0.9rem; font-weight: 500; cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background-color: rgba(243, 156, 18, 0.75); color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .menu-button:hover:not(.active) { background-color: rgba(230, 126, 34, 0.85); transform: translateY(-2px); }
+        .menu-button.active {
+            font-weight: 600; transform: scale(1.05);
+            background-color: #e67e22; border-color: #f1c40f; color: white;
+        }
+        .menu-button.pets.active { background-color: #ff7675; border-color: #fab1a0; color: #2d3436; }
+        .menu-button.wildAnimals.active { background-color: #fdcb6e; border-color: #ffeaa7; color: #2d3436; }
+        .menu-button.fruits.active { background-color: #55efc4; border-color: #00b894; color: #2d3436; }
+        .menu-button.shapes.active { background-color: #74b9ff; border-color: #0984e3; color: #2d3436; }
+        .menu-button.alphabet.active { background-color: #a29bfe; border-color: #6c5ce7; color: #2d3436; }
+        .menu-button.numbers.active { background-color: #ffeaa7; border-color: #fdcb6e; color: #2d3436; }
+        .menu-button.easy.active { background-color: #55efc4; border-color: #00b894; color: #2d3436;}
+        .menu-button.medium.active { background-color: #74b9ff; border-color: #0984e3; color: #2d3436;}
+        .menu-button.hard.active { background-color: #ff7675; border-color: #fab1a0; color: #2d3436;}
+
+        #game-interaction-area {
+            display: flex; flex-direction: column; align-items: center;
+            width: 100%; max-width: 650px; margin: 0 auto 10px auto;
+        }
+        #game-time-display {
+            font-size: 1.3rem; font-weight: bold; color: #f1c40f;
+            background-color: rgba(44, 62, 80, 0.6); padding: 5px 15px;
+            border-radius: 10px; margin-bottom: 10px;
+            display: none; text-shadow: 1px 1px 2px black;
+        }
+        #action-button-container { text-align: center; margin-bottom: 8px; }
+        #actionButton {
+            padding: 12px 25px; font-size: 1.1rem; font-weight: 600;
+            border-radius: 25px; background-color: #2ecc71;
+            color: white; border: none; cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0 3px 7px rgba(0,0,0,0.15); min-width: 180px;
+        }
+        #actionButton:hover:not(:disabled) { background-color: #27ae60; }
+        #actionButton.pause { background-color: #f39c12; }
+        #actionButton.pause:hover:not(:disabled) { background-color: #e67e22; }
+        #actionButton.resume { background-color: #3498db; }
+        #actionButton.resume:hover:not(:disabled) { background-color: #2980b9; }
+        #actionButton:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
+
+        #message-area {
+            font-size: 1.1rem; font-weight: 500; color: #f0e68c; height: 25px;
+            text-align: center;
+        }
+
+        #game-board {
+            display: grid; gap: 10px; width: 100%; max-width: 650px;
+            margin: 0 auto; perspective: 1000px;
+        }
+        .card {
+            aspect-ratio: 1 / 1; position: relative; transform-style: preserve-3d;
+            transition: transform 0.6s; cursor: pointer; border-radius: 10px;
+            background-color: rgba(255,255,255,0.15); box-shadow: 0 3px 7px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        /* Default state: card is showing its content (back face) UNLESS .hidden is present */
+        .card:not(.hidden) {
+            transform: rotateY(180deg);
+        }
+        .card.hidden { /* Use this class to flip to front ('?') */
+            transform: rotateY(0deg);
+        }
+        .card.matched { /* Matched cards remain showing content and styled */
+            transform: rotateY(180deg); /* Ensure it stays showing content */
+            cursor: default; opacity: 0.85;
+            box-shadow: 0 0 15px #f1c40f, 0 0 5px #f1c40f inset; border-color: #f1c40f;
+        }
+
+        .card-face {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            display: flex; justify-content: center; align-items: center;
+            border-radius: 9px; overflow: hidden;
+        }
+        .card-front { /* The '?' side */
+            background-color: rgba(41, 128, 185, 0.7);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="70" fill="rgba(255,255,255,0.8)" style="filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.4));">?</text></svg>');
+            background-size: 50%; background-repeat: no-repeat; background-position: center;
+        }
+        .card-back { /* The image/text side */
+            background-color: rgba(255, 255, 255, 0.25);
+            transform: rotateY(180deg);
+        }
+        .card-back img { max-width: 80%; max-height: 80%; object-fit: contain; border-radius: 5px; }
+        .card-back span {
+            font-size: clamp(1.8rem, 10vw / var(--card-cols, 4), 3rem);
+            font-weight: 600; padding: 5px; text-align: center;
+            color: #f0e68c; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+        }
+        a.home-button {
+            display: inline-block; margin-top: 20px; padding: 10px 20px;
+            background-color: #e74c3c; color: white; text-decoration: none;
+            border-radius: 20px; font-size: 1rem; font-weight: 500;
+            box-shadow: 0 3px #c0392b;
+        }
+        a.home-button:active { transform: translateY(1px); box-shadow: 0 2px #c0392b; }
+    </style>
+</head>
+<body>
+    <h1 class="game-title">Memory Match Mania!</h1>
+    <div id="game-time-display">Time: 00:00</div>
+
+    <div class="menus-wrapper">
+        <div class="menu-container category-menu-container">
+            <h2 class="menu-title">Choose a Category:</h2>
+            <div class="category-menu" id="categoryMenu"></div>
+        </div>
+        <div class="menu-container level-menu-container">
+            <h2 class="menu-title">Select a Level:</h2>
+            <div class="level-menu" id="levelMenu"></div>
+        </div>
+    </div>
+
+    <div id="game-interaction-area">
+        <div id="action-button-container">
+            <button id="actionButton">Start Game</button>
+        </div>
+        <div id="message-area">Select category & level!</div>
+    </div>
+
+    <div id="game-board"></div>
+    <a href="index.html" class="home-button">🏠 Back to Main Menu</a>
+
+    <script>
+        const gameBoard = document.getElementById('game-board');
+        const categoryMenu = document.getElementById('categoryMenu');
+        const levelMenu = document.getElementById('levelMenu');
+        const actionButton = document.getElementById('actionButton');
+        const messageArea = document.getElementById('message-area');
+        const gameTimeDisplayElement = document.getElementById('game-time-display');
+
+        const ASSET_BASE_PATH = 'memory-game-assets/';
+
+        const CATEGORIES = { /* ... same ... */
+            pets: { name: 'Pets 🐾', items: ['cat', 'dog', 'hamster', 'bunny', 'fish', 'turtle', 'bird', 'guinea-pig'], folder: 'pets/', type: 'image' },
+            wildAnimals: { name: 'Wild Animals 🐅', items: ['lion', 'tiger', 'elephant', 'zebra', 'monkey', 'giraffe', 'bear', 'wolf'], folder: 'wild-animals/', type: 'image' },
+            fruits: { name: 'Fruits 🍓', items: ['apple', 'banana', 'orange', 'grapes', 'strawberry', 'watermelon', 'pineapple', 'kiwi'], folder: 'fruits/', type: 'image' },
+            shapes: { name: 'Shapes 🔷', items: ['circle', 'square', 'triangle', 'rectangle', 'star', 'heart', 'oval', 'diamond'], folder: 'shapes/', type: 'image' },
+            alphabet: { name: 'Alphabet A-L', items: 'ABCDEFGHIJKL'.split(''), folder: 'alphabet/', type: 'text' },
+            numbers: { name: 'Numbers 1-12', items: Array.from({length: 12}, (_, i) => (i + 1).toString()), folder: 'numbers/', type: 'text' },
+        };
+        const LEVELS = { /* ... same ... */
+            easy:   { name: 'Easy 😊', pairs: 4, cols: 4, rows: 2, gameTime: 60000 },
+            medium: { name: 'Medium 🤔', pairs: 6, cols: 4, rows: 3, gameTime: 120000 },
+            hard:   { name: 'Hard 🤯', pairs: 8, cols: 4, rows: 4, gameTime: 180000 }
+        };
+
+        let currentCategory = 'pets';
+        let currentLevelKey = 'easy';
+        let cards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let canFlip = false;
+        let gameActive = false;
+        let isPaused = false;
+
+        let preGameCountdownTimerId;
+        let mainGameTimerId;
+        let gameEndTimeStamp;
+        let timeRemainingOnPause;
+        let visualGameTimeUpdaterId;
+
+
+        function formatTime(ms) { /* ... same ... */
+            let totalSeconds = Math.ceil(ms / 1000);
+            let minutes = Math.floor(totalSeconds / 60);
+            let seconds = totalSeconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        function updateVisualGameTime() { /* ... same ... */
+            if (isPaused && timeRemainingOnPause >= 0) {
+                gameTimeDisplayElement.textContent = `Time: ${formatTime(timeRemainingOnPause)}`;
+            } else if (gameActive && !isPaused) {
+                const remaining = gameEndTimeStamp - Date.now();
+                gameTimeDisplayElement.textContent = `Time: ${formatTime(Math.max(0, remaining))}`;
+            } else {
+                 gameTimeDisplayElement.textContent = `Time: ${formatTime(LEVELS[currentLevelKey].gameTime)}`;
+            }
+        }
+        function createMenuButton(id, text, type, clickHandler, parentElement, isActive = false) { /* ... same ... */
+            const button = document.createElement('button');
+            button.id = `${type}-${id}-button`;
+            button.classList.add('menu-button', id);
+            button.textContent = text;
+            if (isActive) button.classList.add('active');
+            button.addEventListener('click', () => clickHandler(id));
+            parentElement.appendChild(button);
+        }
+        function selectCategory(categoryKey) { /* ... same ... */
+            if (gameActive && !isPaused) return;
+            const previousCategory = currentCategory;
+            currentCategory = categoryKey;
+            updateMenuState(categoryMenu, `category-${categoryKey}-button`);
+            if (previousCategory !== currentCategory || isPaused || !gameActive) {
+                resetAndPrepareGame();
+            }
+        }
+        function selectLevel(levelKey) { /* ... same ... */
+            if (gameActive && !isPaused) return;
+            const previousLevel = currentLevelKey;
+            currentLevelKey = levelKey;
+            updateMenuState(levelMenu, `level-${levelKey}-button`);
+            if (previousLevel !== currentLevelKey || isPaused || !gameActive) {
+                resetAndPrepareGame();
+            }
+        }
+        function updateMenuState(menuElement, activeButtonId) { /* ... same ... */
+            Array.from(menuElement.children).forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(activeButtonId);
+            if (activeBtn) activeBtn.classList.add('active');
+        }
+        function initializeMenus() { /* ... same ... */
+            Object.keys(CATEGORIES).forEach((key, index) => {
+                createMenuButton(key, CATEGORIES[key].name, 'category', selectCategory, categoryMenu, index === 0);
+            });
+            Object.keys(LEVELS).forEach((key, index) => {
+                createMenuButton(key, LEVELS[key].name, 'level', selectLevel, levelMenu, index === 0);
+            });
+        }
+        function shuffleArray(array) { /* ... same ... */
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        function getItemPath(categoryData, item) { /* ... same, with .jpg for pets ... */
+            if (categoryData.type === 'image') {
+                const extension = categoryData.folder === 'pets/' ? 'jpg' : 'png';
+                return `${ASSET_BASE_PATH}${categoryData.folder}${item.toLowerCase()}.${extension}`;
+            }
+            return null;
+        }
+
+        // --- REFINED createGameBoard ---
+        function createGameBoard() {
+            gameBoard.innerHTML = '';
+            cards = []; // Reset the global cards array
+            flippedCards = [];
+            matchedPairs = 0;
+            canFlip = false;
+
+            const levelConf = LEVELS[currentLevelKey];
+            const categoryData = CATEGORIES[currentCategory];
+            gameBoard.style.setProperty('--card-cols', levelConf.cols);
+            let availableItems = [...categoryData.items];
+            if (availableItems.length < levelConf.pairs) {
+                console.warn(`Warning: Repeating items for ${currentCategory} at ${currentLevelKey}.`);
+                while (availableItems.length < levelConf.pairs && categoryData.items.length > 0) {
+                     availableItems = availableItems.concat(categoryData.items.slice(0, Math.min(categoryData.items.length, levelConf.pairs - availableItems.length)));
+                }
+                if(availableItems.length === 0) { messageArea.textContent = "Error: Not enough items!"; return false; }
+            }
+            const selectedItems = shuffleArray(availableItems).slice(0, levelConf.pairs);
+            let gameItems = shuffleArray([...selectedItems, ...selectedItems]);
+            gameBoard.style.gridTemplateColumns = `repeat(${levelConf.cols}, 1fr)`;
+
+            gameItems.forEach(itemValue => {
+                const card = document.createElement('div');
+                card.classList.add('card'); // Default CSS makes it show content (back face)
+                card.dataset.value = itemValue;
+
+                const cardFront = document.createElement('div'); cardFront.classList.add('card-face', 'card-front');
+                const cardBack = document.createElement('div'); cardBack.classList.add('card-face', 'card-back');
+
+                if (categoryData.type === 'image') {
+                    const img = document.createElement('img'); const imagePath = getItemPath(categoryData, itemValue);
+                    img.src = imagePath; img.alt = itemValue;
+                    img.onerror = () => {
+                        const textSpan = document.createElement('span'); textSpan.textContent = itemValue.toString().toUpperCase();
+                        cardBack.innerHTML = ''; cardBack.appendChild(textSpan);
+                    };
+                    cardBack.appendChild(img);
+                } else {
+                    const textSpan = document.createElement('span'); textSpan.textContent = itemValue.toString().toUpperCase();
+                    cardBack.appendChild(textSpan);
+                }
+                card.appendChild(cardFront); card.appendChild(cardBack);
+                // Add event listener ONCE here. Its execution will be controlled by flags.
+                card.addEventListener('click', () => flipCard(card));
+                gameBoard.appendChild(card);
+                cards.push(card); // Add to the global array
+            });
+            return true;
+        }
+        // --- END OF createGameBoard REFINEMENT ---
+
+
+        function showCardContent(card) { card.classList.remove('hidden'); }
+        function hideCardContent(card) { card.classList.add('hidden'); }
+
+        function flipCard(card) {
+            if (!canFlip || !gameActive || isPaused || card.classList.contains('matched') || flippedCards.includes(card)) {
+                return;
+            }
+            // A card is clicked. If it's 'hidden' (showing '?'), we want to reveal its content.
+            // If it's already revealed (not 'hidden'), it means it's the first of a potential pair.
+            if (card.classList.contains('hidden')) {
+                showCardContent(card); // Remove 'hidden' to show content
+                flippedCards.push(card);
+            } else {
+                // This should only happen if it's the first card of a pair and it's already showing content
+                // (which is the default state before "Memorize!" phase hides them).
+                // We only add it if we are looking for the first card of a pair.
+                if (flippedCards.length === 0) {
+                    // It's already showing content, so we just add it.
+                    // No need to call showCardContent() as it's not hidden.
+                    flippedCards.push(card);
+                }
+                // If flippedCards.length is 1, and we click another revealed card,
+                // it means the game logic for hiding non-matches might have an issue or player is too fast.
+                // For now, this structure assumes that after picking one, other non-matched cards are hidden.
+            }
+
+            if (flippedCards.length === 2) {
+                checkForMatch();
+            }
+        }
+
+        function checkForMatch() { /* ... same ... */
+            canFlip = false;
+            const [card1, card2] = flippedCards;
+            if (card1.dataset.value === card2.dataset.value) {
+                messageArea.textContent = "It's a Match! 🎉";
+                card1.classList.add('matched'); card2.classList.add('matched');
+                matchedPairs++; flippedCards = []; canFlip = true;
+                if (matchedPairs === LEVELS[currentLevelKey].pairs) endGame(true, "You matched them all!");
+            } else {
+                messageArea.textContent = "Try Again... 🤔";
+                setTimeout(() => {
+                    if (!gameActive || isPaused) return;
+                    hideCardContent(card1); hideCardContent(card2);
+                    flippedCards = []; canFlip = true; messageArea.textContent = "Keep going!";
+                }, 1200);
+            }
+        }
+
+        function clearAllTimers() { /* ... same ... */
+            clearInterval(preGameCountdownTimerId); clearTimeout(mainGameTimerId); clearInterval(visualGameTimeUpdaterId);
+            preGameCountdownTimerId = null; mainGameTimerId = null; visualGameTimeUpdaterId = null;
+        }
+        function updateActionButtonState(state, countdownValue = 0) { /* ... same ... */
+            actionButton.classList.remove('start', 'pause', 'resume');
+            actionButton.disabled = false;
+            switch (state) {
+                case 'initial': case 'play_again':
+                    actionButton.textContent = 'Start Game'; actionButton.classList.add('start'); break;
+                case 'pre_game_countdown':
+                    actionButton.textContent = `Memorize! (${countdownValue})`; actionButton.classList.add('start'); actionButton.disabled = true; break;
+                case 'active':
+                    actionButton.textContent = 'Pause'; actionButton.classList.add('pause'); break;
+                case 'paused':
+                    actionButton.textContent = 'Resume'; actionButton.classList.add('resume'); break;
+                case 'disabled_setting_up':
+                     actionButton.textContent = 'Setting up...'; actionButton.disabled = true; break;
+            }
+        }
+
+        // --- REFINED resetAndPrepareGame ---
+        function resetAndPrepareGame() {
+            clearAllTimers();
+            gameActive = false; isPaused = false; canFlip = false;
+            matchedPairs = 0; flippedCards = [];
+
+            if (!createGameBoard()) { // Creates board, populates `cards` array. Cards show content by default.
+                messageArea.textContent = "Error creating board. Select options.";
+                updateActionButtonState('initial');
+                actionButton.disabled = true;
+                return;
+            }
+            // Cards are now created and visible (content shown).
+            messageArea.textContent = "Cards ready! Hit Start to memorize.";
+            updateActionButtonState('initial');
+            document.querySelectorAll('.menu-button').forEach(btn => btn.disabled = false);
+            gameTimeDisplayElement.style.display = 'none';
+        }
+        // --- END OF resetAndPrepareGame REFINEMENT ---
+
+
+        // --- REFINED startGameSequence ---
+        async function startGameSequence() {
+            if (gameActive) return;
+
+            updateActionButtonState('disabled_setting_up');
+            messageArea.textContent = "Getting ready to memorize...";
+            document.querySelectorAll('.menu-button').forEach(btn => btn.disabled = true);
+
+            // Board and `cards` array should already be populated by resetAndPrepareGame.
+            // Ensure cards are showing content (remove 'hidden' if any stuck from a previous aborted sequence)
+            cards.forEach(card => showCardContent(card));
+
+
+            let preGameCount = 5;
+            updateActionButtonState('pre_game_countdown', preGameCount);
+            await new Promise(resolve => {
+                preGameCountdownTimerId = setInterval(() => {
+                    preGameCount--;
+                    if (preGameCount > 0) {
+                        updateActionButtonState('pre_game_countdown', preGameCount);
+                    } else {
+                        clearInterval(preGameCountdownTimerId);
+                        resolve();
+                    }
+                }, 1000);
+            });
+
+            // After "Memorize!" countdown, HIDE all cards (flip to '?')
+            cards.forEach(card => hideCardContent(card));
+
+            messageArea.textContent = "Go! Find the pairs!";
+            gameActive = true;
+            canFlip = true;
+            updateActionButtonState('active');
+            gameTimeDisplayElement.style.display = 'block';
+
+            gameEndTimeStamp = Date.now() + LEVELS[currentLevelKey].gameTime;
+            updateVisualGameTime();
+            visualGameTimeUpdaterId = setInterval(updateVisualGameTime, 250);
+            mainGameTimerId = setTimeout(() => endGame(false, "Time's Up!"), LEVELS[currentLevelKey].gameTime);
+        }
+        // --- END OF startGameSequence REFINEMENT ---
+
+
+        function endGame(isWin, endMessage) { /* ... same ... */
+            clearAllTimers(); gameActive = false; canFlip = false; isPaused = false;
+            messageArea.textContent = endMessage + (isWin ? " 😄" : " 😕") + " Play Again?";
+            updateActionButtonState('play_again');
+            document.querySelectorAll('.menu-button').forEach(btn => btn.disabled = false);
+        }
+        function pauseGame() { /* ... same ... */
+            if (!gameActive || isPaused) return;
+            isPaused = true; canFlip = false;
+            timeRemainingOnPause = gameEndTimeStamp - Date.now();
+            clearTimeout(mainGameTimerId); clearInterval(visualGameTimeUpdaterId);
+            updateActionButtonState('paused');
+            messageArea.textContent = "Game Paused. Change settings or Resume.";
+            document.querySelectorAll('.menu-button').forEach(btn => btn.disabled = false);
+        }
+        function resumeGame() { /* ... same ... */
+            if (!gameActive || !isPaused) return;
+            isPaused = false; canFlip = true;
+            updateActionButtonState('active');
+            messageArea.textContent = "Go! Find the pairs!";
+            document.querySelectorAll('.menu-button').forEach(btn => btn.disabled = true);
+            gameEndTimeStamp = Date.now() + timeRemainingOnPause;
+            updateVisualGameTime();
+            visualGameTimeUpdaterId = setInterval(updateVisualGameTime, 250);
+            mainGameTimerId = setTimeout(() => endGame(false, "Time's Up!"), timeRemainingOnPause);
+        }
+        actionButton.addEventListener('click', () => { /* ... same ... */
+            if (actionButton.textContent.includes('Start Game') || actionButton.textContent === 'Play Again?') {
+                startGameSequence();
+            } else if (actionButton.textContent === 'Pause') {
+                pauseGame();
+            } else if (actionButton.textContent === 'Resume') {
+                resumeGame();
+            }
+        });
+
+        // Initialize
+        initializeMenus();
+        resetAndPrepareGame();
+        updateMenuState(categoryMenu, `category-${currentCategory}-button`);
+        updateMenuState(levelMenu, `level-${currentLevelKey}-button`);
+
+    </script>
+</body>
+</html>

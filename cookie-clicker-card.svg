@@ -1,0 +1,75 @@
+<svg width="400" height="400" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" font-family="Fredoka, Arial, sans-serif">
+
+  <!-- Background - Light creamy / checkered pattern (simplified) -->
+  <defs>
+    <pattern id="checkers" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="10" height="10" fill="#FDF5E6" /> <!-- Light cream -->
+      <rect x="10" y="0" width="10" height="10" fill="#FAEBD7" /> <!-- Antique white -->
+      <rect x="0" y="10" width="10" height="10" fill="#FAEBD7" />
+      <rect x="10" y="10" width="10" height="10" fill="#FDF5E6" />
+    </pattern>
+  </defs>
+  <rect width="100" height="100" fill="url(#checkers)" />
+  <!-- Fallback solid color if pattern is too much: -->
+  <!-- <rect width="100" height="100" fill="#F5DEB3" /> Wheat color -->
+
+
+  <!-- Main Big Cookie -->
+  <g transform="translate(50 50) scale(1.1)">
+    <circle cx="0" cy="0" r="35" fill="#D2B48C" stroke="#8B4513" stroke-width="1.5" /> <!-- Tan cookie, brown outline -->
+    <!-- Chocolate Chips -->
+    <circle cx="-15" cy="-15" r="5" fill="#5C3317" />
+    <circle cx="10" cy="-20" r="6" fill="#5C3317" />
+    <circle cx="0" cy="5" r="7" fill="#5C3317" />
+    <circle cx="-18" cy="10" r="4.5" fill="#5C3317" />
+    <circle cx="20" cy="15" r="5.5" fill="#5C3317" />
+    <circle cx="5" cy="-5" r="3" fill="#5C3317" />
+    <circle cx="15" cy="-5" r="4" fill="#5C3317" />
+    <circle cx="-5" cy="20" r="4" fill="#5C3317" />
+    <!-- Adding a subtle highlight/shine to the main cookie -->
+    <path d="M -20 -25 A 30 30 0 0 1 15 -28 A 30 30 0 0 1 10 -22 A 25 25 0 0 0 -20 -25 Z" fill="white" opacity="0.15"/>
+  </g>
+
+  <!-- Smaller decorative cookies / crumbs -->
+  <g transform="translate(20 80) scale(0.4)">
+    <circle cx="0" cy="0" r="15" fill="#D2B48C" stroke="#8B4513" stroke-width="1"/>
+    <circle cx="-5" cy="-5" r="2" fill="#5C3317" />
+    <circle cx="5" cy="3" r="2.5" fill="#5C3317" />
+    <circle cx="0" cy="6" r="1.5" fill="#5C3317" />
+  </g>
+
+  <g transform="translate(85 25) scale(0.35) rotate(30)">
+    <circle cx="0" cy="0" r="15" fill="#D2B48C" stroke="#8B4513" stroke-width="1"/>
+    <circle cx="3" cy="-6" r="2" fill="#5C3317" />
+    <circle cx="-4" cy="4" r="2.5" fill="#5C3317" />
+  </g>
+
+  <!-- "Cookie Clicker" Text -->
+  <!-- Wrapped in a group for easier positioning/styling -->
+  <g id="titleText" transform="translate(0 3)"> <!-- Shift text down slightly if needed -->
+    <text x="50" y="88" font-size="10" font-weight="600" fill="#7A4A3A" text-anchor="middle" letter-spacing="0.5">
+      COOKIE
+    </text>
+    <text x="50" y="96" font-size="10" font-weight="600" fill="#7A4A3A" text-anchor="middle" letter-spacing="0.5">
+      CLICKER!
+    </text>
+     <!-- Text outline/shadow for better readability -->
+    <text x="50" y="88" font-size="10" font-weight="600" fill="none" stroke="white" stroke-width="0.3" text-anchor="middle" letter-spacing="0.5" opacity="0.5">
+      COOKIE
+    </text>
+    <text x="50" y="96" font-size="10" font-weight="600" fill="none" stroke="white" stroke-width="0.3" text-anchor="middle" letter-spacing="0.5" opacity="0.5">
+      CLICKER!
+    </text>
+  </g>
+
+  <!-- Optional: A little sparkle/shine animation for the main cookie -->
+  <path d="M 40 35 Q 45 32 50 35 L 45 45 Z" fill="white" opacity="0">
+    <animate attributeName="opacity" values="0; 0.7; 0" dur="2.5s" repeatCount="indefinite" begin="0.5s" />
+    <animateTransform attributeName="transform" type="rotate" from="0 45 40" to="20 45 40" dur="2.5s" repeatCount="indefinite" begin="0.5s" additive="sum" />
+  </path>
+   <path d="M 60 55 Q 65 52 70 55 L 65 65 Z" fill="white" opacity="0">
+    <animate attributeName="opacity" values="0; 0.6; 0" dur="3s" repeatCount="indefinite" begin="1s" />
+    <animateTransform attributeName="transform" type="rotate" from="0 65 60" to="-20 65 60" dur="3s" repeatCount="indefinite" begin="1s" additive="sum" />
+  </path>
+
+</svg>
