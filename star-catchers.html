@@ -141,9 +141,9 @@
         let countdownTimerId, autoStartTimerId, mainGameTimerId, gameEndTimeStamp, timeRemainingOnPause, visualGameTimeUpdaterId;
 
         const LEVELS = {
-            easy:   { name: 'Easy 😊', fallSpeed: 1.2, creationRate: 1800, starSizeMultiplier: 1.7 },
-            medium: { name: 'Medium 🤔', fallSpeed: 2.5, creationRate: 1000, starSizeMultiplier: 1.0 },
-            hard:   { name: 'Hard 🤯', fallSpeed: 3.5, creationRate: 700, starSizeMultiplier: 0.8 }
+            easy:   { name: 'Easy 😊', fallSpeed: 1.2, creationRate: 1800 },
+            medium: { name: 'Medium 🤔', fallSpeed: 2.5, creationRate: 1000 },
+            hard:   { name: 'Hard 🤯', fallSpeed: 3.5, creationRate: 700 }
         };
         let currentLevelKey = 'medium';
 
@@ -226,29 +226,15 @@
             if (!gameActive || isPaused) return;
             const star = document.createElement('div');
             star.classList.add('star');
-
-            let starBaseVisualSize = 20; // Default CSS font-size for .star
-
-            if (currentLevelKey === 'easy') {
-                star.classList.add('easy-size');
-                starBaseVisualSize = 34; // Reflects the .easy-size CSS font-size (34px)
-            } else {
-                // For medium and hard, apply font-size based on multiplier directly
-                const newSize = starBaseVisualSize * LEVELS[currentLevelKey].starSizeMultiplier;
-                star.style.fontSize = `${newSize}px`;
-                // Update starBaseVisualSize for offset calculation if multiplier changed it
-                starBaseVisualSize = newSize;
-            }
+            
+            // All stars are now consistently 34px
+            const starBaseVisualSize = 34;
             star.innerHTML = '⭐';
 
-
             const gameRect = gameContainer.getBoundingClientRect();
-            // Ensure starSizeForOffset accounts for the actual rendered size
-            const starSizeForOffset = starBaseVisualSize;
-
-            const randomX = Math.random() * (gameRect.width - starSizeForOffset - 5); // -5 for a little edge padding
+            const randomX = Math.random() * (gameRect.width - starBaseVisualSize - 5);
             star.style.left = `${randomX}px`;
-            star.style.top = `-${starSizeForOffset + 5}px`; // Start further above for larger stars
+            star.style.top = `-${starBaseVisualSize + 5}px`;
 
             star.addEventListener('mousedown', () => {
                 if (!gameActive || isPaused || star.classList.contains('caught')) return;
