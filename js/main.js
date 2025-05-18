@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
         const gameGallery = document.getElementById('gameGallery');
+        gameGallery.innerHTML = '';
 
         // The 'allGames' variable is now available from games-data.js
         // No need to define it here anymore.
