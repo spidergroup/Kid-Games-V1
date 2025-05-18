@@ -1,5 +1,5 @@
 
-# Playful Wonders - Fun & Educational Games for Kids - Test
+# Playful Wonders - Fun & Educational Games for Kids
 
 Welcome to Playful Wonders! This project is a collection of interactive, web-based games designed for children. The games are crafted to be both fun and educational, helping kids develop important skills such as memory, concentration, and hand-eye coordination in a safe and engaging environment.
 
