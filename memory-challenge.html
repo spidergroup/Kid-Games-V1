@@ -469,10 +469,10 @@
                 messageArea.textContent = `Oops! That's not the ${targetCardDefinition.name}.`;
                 setTimeout(() => {
                     const correctCardEl = cardsOnBoard.find(c => c.dataset.id === targetCardDefinition.id && c !== clickedCardElement);
-                    if (correctCardEl) { correctCardEl.classList.remove('flipped'); correctCardEl.classList.add('target-revealed', 'highlight-blippi-target'); }
+                    if (correctCardEl) { correctCardEl.classList.remove('flipped'); correctCardEl.classList.add('target-revealed', 'highlight-mc-target'); }
                     setTimeout(() => {
                         if (correctCardEl) {
-                            correctCardEl.classList.remove('highlight-blippi-target');
+                            correctCardEl.classList.remove('highlight-mc-target');
                             if(clickedCardElement.dataset.id !== targetCardDefinition.id) {
                                 correctCardEl.classList.add('flipped'); correctCardEl.classList.remove('target-revealed');
                             }
