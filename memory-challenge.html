@@ -244,23 +244,40 @@
         </div>
     </div>
     
-    <script>
-        const gameBoard = document.getElementById('gameBoardShell');
+    <script>        const gameBoard = document.getElementById('gameBoardShell');
         const levelMenuContainer = document.getElementById('levelMenuContainer');
         const actionButton = document.getElementById('actionButton');
         const messageArea = document.getElementById('message-area');
         const winModalOverlay = document.getElementById('winModalOverlay');
-        const winModalMessage = document.getElementById('winModalMessage');        const appColors = { /* ... colors ... */ 
-            mcOrange: '#FF6F00', mcBlue: '#005A9C', mcYellow: '#f1c40f',
-            vehicleCardPurple: '#8A2BE2', vehicleCardBlue: '#007BFF', white: '#FFFFFF', black: '#000000',
-            excavatorYellow: '#FFFF00', gray: 'gray', skyblue: 'skyblue', green: 'green',
-            lightgray: 'lightgray', red: 'red'
-        };// SVG for the back of cards (question mark) is now handled by CSS
-        const vehicleDefinitions = [ /* ... definitions ... */ 
-            { id: 'excavator', name: 'Excavator', getSvg: () => `<svg viewBox="0 0 100 100" class="card-svg"><rect x="10" y="60" width="80" height="20" fill="${appColors.excavatorYellow}"/><rect x="30" y="30" width="40" height="30" fill="${appColors.excavatorYellow}"/><circle cx="25" cy="85" r="10" fill="${appColors.black}"/><circle cx="75" cy="85" r="10" fill="${appColors.black}"/><path d="M 70 45 A 20 20 0 0 0 50 25 L 40 10 L 30 15 L 50 30" fill="${appColors.excavatorYellow}" stroke="${appColors.black}" stroke-width="3"/><rect x="25" y="5" width="15" height="10" fill="${appColors.gray}"/></svg>`, bgColorClass: 'bg-vehicle-purple' },
-            { id: 'schoolbus', name: 'School Bus', getSvg: () => `<svg viewBox="0 0 100 80" class="card-svg"><rect x="5" y="20" width="90" height="40" fill="${appColors.blippiYellow}" rx="5"/><rect x="15" y="5" width="60" height="15" fill="${appColors.blippiYellow}" rx="3"/><rect x="20" y="25" width="15" height="10" fill="${appColors.skyblue}"/><rect x="40" y="25" width="15" height="10" fill="${appColors.skyblue}"/><rect x="60" y="25" width="15" height="10" fill="${appColors.skyblue}"/><circle cx="25" cy="65" r="10" fill="${appColors.black}"/><circle cx="75" cy="65" r="10" fill="${appColors.black}"/></svg>`, bgColorClass: 'bg-vehicle-blue' },
-            { id: 'garbagetruck', name: 'Garbage Truck', getSvg: () => `<svg viewBox="0 0 100 80" class="card-svg"><rect x="5" y="30" width="40" height="30" fill="${appColors.white}"/><rect x="40" y="10" width="55" height="50" fill="${appColors.green}" rx="5"/><circle cx="20" cy="65" r="8" fill="${appColors.black}"/><circle cx="60" cy="65" r="8" fill="${appColors.black}"/><circle cx="80" cy="65" r="8" fill="${appColors.black}"/></svg>`, bgColorClass: 'bg-vehicle-blue' },
-            { id: 'firetruck', name: 'Fire Truck', getSvg: () => `<svg viewBox="0 0 100 80" class="card-svg"><rect x="5" y="30" width="90" height="30" fill="${appColors.red}"/><rect x="10" y="15" width="30" height="15" fill="${appColors.red}"/><rect x="45" y="20" width="45" height="10" fill="${appColors.lightgray}"/><line x1="45" y1="20" x2="80" y2="5" stroke="${appColors.black}" stroke-width="3"/><line x1="50" y1="20" x2="85" y2="5" stroke="${appColors.black}" stroke-width="3"/><circle cx="25" cy="65" r="10" fill="${appColors.black}"/><circle cx="75" cy="65" r="10" fill="${appColors.black}"/></svg>`, bgColorClass: 'bg-vehicle-blue' }
+        const winModalMessage = document.getElementById('winModalMessage');
+          const appColors = {
+            mcOrange: '#FF6F00',
+            mcBlue: '#005A9C',
+            mcYellow: '#f1c40f',
+            vehicleCardPurple: '#8A2BE2',
+            vehicleCardBlue: '#007BFF',
+            white: '#FFFFFF',
+            black: '#000000',
+            excavatorYellow: '#FFFF00',
+            gray: 'gray',
+            skyblue: 'skyblue',
+            green: 'green',
+            lightgray: 'lightgray',
+            red: 'red'
+        };
+
+        const petDefinitions = [
+            { id: 'bird', name: 'Bird', imageSrc: 'memory-game-assets/pets/bird.jpg', bgColorClass: 'bg-vehicle-purple' },
+            { id: 'bunny', name: 'Bunny', imageSrc: 'memory-game-assets/pets/bunny.jpg', bgColorClass: 'bg-vehicle-blue' },
+            { id: 'cat', name: 'Cat', imageSrc: 'memory-game-assets/pets/cat.jpg', bgColorClass: 'bg-vehicle-purple' },
+            { id: 'dog', name: 'Dog', imageSrc: 'memory-game-assets/pets/dog.jpg', bgColorClass: 'bg-vehicle-blue' },
+            { id: 'ferret', name: 'Ferret', imageSrc: 'memory-game-assets/pets/ferret.jpg', bgColorClass: 'bg-vehicle-purple' },
+            { id: 'fish', name: 'Fish', imageSrc: 'memory-game-assets/pets/fish.jpg', bgColorClass: 'bg-vehicle-blue' },
+            { id: 'guinea-pig', name: 'Guinea Pig', imageSrc: 'memory-game-assets/pets/guinea-pig.jpg', bgColorClass: 'bg-vehicle-purple' },
+            { id: 'hamster', name: 'Hamster', imageSrc: 'memory-game-assets/pets/hamster.jpg', bgColorClass: 'bg-vehicle-blue' },
+            { id: 'lizard', name: 'Lizard', imageSrc: 'memory-game-assets/pets/lizard.jpg', bgColorClass: 'bg-vehicle-purple' },
+            { id: 'mouse', name: 'Mouse', imageSrc: 'memory-game-assets/pets/mouse.jpg', bgColorClass: 'bg-vehicle-blue' },
+            { id: 'turtle', name: 'Turtle', imageSrc: 'memory-game-assets/pets/turtle.jpg', bgColorClass: 'bg-vehicle-purple' }
         ];
         
         const LEVELS = { // numCards is fixed at 4 for shell game
@@ -301,19 +318,34 @@
             resetGameUI();
         }
         
-        function createCardElement(vehicleDef) { /* ... same as before ... */ 
-            const card = document.createElement('div'); card.className = 'card-shell'; 
-            card.dataset.id = vehicleDef.id; card.dataset.name = vehicleDef.name;
-            const cardInner = document.createElement('div'); cardInner.className = 'card-shell-inner';
+        function createCardElement(petDef) {
+            const card = document.createElement('div');
+            card.className = 'card-shell'; 
+            card.dataset.id = petDef.id;
+            card.dataset.name = petDef.name;
+            
+            const cardInner = document.createElement('div');
+            cardInner.className = 'card-shell-inner';
+            
             const cardFront = document.createElement('div');
-            cardFront.className = `card-shell-face card-shell-front ${vehicleDef.bgColorClass}`;            cardFront.innerHTML = vehicleDef.getSvg();
-            const cardBack = document.createElement('div'); cardBack.className = 'card-shell-face card-shell-back';
-            // Question mark is handled by CSS background image
-            cardInner.appendChild(cardFront); cardInner.appendChild(cardBack); card.appendChild(cardInner);
+            cardFront.className = `card-shell-face card-shell-front ${petDef.bgColorClass}`;
+            
+            const img = document.createElement('img');
+            img.src = petDef.imageSrc;
+            img.alt = petDef.name;
+            img.className = 'card-svg'; // Reuse the same class for styling
+            cardFront.appendChild(img);
+            
+            const cardBack = document.createElement('div');
+            cardBack.className = 'card-shell-face card-shell-back';
+            
+            cardInner.appendChild(cardFront);
+            cardInner.appendChild(cardBack);
+            card.appendChild(cardInner);
+            
             card.addEventListener('click', () => handleCardClick(card));
             return card;
         }
-
 
         function setupBoard() {
             messageArea.textContent = "Getting ready...";
@@ -322,24 +354,18 @@
             cardsOnBoard = [];
             cardPositions = [];
 
-            const levelConf = LEVELS[currentLevelKey]; // numCards is always 4
-            gameBoard.className = `game-board-shell`; // Grid is fixed 2x2
+            const levelConf = LEVELS[currentLevelKey];
+            gameBoard.className = 'game-board-shell';
 
-            // Ensure we have 4 unique vehicles for the 4 cards
-            let availableVehicles = shuffleArray([...vehicleDefinitions]);
-            if (availableVehicles.length < 4) {
-                console.error("Not enough unique vehicle definitions for 4 cards!");
-                messageArea.textContent = "Error: Need at least 4 vehicle types.";
-                actionButton.disabled = false; actionButton.textContent = "Start Game";
-                return;
-            }
-            let itemsForLevel = availableVehicles.slice(0, 4); // Take the first 4
+            // Randomly select 4 unique pets for the game
+            let availablePets = shuffleArray([...petDefinitions]);
+            let itemsForLevel = availablePets.slice(0, 4); // Take the first 4 shuffled pets
             
             targetCardDefinition = itemsForLevel[Math.floor(Math.random() * itemsForLevel.length)];
 
-            // Create the 4 cards. Their order in itemsForLevel is already shuffled.
-            itemsForLevel.forEach(vehicleDef => {
-                const cardElement = createCardElement(vehicleDef);
+            // Create the 4 cards
+            itemsForLevel.forEach(petDef => {
+                const cardElement = createCardElement(petDef);
                 cardsOnBoard.push(cardElement);
                 gameBoard.appendChild(cardElement);
             });
