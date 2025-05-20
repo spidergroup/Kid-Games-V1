@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+<head>    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blippi Memory Challenge!</title>
+    <title>Memory Challenge!</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -170,7 +169,14 @@
             backface-visibility: hidden; -webkit-backface-visibility: hidden;
         }
         .card-shell-front { /* Shows the vehicle */ }
-        .card-shell-back { background-color: var(--blippi-blue); transform: rotateY(180deg); }
+        .card-shell-back { 
+            background-color: var(--blippi-blue);
+            transform: rotateY(180deg);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="70" fill="rgba(255,255,255,0.8)" style="filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.4));">?</text></svg>');
+            background-size: 60%;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
         .card-svg { width: 90%; height: 90%; object-fit: contain; }
         .bg-vehicle-purple { background-color: var(--vehicle-card-purple); }
         .bg-vehicle-blue { background-color: var(--vehicle-card-blue); }
@@ -252,22 +258,7 @@
             vehicleCardPurple: '#8A2BE2', vehicleCardBlue: '#007BFF', white: '#FFFFFF', black: '#000000',
             excavatorYellow: '#FFFF00', gray: 'gray', skyblue: 'skyblue', green: 'green',
             lightgray: 'lightgray', red: 'red', blippiSkin: '#FFE0B2', blippiShoes: '#4A4A4A',
-        };
-
-        function getBlippiLogoSVG() { /* ... SVG string ... */ 
-            return `
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="card-svg">
-                  <circle cx="35" cy="40" r="15" stroke="${appColors.blippiOrange}" stroke-width="5" fill="none"/>
-                  <circle cx="65" cy="40" r="15" stroke="${appColors.blippiOrange}" stroke-width="5" fill="none"/>
-                  <line x1="50" y1="40" x2="50" y2="40" stroke="${appColors.blippiOrange}" stroke-width="4" />
-                  <path d="M20 40 Q25 30 35 30" stroke="${appColors.blippiOrange}" stroke-width="4" fill="none" />
-                  <path d="M80 40 Q75 30 65 30" stroke="${appColors.blippiOrange}" stroke-width="4" fill="none" />
-                  <polygon points="30,70 50,60 30,50" fill="${appColors.blippiOrange}" stroke="${appColors.black}" stroke-width="2"/>
-                  <polygon points="70,70 50,60 70,50" fill="${appColors.blippiOrange}" stroke="${appColors.black}" stroke-width="2"/>
-                  <circle cx="50" cy="60" r="5" fill="${appColors.blippiYellow}" stroke="${appColors.black}" stroke-width="1"/>
-                </svg>
-            `;
-        }
+        };        // SVG for the back of cards (question mark) is now handled by CSS
         const vehicleDefinitions = [ /* ... definitions ... */ 
             { id: 'excavator', name: 'Excavator', getSvg: () => `<svg viewBox="0 0 100 100" class="card-svg"><rect x="10" y="60" width="80" height="20" fill="${appColors.excavatorYellow}"/><rect x="30" y="30" width="40" height="30" fill="${appColors.excavatorYellow}"/><circle cx="25" cy="85" r="10" fill="${appColors.black}"/><circle cx="75" cy="85" r="10" fill="${appColors.black}"/><path d="M 70 45 A 20 20 0 0 0 50 25 L 40 10 L 30 15 L 50 30" fill="${appColors.excavatorYellow}" stroke="${appColors.black}" stroke-width="3"/><rect x="25" y="5" width="15" height="10" fill="${appColors.gray}"/></svg>`, bgColorClass: 'bg-vehicle-purple' },
             { id: 'schoolbus', name: 'School Bus', getSvg: () => `<svg viewBox="0 0 100 80" class="card-svg"><rect x="5" y="20" width="90" height="40" fill="${appColors.blippiYellow}" rx="5"/><rect x="15" y="5" width="60" height="15" fill="${appColors.blippiYellow}" rx="3"/><rect x="20" y="25" width="15" height="10" fill="${appColors.skyblue}"/><rect x="40" y="25" width="15" height="10" fill="${appColors.skyblue}"/><rect x="60" y="25" width="15" height="10" fill="${appColors.skyblue}"/><circle cx="25" cy="65" r="10" fill="${appColors.black}"/><circle cx="75" cy="65" r="10" fill="${appColors.black}"/></svg>`, bgColorClass: 'bg-vehicle-blue' },
@@ -318,10 +309,9 @@
             card.dataset.id = vehicleDef.id; card.dataset.name = vehicleDef.name;
             const cardInner = document.createElement('div'); cardInner.className = 'card-shell-inner';
             const cardFront = document.createElement('div');
-            cardFront.className = `card-shell-face card-shell-front ${vehicleDef.bgColorClass}`;
-            cardFront.innerHTML = vehicleDef.getSvg();
+            cardFront.className = `card-shell-face card-shell-front ${vehicleDef.bgColorClass}`;            cardFront.innerHTML = vehicleDef.getSvg();
             const cardBack = document.createElement('div'); cardBack.className = 'card-shell-face card-shell-back';
-            cardBack.innerHTML = getBlippiLogoSVG();
+            // Question mark is handled by CSS background image
             cardInner.appendChild(cardFront); cardInner.appendChild(cardBack); card.appendChild(cardInner);
             card.addEventListener('click', () => handleCardClick(card));
             return card;
