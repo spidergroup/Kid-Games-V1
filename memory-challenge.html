@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Challenge!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ... (previous CSS is good, especially the .card transition for top/left) ... */
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap');
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background-image: linear-gradient(to bottom, #2c3e50, #4ca1af);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+        .game-title {
+            font-size: 2.8rem; font-weight: 600; color: #f1c40f;
+            margin-bottom: 15px; text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .menus-wrapper {
+            display: flex; flex-direction: column; gap: 10px;
+            width: 100%; max-width: 850px;
+            margin-bottom: 15px;
+        }
+        .menu-container {
+            padding: 10px 15px; border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .menu-title {
+            font-size: 1.1rem; font-weight: 600; text-align: center;
+            margin-bottom: 10px; color: #f0e68c;
+        }
+        .level-menu { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+        .menu-button {
+            padding: 8px 15px; border-radius: 20px; border: 2px solid transparent;
+            font-size: 0.9rem; font-weight: 500; cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background-color: rgba(243, 156, 18, 0.75); color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .menu-button:hover:not(.active) { background-color: rgba(230, 126, 34, 0.85); transform: translateY(-2px); }
+        .menu-button.active {
+            font-weight: 600; transform: scale(1.05);
+            background-color: #e67e22; border-color: #f1c40f; color: white;
+        }
+        .menu-button.easy.active { background-color: #55efc4; border-color: #00b894; color: #2d3436;}
+        .menu-button.medium.active { background-color: #74b9ff; border-color: #0984e3; color: #2d3436;}
+        .menu-button.hard.active { background-color: #ff7675; border-color: #fab1a0; color: #2d3436;}
+        .message-box {
+            font-size: 1.1rem; font-weight: 500; color: #f0e68c; height: 25px;
+            text-align: center;
+            background: none;
+            border: none;
+            box-shadow: none;
+            margin-bottom: 10px;
+        }
+        .game-board {
+            display: grid; gap: 10px; width: 100%; max-width: 650px;
+            margin: 0 auto 10px auto; perspective: 1000px;
+            grid-template-columns: repeat(var(--card-cols, 2), 1fr);
+        }
+        .card {
+            aspect-ratio: 1 / 1; position: relative; transform-style: preserve-3d;
+            transition: transform 0.6s; cursor: pointer; border-radius: 10px;
+            background-color: rgba(255,255,255,0.15); box-shadow: 0 3px 7px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
+        .card-inner {
+            position: relative; width: 100%; height: 100%; text-align: center;
+            transition: transform 0.5s ease-in-out; transform-style: preserve-3d;
+            border-radius: 9px;
+        }
+        .card-face {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            display: flex; justify-content: center; align-items: center;
+            border-radius: 9px; overflow: hidden;
+        }
+        .card-back {
+            background-color: rgba(255, 255, 255, 0.25);
+            transform: rotateY(180deg);
+        }
+        .card-back img {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+            border-radius: 5px;
+        }
+        .card-back span {
+            font-size: clamp(1.8rem, 10vw / var(--card-cols, 4), 3rem);
+            font-weight: 600; padding: 5px; text-align: center;
+            color: #f0e68c; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+        }
+        .card-front {
+            background-color: rgba(41, 128, 185, 0.7);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="70" fill="rgba(255,255,255,0.8)" style="filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.4));">?</text></svg>');
+            background-size: 50%; background-repeat: no-repeat; background-position: center;
+        }
+        .highlight-target-pulse { animation: pulse 1s infinite alternate; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 5px #FFFF00, 0 0 10px #FFFF00; }
+            50% { transform: scale(1.05); box-shadow: 0 0 15px #FFFF00, 0 0 25px #FFFF00; }
+        }
+        .confetti-piece {
+            position: absolute; width: 10px; height: 10px; opacity: 0;
+            animation: fall 3s ease-out forwards;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-20px) rotateZ(0deg); opacity: 1; }
+            100% { transform: translateY(100px) rotateZ(360deg); opacity: 0; }
+        }
+        .confetti-orange { background-color: #FF6F00; }
+        .confetti-blue { background-color: #005A9C; }
+        .confetti-yellow { background-color: #FFD700; }
+        .confetti-green { background-color: #00FF00; }
+        .confetti-pink { background-color: #FF00FF; }
+    </style>
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="game-title">Memory Challenge!</h1>
+        <div class="menus-wrapper">
+            <div class="menu-container level-menu-container">
+                <h2 class="menu-title">Select a Level:</h2>
+                <div class="level-menu" id="levelMenu"></div>
+            </div>
+        </div>
+        <div id="message" class="message-box">Click "Start Game" to play!</div>
+        <div id="gameBoard" class="game-board"></div>
+        <button id="startGameBtn" class="start-button" style="font-size:1.1rem;padding:10px 30px;border-radius:20px;background-color:#2ecc71;color:white;border:none;box-shadow:0 2px 4px rgba(0,0,0,0.2);margin-top:10px;">Start Game</button>
+    </div>
+    
+    <script>
+        const gameBoard = document.getElementById('gameBoard');
+        const messageEl = document.getElementById('message');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const levelMenu = document.getElementById('levelMenu');
+        // --- LEVELS ---
+        const LEVELS = {
+            easy:   { name: 'Easy 😊', pairs: 2, cols: 2, rows: 2 },
+            medium: { name: 'Medium 🤔', pairs: 3, cols: 3, rows: 2 },
+            hard:   { name: 'Hard 🤯', pairs: 4, cols: 4, rows: 2 }
+        };
+        let currentLevelKey = 'easy';
+        function createMenuButton(id, text, clickHandler, parentElement, isActive = false) {
+            const button = document.createElement('button');
+            button.id = `level-${id}-button`;
+            button.classList.add('menu-button', id);
+            button.textContent = text;
+            if (isActive) button.classList.add('active');
+            button.addEventListener('click', () => clickHandler(id));
+            parentElement.appendChild(button);
+        }
+        function selectLevel(levelKey) {
+            currentLevelKey = levelKey;
+            updateMenuState(levelMenu, `level-${levelKey}-button`);
+            resetAndPrepareGame();
+        }
+        function updateMenuState(menuElement, activeButtonId) {
+            Array.from(menuElement.children).forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(activeButtonId);
+            if (activeBtn) activeBtn.classList.add('active');
+        }
+        function initializeMenus() {
+            Object.keys(LEVELS).forEach((key, index) => {
+                createMenuButton(key, LEVELS[key].name, selectLevel, levelMenu, index === 0);
+            });
+        }
+
+        const appColors = { /* ... colors ... */ 
+            blippiOrange: '#FF6F00', blippiBlue: '#005A9C', blippiYellow: '#FFD700',
+            cardPurple: '#8A2BE2', cardBlue: '#007BFF', white: '#FFFFFF', black: '#000000',
+            excavatorYellow: '#FFFF00', gray: 'gray', skyblue: 'skyblue', green: 'green',
+            lightgray: 'lightgray', red: 'red', blippiSkin: '#FFE0B2', blippiShoes: '#4A4A4A',
+        };
+         
+        function getCardBackSVG() { /* ... SVG string ... */ 
+            return `
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="card-back-svg">
+                  <circle cx="35" cy="40" r="15" stroke="${appColors.blippiOrange}" stroke-width="5" fill="none"/>
+                  <circle cx="65" cy="40" r="15" stroke="${appColors.blippiOrange}" stroke-width="5" fill="none"/>
+                  <line x1="50" y1="40" x2="50" y2="40" stroke="${appColors.blippiOrange}" stroke-width="4" />
+                  <path d="M20 40 Q25 30 35 30" stroke="${appColors.blippiOrange}" stroke-width="4" fill="none" />
+                  <path d="M80 40 Q75 30 65 30" stroke="${appColors.blippiOrange}" stroke-width="4" fill="none" />
+                  <polygon points="30,70 50,60 30,50" fill="${appColors.blippiOrange}" stroke="${appColors.black}" stroke-width="2"/>
+                  <polygon points="70,70 50,60 70,50" fill="${appColors.blippiOrange}" stroke="${appColors.black}" stroke-width="2"/>
+                  <circle cx="50" cy="60" r="5" fill="${appColors.blippiYellow}" stroke="${appColors.black}" stroke-width="1"/>
+                </svg>
+            `;
+        }
+        const cardImageDefinitions = [ /* ... definitions ... */ 
+            { id: 'excavator', name: 'Excavator', getSvg: () => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="card-front-svg"><rect x="10" y="60" width="80" height="20" fill="${appColors.excavatorYellow}" stroke="${appColors.black}" stroke-width="2"/><rect x="30" y="30" width="40" height="30" fill="${appColors.excavatorYellow}" stroke="${appColors.black}" stroke-width="2"/><circle cx="25" cy="85" r="10" fill="${appColors.black}"/><circle cx="75" cy="85" r="10" fill="${appColors.black}"/><path d="M 70 45 A 20 20 0 0 0 50 25 L 40 10 L 30 15 L 50 30" stroke="${appColors.black}" stroke-width="4" fill="${appColors.excavatorYellow}"/><rect x="25" y="5" width="15" height="10" fill="${appColors.gray}" stroke="${appColors.black}" stroke-width="1"/></svg>`, bgColorClass: 'bg-card-purple' },
+            { id: 'schoolbus', name: 'School Bus', getSvg: () => `<svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg" class="card-front-svg"><rect x="5" y="20" width="90" height="40" fill="${appColors.blippiYellow}" stroke="${appColors.black}" stroke-width="2" rx="5"/><rect x="15" y="5" width="60" height="15" fill="${appColors.blippiYellow}" stroke="${appColors.black}" stroke-width="2" rx="3"/><rect x="20" y="25" width="15" height="10" fill="${appColors.skyblue}" stroke="${appColors.black}" stroke-width="1"/><rect x="40" y="25" width="15" height="10" fill="${appColors.skyblue}" stroke="${appColors.black}" stroke-width="1"/><rect x="60" y="25" width="15" height="10" fill="${appColors.skyblue}" stroke="${appColors.black}" stroke-width="1"/><circle cx="25" cy="65" r="10" fill="${appColors.black}"/><circle cx="75" cy="65" r="10" fill="${appColors.black}"/><line x1="5" y1="40" x2="95" y2="40" stroke="${appColors.black}" stroke-width="2"/></svg>`, bgColorClass: 'bg-card-blue' },
+            { id: 'garbagetruck', name: 'Garbage Truck', getSvg: () => `<svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg" class="card-front-svg"><rect x="5" y="30" width="40" height="30" fill="${appColors.white}" stroke="${appColors.black}" stroke-width="2"/><rect x="40" y="10" width="55" height="50" fill="${appColors.green}" stroke="${appColors.black}" stroke-width="2" rx="5"/><circle cx="20" cy="65" r="8" fill="${appColors.black}"/><circle cx="60" cy="65" r="8" fill="${appColors.black}"/><circle cx="80" cy="65" r="8" fill="${appColors.black}"/><rect x="50" y="20" width="10" height="10" fill="${appColors.lightgray}" opacity="0.5"/><rect x="65" y="20" width="10" height="10" fill="${appColors.lightgray}" opacity="0.5"/><rect x="80" y="20" width="10" height="10" fill="${appColors.lightgray}" opacity="0.5"/></svg>`, bgColorClass: 'bg-card-blue' },
+            { id: 'firetruck', name: 'Fire Truck', getSvg: () => `<svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg" class="card-front-svg"><rect x="5" y="30" width="90" height="30" fill="${appColors.red}" stroke="${appColors.black}" stroke-width="2"/><rect x="10" y="15" width="30" height="15" fill="${appColors.red}" stroke="${appColors.black}" stroke-width="2"/><rect x="45" y="20" width="45" height="10" fill="${appColors.lightgray}" stroke="${appColors.black}" stroke-width="1"/><line x1="45" y1="20" x2="80" y2="5" stroke="${appColors.black}" stroke-width="3"/><line x1="50" y1="20" x2="85" y2="5" stroke="${appColors.black}" stroke-width="3"/><circle cx="25" cy="65" r="10" fill="${appColors.black}"/><circle cx="75" cy="65" r="10" fill="${appColors.black}"/><rect x="70" y="10" width="10" height="10" fill="${appColors.blippiBlue}" rx="2"/></svg>`, bgColorClass: 'bg-card-blue' }
+        ];
+
+        let cards = []; 
+        let targetCardId = null;
+        let canFlip = false;
+        let isShuffling = false;
+        let gameInProgress = false;
+        let cardPositions = []; // To store the grid positions of cards
+
+function initializeGameAssets() {  }
+        function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } }
+        function createCardElement(cardDef) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.id = cardDef.id;
+            card.dataset.name = cardDef.name;
+            const cardInner = document.createElement('div');
+            cardInner.className = 'card-inner';
+            // Card front (question mark style)
+            const cardFront = document.createElement('div');
+            cardFront.className = 'card-face card-front';
+            cardFront.innerHTML = '<span style="font-size:4rem;font-weight:700;color:#f1c40f;text-shadow:2px 2px 4px rgba(0,0,0,0.5);">?</span>';
+            // Card back (vehicle SVG)
+            const cardBack = document.createElement('div');
+            cardBack.className = 'card-face card-back';
+            cardBack.innerHTML = cardDef.getSvg();
+            cardInner.appendChild(cardFront);
+            cardInner.appendChild(cardBack);
+            card.appendChild(cardInner);
+            card.addEventListener('click', () => handleCardClick(card));
+            return card;
+        }
+
+        function setupBoard() {
+            gameBoard.innerHTML = '';
+            cards = []; 
+            cardPositions = []; // Reset stored positions
+            
+            let initialCardDefs = [...cardImageDefinitions];
+            shuffleArray(initialCardDefs);
+            const levelConf = LEVELS[currentLevelKey];
+            gameBoard.style.setProperty('--card-cols', levelConf.cols);
+            let numCards = levelConf.pairs * 2;
+            const boardRect = gameBoard.getBoundingClientRect();
+            initialCardDefs = initialCardDefs.slice(0, levelConf.pairs);
+            let gameItems = shuffleArray([...initialCardDefs, ...initialCardDefs]);
+            gameItems = gameItems.slice(0, numCards);
+            shuffleArray(gameItems);
+            gameItems.forEach((cardDef, index) => {
+                const cardElement = createCardElement(cardDef);
+                cards.push(cardElement);
+                gameBoard.appendChild(cardElement);
+            });
+
+            // After all cards are in the grid, get their positions
+            // Needs a slight delay for the browser to compute layout if relying on getBoundingClientRect
+            // relative to the `gameBoard` (which is `position: relative`)
+            setTimeout(() => {
+                cards.forEach(cardEl => {
+                    const rect = cardEl.getBoundingClientRect();
+                    cardPositions.push({
+                        top: rect.top - boardRect.top,
+                        left: rect.left - boardRect.left
+                    });
+                });
+                console.log("Calculated cardPositions:", cardPositions);
+
+                const targetIndex = Math.floor(Math.random() * cards.length);
+                targetCardId = cards[targetIndex].dataset.id;
+                const targetCardName = cards[targetIndex].dataset.name;
+                messageEl.textContent = `Keep your eye on the ${targetCardName}!`;
+                cards[targetIndex].classList.add('highlight-target-pulse');
+                cards.forEach(card => card.classList.remove('flipped'));
+
+                setTimeout(() => {
+                    if (cards[targetIndex]) cards[targetIndex].classList.remove('highlight-target-pulse');
+                    flipAllToBack();
+                }, 3000);
+            }, 50); // Small delay for layout calculation
+        }
+
+        function flipAllToBack() { /* ... same ... */ 
+             if (isShuffling) return; messageEl.textContent = 'Watch closely...';
+            cards.forEach(card => card.classList.add('flipped'));
+            setTimeout(startShuffle, 1000);
+        }
+        
+        async function startShuffle() {
+            if (isShuffling || cardPositions.length !== cards.length) {
+                console.warn("Shuffle blocked or cardPositions not ready", {isShuffling, cardPosLen: cardPositions.length, cardsLen: cards.length});
+                // If positions aren't ready, maybe retry or handle error
+                if(cardPositions.length !== cards.length && !isShuffling) {
+                    messageEl.textContent = "Error preparing shuffle. Please restart.";
+                    // Reset state to allow restart
+                    gameInProgress = false; isShuffling = false; canFlip = false;
+                    startGameBtn.textContent = 'Start Game';
+                    return;
+                }
+                return;
+            }
+            isShuffling = true;
+            canFlip = false;
+            messageEl.textContent = 'Shuffling!';
+
+            // Convert cards to absolute positioning using their stored grid positions
+            cards.forEach((card, index) => {
+                card.style.position = 'absolute';
+                card.style.top = cardPositions[index].top + 'px';
+                card.style.left = cardPositions[index].left + 'px';
+                // The 'cards' array elements themselves are already in their initial visual order
+            });
+
+            // This array will track the elements and their CURRENT animated positions
+            let animatedCardsData = cards.map((card, index) => ({
+                element: card,
+                targetSlotIndex: index // its original slot index
+            }));
+
+
+            const numShuffles = 10 + Math.floor(Math.random() * 6); // e.g., 10-15 swaps
+
+            for (let i = 0; i < numShuffles; i++) {
+                // Pick two different *slots* to swap the cards currently in them
+                let slotIdx1 = Math.floor(Math.random() * animatedCardsData.length);
+                let slotIdx2 = Math.floor(Math.random() * animatedCardsData.length);
+                while (slotIdx2 === slotIdx1) {
+                    slotIdx2 = Math.floor(Math.random() * animatedCardsData.length);
+                }
+
+                // Find which cards are currently logically in these slots
+                // (This step is a bit redundant if animatedCardsData is always synced with visual order,
+                //  but good for clarity if we were tracking elements separate from their visual order)
+                const cardData1 = animatedCardsData.find(acd => acd.targetSlotIndex === slotIdx1);
+                const cardData2 = animatedCardsData.find(acd => acd.targetSlotIndex === slotIdx2);
+
+                if (!cardData1 || !cardData2) {
+                    console.error("Could not find cards for shuffle slots:", slotIdx1, slotIdx2, animatedCardsData);
+                    continue; // Skip this shuffle iteration
+                }
+
+                // The target visual positions are the *original grid positions* of the *other slot*
+                const visualPosForCard1 = cardPositions[slotIdx2]; // Card1 moves to slot2's original spot
+                const visualPosForCard2 = cardPositions[slotIdx1]; // Card2 moves to slot1's original spot
+
+                // Animate by setting style.top and style.left
+                // The CSS transition on .card will handle the animation
+                cardData1.element.style.top = visualPosForCard1.top + 'px';
+                cardData1.element.style.left = visualPosForCard1.left + 'px';
+                
+                cardData2.element.style.top = visualPosForCard2.top + 'px';
+                cardData2.element.style.left = visualPosForCard2.left + 'px';
+
+                // Update which slot each card element is now targeting
+                cardData1.targetSlotIndex = slotIdx2;
+                cardData2.targetSlotIndex = slotIdx1;
+                
+                // Wait for CSS transition (0.5s from .card class for top/left)
+                await new Promise(resolve => setTimeout(resolve, 550)); 
+            }
+            
+            // After all shuffles, reset styles and re-order in DOM for grid layout
+            // The `animatedCardsData` now tells us which element *should end up* in which original slot.
+            // We need to sort the `cards` array based on the `targetSlotIndex` to reflect the final visual order.
+            
+            const finalOrderedElements = animatedCardsData
+                .sort((a, b) => a.targetSlotIndex - b.targetSlotIndex) // Sort by the slot they ended up in
+                .map(data => data.element); // Get the DOM elements in that order
+
+            finalOrderedElements.forEach(card => {
+                card.style.position = ''; // Remove absolute positioning
+                card.style.top = '';      // Clear inline style
+                card.style.left = '';     // Clear inline style
+            });
+
+            gameBoard.innerHTML = ''; // Clear the board
+            finalOrderedElements.forEach(card => {
+                gameBoard.appendChild(card); // Append in the new shuffled order
+            });
+
+            cards = finalOrderedElements; // Update the global `cards` array to the new order of DOM elements
+
+            isShuffling = false;
+            canFlip = true;
+            const targetCardData = cardImageDefinitions.find(c => c.id === targetCardId);
+            messageEl.textContent = `Where is the ${targetCardData.name}? Click a card!`;
+        }
+
+
+        function handleCardClick(card) { /* ... same as before ... */ 
+            if (!canFlip || card.classList.contains('revealed') || isShuffling || !gameInProgress) return;
+            card.classList.remove('flipped'); card.classList.add('revealed'); canFlip = false;
+            if (card.dataset.id === targetCardId) {
+                const fd = cardImageDefinitions.find(c=>c.id===card.dataset.id); messageEl.textContent = `Yeah! You found the ${fd.name}!`;
+                showConfetti(card); startGameBtn.textContent = 'Play Again?';
+            } else {
+                messageEl.textContent = `Oops! That's not it.`;
+                setTimeout(() => {
+                    const cc = cards.find(c=>c.dataset.id===targetCardId);
+                    if(cc && !cc.classList.contains('revealed')){ cc.classList.remove('flipped'); cc.classList.add('highlight-target-pulse');}
+                    setTimeout(() => { if(cc) cc.classList.remove('highlight-target-pulse'); startGameBtn.textContent = 'Play Again?'; }, 2000);
+                }, 1000);
+            }
+            gameInProgress = false;
+        }
+        function showConfetti(element) { /* ... same as before ... */ 
+            const r = element.getBoundingClientRect(); const gc = document.querySelector('.game-container'); const gcr = gc.getBoundingClientRect();
+            for(let i=0; i<30; i++){ const c=document.createElement('div');c.className='confetti-piece'; const ox=r.left-gcr.left+r.width/2; const oy=r.top-gcr.top+r.height/2;
+            c.style.left=(ox+(Math.random()-0.5)*r.width)+'px'; c.style.top=(oy+(Math.random()-0.5)*r.height)+'px';
+            const cls=['confetti-orange','confetti-blue','confetti-yellow','confetti-green','confetti-pink']; c.classList.add(cls[Math.floor(Math.random()*cls.length)]);
+            c.style.transform=`rotate(${Math.random()*360}deg)`; c.style.animationDelay=`${Math.random()*0.5}s`; gc.appendChild(c); setTimeout(()=>c.remove(),3000);}
+        }
+
+        function resetAndPrepareGame() {
+            gameInProgress = false; isShuffling = false; canFlip = false;
+            cards = []; cardPositions = [];
+            setupBoard();
+            messageEl.textContent = "Click 'Start Game' to play!";
+            startGameBtn.textContent = 'Start Game';
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeGameAssets();
+            initializeMenus();
+            resetAndPrepareGame();
+        });
+        startGameBtn.addEventListener('click', () => {
+            if (isShuffling) return;
+            if (gameInProgress && startGameBtn.textContent !== 'Play Again?') return;
+            gameInProgress = true; canFlip = false; isShuffling = false;
+            startGameBtn.textContent = 'Loading...'; messageEl.textContent = 'Getting ready...';
+            document.querySelectorAll('.confetti-piece').forEach(c => c.remove());
+            try { setupBoard(); } catch (e) {
+                console.error("Error starting game:", e); messageEl.textContent = "Error. Check console.";
+                gameInProgress = false; isShuffling = false; canFlip = false; startGameBtn.textContent = 'Start Game';
+            }
+        });
+    </script>
+</body>
+</html>
