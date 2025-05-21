@@ -225,6 +225,86 @@
         }
         a.home-button:active { transform: translateY(1px); box-shadow: 0 2px #c0392b; }
 
+        /* --- Firework Animation --- */
+        .firework {
+            position: fixed;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 2000;
+        }
+        .firework > .before, .firework > .after {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            content: '';
+            box-shadow: 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff;
+            animation: bang 1s ease-out forwards, gravity 1s ease-in forwards, position 5s linear forwards;
+        }
+        .firework > .after {
+            animation-delay: 1.25s, 1.25s, 1.25s;
+            animation-duration: 1.25s, 1.25s, 6.25s;
+        }
+        @keyframes bang {
+            to {
+                box-shadow:
+                    0 0 #fff,
+                    50px -80px hsl(0,100%,50%),
+                    -60px -60px hsl(30,100%,50%),
+                    80px 0 hsl(60,100%,50%),
+                    -80px 0 hsl(90,100%,50%),
+                    60px 60px hsl(120,100%,50%),
+                    -50px 80px hsl(150,100%,50%),
+                    0 90px hsl(180,100%,50%),
+                    0 -90px hsl(210,100%,50%),
+                    90px 0 hsl(240,100%,50%),
+                    -90px 0 hsl(270,100%,50%),
+                    70px 70px hsl(300,100%,50%),
+                    -70px 70px hsl(330,100%,50%),
+                    30px -100px hsl(45,100%,50%),
+                    -30px -100px hsl(75,100%,50%),
+                    100px 30px hsl(105,100%,50%),
+                    -100px 30px hsl(135,100%,50%),
+                    100px -30px hsl(165,100%,50%),
+                    -100px -30px hsl(195,100%,50%),
+                    30px 100px hsl(225,100%,50%),
+                    -30px 100px hsl(255,100%,50%),
+                    60px -90px hsl(285,100%,50%),
+                    -60px -90px hsl(315,100%,50%),
+                    90px 60px hsl(345,100%,50%),
+                    -90px 60px hsl(15,100%,50%),
+                    0 0 #fff;
+            }
+        }
+        @keyframes gravity {
+            to {
+                transform: translateY(200px);
+                opacity: 0;
+            }
+        }
+        @keyframes position {
+            0%, 19.9% {
+                margin-top: 10%;
+                margin-left: 40%;
+            }
+            20%, 39.9% {
+                margin-top: 40%;
+                margin-left: 30%;
+            }
+            40%, 59.9% {
+                margin-top: 20%;
+                margin-left: 70%;
+            }
+            60%, 79.9% {
+                margin-top: 30%;
+                margin-left: 20%;
+            }
+            80%, 99.9% {
+                margin-top: 30%;
+                margin-left: 80%;
+            }
+        }
+
         @keyframes pulse-mc {
             0%, 100% { box-shadow: 0 0 8px var(--mc-yellow), 0 0 15px var(--mc-yellow); transform: scale(1); }
             50% { box-shadow: 0 0 15px var(--mc-yellow), 0 0 25px var(--mc-yellow); transform: scale(1.03); }
@@ -259,7 +339,7 @@
             <li>Celebrate your win with fireworks, or try again!</li>
         </ul>
         <br/>
-        Great for kids and families. Play as many times as you like!
+        Play as many times as you like!
     </div>
 
     <div class="menus-wrapper">
@@ -523,21 +603,25 @@
                 clickedCardElement.classList.add('target-revealed');
                 messageArea.textContent = `Yeah! You found the ${targetCardDefinition.name}!`;
                 winModalMessage.textContent = `You found the ${targetCardDefinition.name}!`;
-                
-                // Create multiple fireworks
-                for (let i = 0; i < 3; i++) {
-                    const firework = document.createElement('div');
-                    firework.className = 'firework';
-                    document.body.appendChild(firework);
-                }
+            // Show the Firework animation 3 times
+            const fireworks = [];
+            for (let i = 0; i < 3; i++) {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.innerHTML = '<div class="before"></div><div class="after"></div>';
+                // Stagger each firework slightly for a more dynamic effect
+                firework.style.animationDelay = `${i * 0.2}s`;
+                document.body.appendChild(firework);
+                fireworks.push(firework);
+            }
 
-                winModalOverlay.classList.add('show');
-                setTimeout(() => { 
-                    winModalOverlay.classList.remove('show');
-                    // Remove all fireworks
-                    document.querySelectorAll('.firework').forEach(fw => document.body.removeChild(fw));
-                    resetGameUI('Play Again?');
-                }, 2500);
+            winModalOverlay.classList.add('show');
+            setTimeout(() => {
+                winModalOverlay.classList.remove('show');
+                // Remove all fireworks
+                fireworks.forEach(fw => { if (fw.parentNode) fw.parentNode.removeChild(fw); });
+                resetGameUI('Play Again?');
+            }, 2500);
             } else {
                 clickedCardElement.classList.add('incorrect-revealed');
                 messageArea.textContent = `Oops! That's not the ${targetCardDefinition.name}.`;
