@@ -340,9 +340,7 @@
             
             card.addEventListener('click', () => handleCardClick(card));
             return card;
-        }
-
-        function setupBoard() {
+        }        function setupBoard() {
             messageArea.textContent = "Getting ready...";
             actionButton.disabled = true;
             gameBoard.innerHTML = '';
@@ -356,41 +354,35 @@
             let availablePets = shuffleArray([...petDefinitions]);
             let itemsForLevel = availablePets.slice(0, 4); // Take the first 4 shuffled pets
             
-            targetCardDefinition = itemsForLevel[Math.floor(Math.random() * itemsForLevel.length)];            // Create the 4 cards
+            targetCardDefinition = itemsForLevel[Math.floor(Math.random() * itemsForLevel.length)];
+
+            // Create the 4 cards
             itemsForLevel.forEach(petDef => {
                 const cardElement = createCardElement(petDef);
                 cardsOnBoard.push(cardElement);
                 gameBoard.appendChild(cardElement);
             });
-            // The cardsOnBoard array is now in the shuffled visual order for initial display
-            setTimeout(() => {
-                const boardRect = gameBoard.getBoundingClientRect();
-                cardsOnBoard.forEach(cardEl => {
-                    const rect = cardEl.getBoundingClientRect();
-                    cardPositions.push({
-                        top: rect.top - boardRect.top,
-                        left: rect.left - boardRect.left
-                    });
-                });
+            cardsOnBoard.forEach(card => card.classList.add('flipped'));
+        }
 
-                // First show all cards face up for a moment
-                messageArea.textContent = "Look at all the pets...";
-                cardsOnBoard.forEach(card => card.classList.remove('flipped'));
-                
-                // After 2 seconds, highlight the target card
+        function startGameSequence() {
+            // First show all cards face up for a moment
+            messageArea.textContent = "Look at all the pets...";
+            cardsOnBoard.forEach(card => card.classList.remove('flipped'));
+            
+            // After 2 seconds, highlight the target card
+            setTimeout(() => {
+                messageArea.textContent = `Find the ${targetCardDefinition.name}!`;
+                const targetCardElement = cardsOnBoard.find(c => c.dataset.id === targetCardDefinition.id);
+                if (targetCardElement) {
+                    targetCardElement.classList.add('highlight-mc-target');
+                }
+
                 setTimeout(() => {
-                    messageArea.textContent = `Find the ${targetCardDefinition.name}!`;
-                    const targetCardElement = cardsOnBoard.find(c => c.dataset.id === targetCardDefinition.id);
-                    if (targetCardElement) {
-                        targetCardElement.classList.add('highlight-mc-target');
-                    }
-    
-                    setTimeout(() => {
-                        if (targetCardElement) targetCardElement.classList.remove('highlight-mc-target');
-                        flipAllToBackAndPrepareShuffle();
-                    }, 3000);
-                }, 2000); 
-            }, 100);
+                    if (targetCardElement) targetCardElement.classList.remove('highlight-mc-target');
+                    flipAllToBackAndPrepareShuffle();
+                }, 3000);
+            }, 2000);
         }
 
         function flipAllToBackAndPrepareShuffle() { /* ... same as before ... */ 
@@ -483,13 +475,25 @@
         function handleCardClick(clickedCardElement) { /* ... same as before ... */ 
             if (!canClickCard || isShuffling || !gameActive) return;
             canClickCard = false; actionButton.disabled = true;
-            clickedCardElement.classList.remove('flipped'); 
-            if (clickedCardElement.dataset.id === targetCardDefinition.id) {
+            clickedCardElement.classList.remove('flipped');            if (clickedCardElement.dataset.id === targetCardDefinition.id) {
                 clickedCardElement.classList.add('target-revealed');
                 messageArea.textContent = `Yeah! You found the ${targetCardDefinition.name}!`;
                 winModalMessage.textContent = `You found the ${targetCardDefinition.name}!`;
+                
+                // Create multiple fireworks
+                for (let i = 0; i < 3; i++) {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    document.body.appendChild(firework);
+                }
+
                 winModalOverlay.classList.add('show');
-                setTimeout(() => { winModalOverlay.classList.remove('show'); resetGameUI('Play Again?'); }, 2500);
+                setTimeout(() => { 
+                    winModalOverlay.classList.remove('show');
+                    // Remove all fireworks
+                    document.querySelectorAll('.firework').forEach(fw => document.body.removeChild(fw));
+                    resetGameUI('Play Again?');
+                }, 2500);
             } else {
                 clickedCardElement.classList.add('incorrect-revealed');
                 messageArea.textContent = `Oops! That's not the ${targetCardDefinition.name}.`;
@@ -522,10 +526,23 @@
         actionButton.addEventListener('click', () => { /* ... same as before ... */ 
              if (actionButton.textContent === "Start Game" || actionButton.textContent === "Play Again?" || actionButton.textContent === "Try Again?") {
                 gameActive = true; setupBoard();
+                 // Store initial positions for the shuffle animation
+                setTimeout(() => {
+                    const boardRect = gameBoard.getBoundingClientRect();
+                    cardsOnBoard.forEach(cardEl => {
+                        const rect = cardEl.getBoundingClientRect();
+                        cardPositions.push({
+                            top: rect.top - boardRect.top,
+                            left: rect.left - boardRect.left
+                        });
+                    });
+                    startGameSequence();
+                }, 100);
             }
         });
 
         createLevelButtons();
+        setupBoard();
         resetGameUI();
         messageArea.textContent = "Select difficulty and click Start!";
 
