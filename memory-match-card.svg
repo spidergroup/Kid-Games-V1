@@ -1,58 +1,104 @@
 <svg width="400" height="400" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" font-family="Fredoka, Arial, sans-serif">
 
-  <!-- Background Gradient -->
   <defs>
-    <linearGradient id="memoryBgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#2c3e50;" />
-      <stop offset="100%" style="stop-color:#4ca1af;" />
+    <linearGradient id="petMatchBgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#a1c4fd;" /> <!-- Soft Sky Blue -->
+      <stop offset="100%" style="stop-color:#c2e9fb;" /> <!-- Lighter Sky Blue -->
     </linearGradient>
+
+    <!-- Cat Icon -->
+    <g id="catIcon">
+      <path fill="#FFB74D" d="M65.6,28.2c-0.9-2.3-2.2-4.4-3.9-6.1c-0.3-0.3-0.7-0.3-1,0c-1.8,1.8-3,3.9-3.6,6.2c-0.2,0.7,0.4,1.3,1.1,1.2 C61.9,39.3,64.8,34.9,65.6,28.2z"/>
+      <path fill="#FFB74D" d="M34.4,28.2c0.9-2.3,2.2-4.4,3.9-6.1c0.3-0.3,0.7-0.3,1,0c1.8,1.8,3,3.9,3.6,6.2c0.2,0.7-0.4,1.3-1.1,1.2 C38.1,39.3,35.2,34.9,34.4,28.2z"/>
+      <path fill="#FFE0B2" d="M50,35c-11,0-20,9-20,20c0,11,9,20,20,20s20-9,20-20C70,44,61,35,50,35z"/>
+      <circle fill="#546E7A" cx="42" cy="50" r="3"/>
+      <circle fill="#546E7A" cx="58" cy="50" r="3"/>
+      <path fill="#F48FB1" d="M50,58c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S52.2,58,50,58z"/>
+      <path fill="#FFE0B2" d="M45,63c0-1.7,1.3-3,3-3h4c1.7,0,3,1.3,3,3v2c0,1.1-0.9,2-2,2h-6c-1.1,0-2-0.9-2-2V63z"/>
+    </g>
+
+    <!-- Dog Icon -->
+    <g id="dogIcon">
+      <path fill="#A1887F" d="M68,30c-1-2.8-2.7-5.2-4.9-7.1c-0.3-0.3-0.7-0.2-1,0.1c-2,1.7-3.4,3.9-4.1,6.3c-0.2,0.7,0.4,1.3,1.1,1.2 C63.1,39.8,66.7,35.9,68,30z"/>
+      <path fill="#A1887F" d="M32,30c1-2.8,2.7-5.2,4.9-7.1c0.3-0.3,0.7-0.2,1,0.1c2,1.7,3.4,3.9,4.1,6.3c0.2,0.7-0.4,1.3-1.1,1.2 C36.9,39.8,33.3,35.9,32,30z"/>
+      <path fill="#D7CCC8" d="M50,36c-10.5,0-19,8.5-19,19s8.5,19,19,19s19-8.5,19-19S60.5,36,50,36z"/>
+      <circle fill="#3E2723" cx="43" cy="51" r="2.5"/>
+      <circle fill="#3E2723" cx="57" cy="51" r="2.5"/>
+      <path fill="#6D4C41" d="M50,60c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S52.2,60,50,60z"/>
+      <path fill="#A1887F" d="M48,63c-0.6-1.1-0.2-2.4,0.9-3c0.5-0.3,1.1-0.3,1.6-0.1l0,0c0.6,0.3,1,0.8,1,1.5v3c0,0.6-0.4,1-1,1h-2 C48.4,65.5,48,65.1,48,64.5V63z"/>
+    </g>
   </defs>
-  <rect width="100" height="100" fill="url(#memoryBgGradient)" />
 
-  <!-- Subtle background stars/elements -->
-  <text x="15" y="20" font-size="10" fill="white" opacity="0.2" transform="rotate(-15 15 20)">?</text>
-  <text x="85" y="30" font-size="12" fill="white" opacity="0.15" transform="rotate(20 85 30)">⭐</text>
-  <text x="70" y="80" font-size="9" fill="white" opacity="0.2" transform="rotate(10 70 80)">?</text>
+  <rect width="100" height="100" fill="url(#petMatchBgGradient)" />
 
-  <!-- Stylized Card Grid -->
-  <g id="card-grid" transform="translate(15, 25)">
-    <!-- Card 1 (Face down '?') -->
-    <rect x="5" y="5" width="25" height="25" rx="3" ry="3" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
-    <text x="17.5" y="20" font-size="18" fill="white" text-anchor="middle" style="filter: drop-shadow(0.5px 0.5px 0.5px rgba(0,0,0,0.3));">?</text>
+  <!-- Decorative Paw Prints -->
+  <text x="10" y="15" font-size="10" fill="white" opacity="0.3" transform="rotate(-20 10 15)">🐾</text>
+  <text x="88" y="88" font-size="12" fill="white" opacity="0.4" transform="rotate(15 88 88)">🐾</text>
+  <text x="15" y="85" font-size="9" fill="white" opacity="0.25" transform="rotate(10 15 85)">🐾</text>
 
-    <!-- Card 2 (Face up - Pet Paw) -->
-    <rect x="35" y="5" width="25" height="25" rx="3" ry="3" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
-    <!-- Simple Paw Icon -->
-    <g transform="translate(47.5, 17.5) scale(0.15)">
-        <path fill="#7f8c8d" d="M50,5 C25,5 5,25 5,50 C5,75 25,95 50,95 C75,95 95,75 95,50 C95,25 75,5 50,5 Z M50,15 C69.33,15 85,30.67 85,50 C85,69.33 69.33,85 50,85 C30.67,85 15,69.33 15,50 C15,30.67 30.67,15 50,15 Z"/>
-        <circle fill="#7f8c8d" cx="30" cy="30" r="10"/>
-        <circle fill="#7f8c8d" cx="70" cy="30" r="10"/>
-        <circle fill="#7f8c8d" cx="30" cy="70" r="10"/>
-        <circle fill="#7f8c8d" cx="70" cy="70" r="10"/>
+
+  <!-- Card 1 (Animated Flip) -->
+  <g id="animatedCard1" transform="translate(20 30)">
+    <rect x="0" y="0" width="30" height="30" rx="3" ry="3" fill="#FFCC80" stroke="#FFA726" stroke-width="1" class="card-base"/>
+    <g class="card-face card-front-face"> <!-- Initially Visible: Question Mark -->
+        <text x="15" y="20" font-size="20" fill="#8D6E63" text-anchor="middle">?</text>
     </g>
-
-
-    <!-- Card 3 (Face up - Fruit: Strawberry) -->
-    <rect x="5" y="35" width="25" height="25" rx="3" ry="3" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
-    <!-- Simple Strawberry Icon -->
-    <g transform="translate(17.5, 47.5) scale(0.2)">
-      <path fill="#e74c3c" d="M50 10 C 30 10, 15 30, 15 50 C 15 70, 30 90, 50 90 C 70 90, 85 70, 85 50 A 35 40 0 0 0 50 10 Z"/>
-      <path fill="#2ecc71" d="M50 10 C 55 5, 65 5, 70 15 L 60 20 L 50 10 Z M50 10 C 45 5, 35 5, 30 15 L 40 20 L 50 10 Z"/>
-      <circle cx="40" cy="40" r="3" fill="yellow" opacity="0.7"/>
-      <circle cx="60" cy="40" r="3" fill="yellow" opacity="0.7"/>
-      <circle cx="50" cy="55" r="3" fill="yellow" opacity="0.7"/>
-      <circle cx="45" cy="70" r="3" fill="yellow" opacity="0.7"/>
-      <circle cx="55" cy="70" r="3" fill="yellow" opacity="0.7"/>
+    <g class="card-face card-back-face" visibility="hidden"> <!-- Initially Hidden: Dog Icon -->
+        <use href="#dogIcon" transform="translate(-25 -15) scale(0.5)"/>
     </g>
+    <animateTransform attributeName="transform" type="rotate"
+        begin="1s; animatedCard1.end+2s" dur="0.5s"
+        values="0 15 15; 180 15 15" fill="freeze" additive="sum" />
+    <animateTransform attributeName="transform" type="rotate"
+        begin="animatedCard1.begin+1.5s" dur="0.5s"
+        values="0 15 15; -180 15 15" fill="freeze" additive="sum" />
 
-    <!-- Card 4 (Face down '?') -->
-    <rect x="35" y="35" width="25" height="25" rx="3" ry="3" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
-    <text x="47.5" y="50" font-size="18" fill="white" text-anchor="middle" style="filter: drop-shadow(0.5px 0.5px 0.5px rgba(0,0,0,0.3));">?</text>
+    <script type="text/ecmascript"> <![CDATA[
+      // Script to toggle visibility of faces during flip
+      // Note: Inline script in SVG has limitations and security considerations.
+      // For complex interactions, external JS controlling SVG via DOM is better.
+      // This is a simplified approach.
+      var card1 = document.getElementById('animatedCard1');
+      var front1 = card1.querySelector('.card-front-face');
+      var back1 = card1.querySelector('.card-back-face');
+      var isFront1Visible = true;
 
-    <!-- Card 5 (Optional, smaller, peeking - Face down '?') -->
-     <g transform="translate(30, 0) rotate(5)">
-      <rect x="35" y="0" width="25" height="25" rx="3" ry="3" fill="#3498db" stroke="#2980b9" stroke-width="0.8" opacity="0.8"/>
-      <text x="47.5" y="15" font-size="16" fill="white" text-anchor="middle" opacity="0.8" style="filter: drop-shadow(0.5px 0.5px 0.5px rgba(0,0,0,0.3));">?</text>
-    </g>
+      card1.addEventListener('beginEvent', function() { // Corresponds to first animateTransform begin
+        setTimeout(function() {
+          if (isFront1Visible) {
+            front1.setAttribute('visibility', 'hidden');
+            back1.setAttribute('visibility', 'visible');
+          } else {
+            front1.setAttribute('visibility', 'visible');
+            back1.setAttribute('visibility', 'hidden');
+          }
+          isFront1Visible = !isFront1Visible;
+        }, 250); // Halfway through the 0.5s flip
+      });
+       card1.addEventListener('endEvent', function() { // Corresponds to second animateTransform begin
+          setTimeout(function() {
+          if (isFront1Visible) {
+            front1.setAttribute('visibility', 'hidden');
+            back1.setAttribute('visibility', 'visible');
+          } else {
+            front1.setAttribute('visibility', 'visible');
+            back1.setAttribute('visibility', 'hidden');
+          }
+          isFront1Visible = !isFront1Visible;
+        }, 250); // Halfway through the 0.5s flip
+      });
+    ]]> </script>
   </g>
+
+  <!-- Card 2 (Bouncing Cat) -->
+  <g transform="translate(55 30)">
+    <g class="card-base">
+        <rect x="0" y="0" width="30" height="30" rx="3" ry="3" fill="#AED581" stroke="#7CB342" stroke-width="1"/>
+        <use href="#catIcon" transform="translate(-25 -15) scale(0.5)"/>
+    </g>
+    <animateTransform attributeName="transform" type="translate"
+        values="55 30; 55 28; 55 30"
+        dur="0.7s" repeatCount="indefinite" />
+  </g>
+ 
 </svg>
