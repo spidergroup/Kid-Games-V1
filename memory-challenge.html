@@ -262,18 +262,16 @@
             red: 'red'
         };
 
-        const petDefinitions = [
-            { id: 'bird', name: 'Bird', imageSrc: 'memory-game-assets/pets/bird.jpg', bgColorClass: 'bg-purple' },
-            { id: 'bunny', name: 'Bunny', imageSrc: 'memory-game-assets/pets/bunny.jpg', bgColorClass: 'bg-blue' },
-            { id: 'cat', name: 'Cat', imageSrc: 'memory-game-assets/pets/cat.jpg', bgColorClass: 'bg-purple' },
-            { id: 'dog', name: 'Dog', imageSrc: 'memory-game-assets/pets/dog.jpg', bgColorClass: 'bg-blue' },
-            { id: 'ferret', name: 'Ferret', imageSrc: 'memory-game-assets/pets/ferret.jpg', bgColorClass: 'bg-purple' },
-            { id: 'fish', name: 'Fish', imageSrc: 'memory-game-assets/pets/fish.jpg', bgColorClass: 'bg-blue' },
-            { id: 'guinea-pig', name: 'Guinea Pig', imageSrc: 'memory-game-assets/pets/guinea-pig.jpg', bgColorClass: 'bg-purple' },
-            { id: 'hamster', name: 'Hamster', imageSrc: 'memory-game-assets/pets/hamster.jpg', bgColorClass: 'bg-blue' },
-            { id: 'lizard', name: 'Lizard', imageSrc: 'memory-game-assets/pets/lizard.jpg', bgColorClass: 'bg-purple' },
-            { id: 'mouse', name: 'Mouse', imageSrc: 'memory-game-assets/pets/mouse.jpg', bgColorClass: 'bg-blue' },
-            { id: 'turtle', name: 'Turtle', imageSrc: 'memory-game-assets/pets/turtle.jpg', bgColorClass: 'bg-purple' }
+        const petDefinitions = [            { id: 'bird', name: 'Bird', imageSrc: 'memory-game-assets/pets/bird.jpg' },
+            { id: 'bunny', name: 'Bunny', imageSrc: 'memory-game-assets/pets/bunny.jpg' },
+            { id: 'cat', name: 'Cat', imageSrc: 'memory-game-assets/pets/cat.jpg' },            { id: 'dog', name: 'Dog', imageSrc: 'memory-game-assets/pets/dog.jpg' },
+            { id: 'ferret', name: 'Ferret', imageSrc: 'memory-game-assets/pets/ferret.jpg' },
+            { id: 'fish', name: 'Fish', imageSrc: 'memory-game-assets/pets/fish.jpg' },
+            { id: 'guinea-pig', name: 'Guinea Pig', imageSrc: 'memory-game-assets/pets/guinea-pig.jpg' },
+            { id: 'hamster', name: 'Hamster', imageSrc: 'memory-game-assets/pets/hamster.jpg' },
+            { id: 'lizard', name: 'Lizard', imageSrc: 'memory-game-assets/pets/lizard.jpg' },
+            { id: 'mouse', name: 'Mouse', imageSrc: 'memory-game-assets/pets/mouse.jpg' },
+            { id: 'turtle', name: 'Turtle', imageSrc: 'memory-game-assets/pets/turtle.jpg' }
         ];
         
         const LEVELS = { // numCards is fixed at 4 for shell game
@@ -314,8 +312,7 @@
             resetGameUI();
         }
         
-        function createCardElement(petDef) {
-            const card = document.createElement('div');
+        function createCardElement(petDef) {            const card = document.createElement('div');
             card.className = 'card-shell'; 
             card.dataset.id = petDef.id;
             card.dataset.name = petDef.name;
@@ -324,7 +321,9 @@
             cardInner.className = 'card-shell-inner';
             
             const cardFront = document.createElement('div');
-            cardFront.className = `card-shell-face card-shell-front ${petDef.bgColorClass}`;
+            // Set bg-purple only for the target card, bg-blue for others
+            const bgColorClass = petDef.id === targetCardDefinition?.id ? 'bg-purple' : 'bg-blue';
+            cardFront.className = `card-shell-face card-shell-front ${bgColorClass}`;
             
             const img = document.createElement('img');
             img.src = petDef.imageSrc;
@@ -357,17 +356,14 @@
             let availablePets = shuffleArray([...petDefinitions]);
             let itemsForLevel = availablePets.slice(0, 4); // Take the first 4 shuffled pets
             
-            targetCardDefinition = itemsForLevel[Math.floor(Math.random() * itemsForLevel.length)];
-
-            // Create the 4 cards
+            targetCardDefinition = itemsForLevel[Math.floor(Math.random() * itemsForLevel.length)];            // Create the 4 cards
             itemsForLevel.forEach(petDef => {
                 const cardElement = createCardElement(petDef);
                 cardsOnBoard.push(cardElement);
                 gameBoard.appendChild(cardElement);
             });
             // The cardsOnBoard array is now in the shuffled visual order for initial display
-
-            setTimeout(() => { 
+            setTimeout(() => {
                 const boardRect = gameBoard.getBoundingClientRect();
                 cardsOnBoard.forEach(cardEl => {
                     const rect = cardEl.getBoundingClientRect();
@@ -377,15 +373,23 @@
                     });
                 });
 
-                messageArea.textContent = `Find the ${targetCardDefinition.name}!`;                const targetCardElement = cardsOnBoard.find(c => c.dataset.id === targetCardDefinition.id);
-                if (targetCardElement) {
-                    targetCardElement.classList.add('highlight-mc-target');
-                }
-
+                // First show all cards face up for a moment
+                messageArea.textContent = "Look at all the pets...";
+                cardsOnBoard.forEach(card => card.classList.remove('flipped'));
+                
+                // After 2 seconds, highlight the target card
                 setTimeout(() => {
-                    if (targetCardElement) targetCardElement.classList.remove('highlight-mc-target');
-                    flipAllToBackAndPrepareShuffle();
-                }, 3000); 
+                    messageArea.textContent = `Find the ${targetCardDefinition.name}!`;
+                    const targetCardElement = cardsOnBoard.find(c => c.dataset.id === targetCardDefinition.id);
+                    if (targetCardElement) {
+                        targetCardElement.classList.add('highlight-mc-target');
+                    }
+    
+                    setTimeout(() => {
+                        if (targetCardElement) targetCardElement.classList.remove('highlight-mc-target');
+                        flipAllToBackAndPrepareShuffle();
+                    }, 3000);
+                }, 2000); 
             }, 100);
         }
 
