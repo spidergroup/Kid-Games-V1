@@ -12,7 +12,7 @@ const allGames = [
     {
         id: 2,
         title: "Memory Challenge",
-        image: "memory-match-card2.svg",
+        image: "memory-challenge.svg",
         url: "memory-challenge.html",
         description: "Can you follow the hidden card? Test your memory and concentration in this exciting card-tracking challenge. Choose different difficulty levels and see if you can keep up!",
         keywords: ["memory game", "card tracking game", "concentration game", "kids puzzle game", "brain training", "cognitive skills game"]
