@@ -47,7 +47,7 @@
             flex-direction: column;
             gap: 10px;
             width: 100%;
-            max-width: 400px; /* Adjusted for simpler menu */
+            max-width: 440px; /* Adjusted for simpler menu */
             margin-bottom: 15px;
         }
 
@@ -134,20 +134,18 @@
             min-width: 150px;
         }
         #actionButton:hover:not(:disabled) { background-color: #27ae60; }
-        #actionButton:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
-
-        .game-board-shell {
+        #actionButton:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }        .game-board-shell {
             display: grid;
             grid-template-columns: repeat(2, 1fr); /* Always 2x2 for 4 cards */
             gap: 10px;
-            width: 220px; /* (100 * 2) + 10 gap */
-            height: 300px; /* (140 * 2) + 10 gap */
+            width: 290px; /* (140 * 2) + 10 gap */
+            height: 290px; /* (140 * 2) + 10 gap */
             margin: 15px auto;
             position: relative;
         }
 
         .card-shell {
-            width: 100px; 
+            width: 140px; 
             height: 140px; 
             perspective: 1000px;
             cursor: pointer;
@@ -207,16 +205,14 @@
             25% { transform: translateX(-5px) rotateY(0deg); }
             50% { transform: translateX(5px) rotateY(0deg); }
             75% { transform: translateX(-5px) rotateY(0deg); }
-        }
-
-        /* Responsive adjustments for shell game board */
+        }        /* Responsive adjustments for shell game board */
          @media (min-width: 380px) { /* Slightly larger cards */
-            .game-board-shell { width: 250px; height: 340px; }
-            .card-shell { width: 115px; height: 160px; }
+            .game-board-shell { width: 330px; height: 330px; }
+            .card-shell { width: 160px; height: 160px; }
         }
         @media (min-width: 640px) { /* Even larger for wider screens */
-            .game-board-shell { width: 320px; height: 420px; }
-            .card-shell { width: 150px; height: 200px; }
+            .game-board-shell { width: 440px; height: 440px; }
+            .card-shell { width: 200px; height: 200px; }
         }
     </style>
 </head>
