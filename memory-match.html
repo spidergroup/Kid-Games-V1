@@ -186,6 +186,86 @@
         }
         a.home-button:active { transform: translateY(1px); box-shadow: 0 2px #c0392b; }
 
+    /* --- Firework Animation --- */
+    .firework {
+        position: fixed;
+        left: 0; top: 0; width: 100vw; height: 100vh;
+        pointer-events: none;
+        z-index: 2000;
+    }
+    .firework > .before, .firework > .after {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        content: '';
+        box-shadow: 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff;
+        animation: bang 1s ease-out forwards, gravity 1s ease-in forwards, position 5s linear forwards;
+    }
+    .firework > .after {
+        animation-delay: 1.25s, 1.25s, 1.25s;
+        animation-duration: 1.25s, 1.25s, 6.25s;
+    }
+    @keyframes bang {
+        to {
+            box-shadow:
+                0 0 #fff,
+                50px -80px hsl(0,100%,50%),
+                -60px -60px hsl(30,100%,50%),
+                80px 0 hsl(60,100%,50%),
+                -80px 0 hsl(90,100%,50%),
+                60px 60px hsl(120,100%,50%),
+                -50px 80px hsl(150,100%,50%),
+                0 90px hsl(180,100%,50%),
+                0 -90px hsl(210,100%,50%),
+                90px 0 hsl(240,100%,50%),
+                -90px 0 hsl(270,100%,50%),
+                70px 70px hsl(300,100%,50%),
+                -70px 70px hsl(330,100%,50%),
+                30px -100px hsl(45,100%,50%),
+                -30px -100px hsl(75,100%,50%),
+                100px 30px hsl(105,100%,50%),
+                -100px 30px hsl(135,100%,50%),
+                100px -30px hsl(165,100%,50%),
+                -100px -30px hsl(195,100%,50%),
+                30px 100px hsl(225,100%,50%),
+                -30px 100px hsl(255,100%,50%),
+                60px -90px hsl(285,100%,50%),
+                -60px -90px hsl(315,100%,50%),
+                90px 60px hsl(345,100%,50%),
+                -90px 60px hsl(15,100%,50%),
+                0 0 #fff;
+        }
+    }
+    @keyframes gravity {
+        to {
+            transform: translateY(200px);
+            opacity: 0;
+        }
+    }
+    @keyframes position {
+        0%, 19.9% {
+            margin-top: 10%;
+            margin-left: 40%;
+        }
+        20%, 39.9% {
+            margin-top: 40%;
+            margin-left: 30%;
+        }
+        40%, 59.9% {
+            margin-top: 20%;
+            margin-left: 70%;
+        }
+        60%, 79.9% {
+            margin-top: 30%;
+            margin-left: 20%;
+        }
+        80%, 99.9% {
+            margin-top: 30%;
+            margin-left: 80%;
+        }
+    }
+
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -298,6 +378,22 @@
         let isPaused = false;
 
         let preGameCountdownTimerId;
+
+        // --- Firework celebration function ---
+        function showFireworks(times = 3) {
+            const fireworks = [];
+            for (let i = 0; i < times; i++) {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.innerHTML = '<div class="before"></div><div class="after"></div>';
+                firework.style.animationDelay = `${i * 0.2}s`;
+                document.body.appendChild(firework);
+                fireworks.push(firework);
+            }
+            setTimeout(() => {
+                fireworks.forEach(fw => { if (fw.parentNode) fw.parentNode.removeChild(fw); });
+            }, 2500);
+        }
         let mainGameTimerId;
         let gameEndTimeStamp;
         let timeRemainingOnPause;
@@ -727,6 +823,8 @@
             stopButton.style.display = 'none';
 
             if (isWin) {
+                // Show fireworks celebration
+                showFireworks(3);
                 // Create and show modal
                 const modalOverlay = document.createElement('div');
                 modalOverlay.className = 'modal-overlay';
