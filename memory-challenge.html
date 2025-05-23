@@ -464,7 +464,8 @@
             
             card.addEventListener('click', () => handleCardClick(card));
             return card;
-        }        function setupBoard() {
+        }        
+        function setupBoard() {
             messageArea.textContent = "Getting ready...";
             actionButton.disabled = true;
             gameBoard.innerHTML = '';
@@ -487,6 +488,17 @@
                 gameBoard.appendChild(cardElement);
             });
             cardsOnBoard.forEach(card => card.classList.add('flipped'));
+
+            // Store initial positions for the shuffle animation
+            const boardRect = gameBoard.getBoundingClientRect();
+            cardsOnBoard.forEach(cardEl => {
+                const rect = cardEl.getBoundingClientRect();
+                cardPositions.push({
+                    top: rect.top - boardRect.top,
+                    left: rect.left - boardRect.left
+                });
+            });
+                    
         }
 
         function startGameSequence() {
@@ -501,7 +513,7 @@
                 if (targetCardElement) {
                     targetCardElement.classList.add('highlight-mc-target');
                 }
-
+                 
                 setTimeout(() => {
                     if (targetCardElement) targetCardElement.classList.remove('highlight-mc-target');
                     flipAllToBackAndPrepareShuffle();
@@ -515,6 +527,8 @@
             setTimeout(startShuffleAnimation, 1000);
         }
 
+
+
         async function startShuffleAnimation() {
             if (isShuffling || cardPositions.length !== cardsOnBoard.length) return;
             
@@ -523,6 +537,7 @@
             actionButton.disabled = true;
             messageArea.textContent = 'Shuffling!';
 
+            let animatedCardsData = [];
             cardsOnBoard.forEach((card, index) => {
                 card.style.position = 'absolute';
                 // Use the *stored* initial grid position corresponding to this card's current index in cardsOnBoard
@@ -530,14 +545,23 @@
                 const initialPos = cardPositions[index];
                 card.style.top = initialPos.top + 'px';
                 card.style.left = initialPos.left + 'px';
-            });
+
+                animatedCardsData.push({
+                    element: card,
+                    currentVisualSlotIndex: index
+                });
+            }); 
 
             // animatedCardsData now tracks the element and which *original slot position* it's currently in or moving to.
             // The slot indices (0, 1, 2, 3) correspond to the entries in cardPositions.
-            let animatedCardsData = cardsOnBoard.map((card, index) => ({
-                element: card,
-                currentVisualSlotIndex: index // The index of the cardPosition it's currently at
-            }));
+            // let animatedCardsData = [];
+            // cardsOnBoard.forEach((card, index) => {
+            //     animatedCardsData.push({
+            //         element: card,
+            //         currentVisualSlotIndex: index // The index of the cardPosition it's currently at
+            //     });
+            // });
+ 
 
             const levelConf = LEVELS[currentLevelKey];
             const numShuffleMoves = levelConf.shuffleMoves;
@@ -579,6 +603,8 @@
                 .sort((a, b) => a.currentVisualSlotIndex - b.currentVisualSlotIndex)
                 .map(data => data.element);
 
+            
+
             // Reset styles and re-append to DOM in the new visual order to go back to grid flow.
             // This step ensures the DOM order matches the visual order if that's important later,
             // and cleans up absolute positioning.
@@ -587,8 +613,10 @@
                 card.style.top = '';
                 card.style.left = '';
             });
+ 
+
             gameBoard.innerHTML = ''; // Clear board
-            cardsOnBoard.forEach(card => gameBoard.appendChild(card)); // Re-add in new visual order
+            cardsOnBoard.forEach(card => gameBoard.appendChild(card)); // Re-add in new visual order 
 
             isShuffling = false;
             canClickCard = true;
@@ -630,7 +658,7 @@
                     if (correctCardEl) { correctCardEl.classList.remove('flipped'); correctCardEl.classList.add('target-revealed', 'highlight-mc-target'); }
                     setTimeout(() => {
                         if (correctCardEl) {
-                            correctCardEl.classList.remove('highlight-mc-target');
+                            correctCardEl.classList.remove('highlight-mc-target-aaa');
                             if(clickedCardElement.dataset.id !== targetCardDefinition.id) {
                                 correctCardEl.classList.add('flipped'); correctCardEl.classList.remove('target-revealed');
                             }
@@ -654,21 +682,13 @@
         actionButton.addEventListener('click', () => { /* ... same as before ... */ 
              if (actionButton.textContent === "Start Game" || actionButton.textContent === "Play Again?" || actionButton.textContent === "Try Again?") {
                 gameActive = true; setupBoard();
-                 // Store initial positions for the shuffle animation
+                 
                 setTimeout(() => {
-                    const boardRect = gameBoard.getBoundingClientRect();
-                    cardsOnBoard.forEach(cardEl => {
-                        const rect = cardEl.getBoundingClientRect();
-                        cardPositions.push({
-                            top: rect.top - boardRect.top,
-                            left: rect.left - boardRect.left
-                        });
-                    });
                     startGameSequence();
                 }, 100);
             }
         });
-
+ 
         createLevelButtons();
         setupBoard();
         resetGameUI();
