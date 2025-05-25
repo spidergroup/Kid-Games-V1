@@ -331,11 +331,10 @@
 
 
         #innerGameSection {  
-            border: 0.05em solid black;
+            
         }
 
         #outerGameSection {
-            border: 0.05em solid red;
             width:100%;
             display: flex;
             justify-content: center;
@@ -486,6 +485,30 @@
             return card;
         }
 
+        function setupBoard_for_Init() {
+            messageArea.textContent = "Getting ready...";
+            actionButton.disabled = true;
+            gameBoard.innerHTML = '';
+            cardsOnBoard = [];
+
+            const numCards = currentDifficulty.rows * currentDifficulty.cols;
+            const availablePets = shuffleArray([...petDefinitions]);
+            const petsForGame = availablePets.slice(0, numCards);
+            targetPet = petsForGame[Math.floor(Math.random() * petsForGame.length)];
+
+            // Set grid
+            gameBoard.style.gridTemplateColumns = `repeat(${currentDifficulty.cols}, 1fr)`;
+            gameBoard.style.gridTemplateRows = `repeat(${currentDifficulty.rows}, 1fr)`;
+
+            petsForGame.forEach((pet, idx) => {
+                const card = createCardElement(pet, idx);
+                cardsOnBoard.push(card);
+                gameBoard.appendChild(card);
+            });
+
+            cardsOnBoard.forEach(card => card.classList.add('flipped'));
+        }
+
         function setupBoard() {
             messageArea.textContent = "Getting ready...";
             actionButton.disabled = true;
@@ -518,7 +541,7 @@
                 targetCard.classList.add('highlight-mc-target');
             }
             setTimeout(() => {
-                //if (targetCard) targetCard.classList.remove('highlight-mc-target');
+                if (targetCard) targetCard.classList.remove('highlight-mc-target');
                 flipAllToBackAndPrepareShuffle();
             }, 2000);
         }
@@ -636,7 +659,7 @@
         });
 
         createLevelButtons();
-        setupBoard();
+        setupBoard_for_Init();
         resetGameUI();
         messageArea.textContent = "Select difficulty and click Start!";
         // --- GAME LOGIC REPLACEMENT END ---
