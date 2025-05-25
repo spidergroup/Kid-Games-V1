@@ -404,19 +404,20 @@
             { id: 'bunny', name: 'Bunny', imageSrc: 'memory-game-assets/pets/bunny.jpg' },
             { id: 'cat', name: 'Cat', imageSrc: 'memory-game-assets/pets/cat.jpg' },
             { id: 'dog', name: 'Dog', imageSrc: 'memory-game-assets/pets/dog.jpg' },
-            { id: 'ferret', name: 'Ferret', imageSrc: 'memory-game-assets/pets/ferret.jpg' },
+            { id: 'ferret', name: 'Ferret', imageSrc: 'memory-game-assets/pets/ferret.jpg' },                                                                                                                                                                                                                                                                                                                                     
             { id: 'fish', name: 'Fish', imageSrc: 'memory-game-assets/pets/fish.jpg' },
             { id: 'guinea-pig', name: 'Guinea Pig', imageSrc: 'memory-game-assets/pets/guinea-pig.jpg' },
             { id: 'hamster', name: 'Hamster', imageSrc: 'memory-game-assets/pets/hamster.jpg' },
             { id: 'lizard', name: 'Lizard', imageSrc: 'memory-game-assets/pets/lizard.jpg' },
             { id: 'mouse', name: 'Mouse', imageSrc: 'memory-game-assets/pets/mouse.jpg' },
+            { id: 'parrot', name: 'Parrot', imageSrc: 'memory-game-assets/pets/parrot.jpg' },
             { id: 'turtle', name: 'Turtle', imageSrc: 'memory-game-assets/pets/turtle.jpg' }
         ];
 
         const LEVELS = {
-            easy:   { name: 'Easy', rows: 2, cols: 2, shuffles: 3 },
-            medium: { name: 'Medium', rows: 2, cols: 3, shuffles: 5 },
-            hard:   { name: 'Hard', rows: 3, cols: 4, shuffles: 7 }
+            easy:   { name: 'Easy', rows: 2, cols: 2, shuffles: 7 },
+            medium: { name: 'Medium', rows: 2, cols: 3, shuffles: 15 },
+            hard:   { name: 'Hard', rows: 2, cols: 2, shuffles: 20 }
         };
         let currentLevelKey = 'easy';
         let currentDifficulty = LEVELS[currentLevelKey];
@@ -576,7 +577,7 @@
                 cardsOnBoard[idx2].style.left = tempLeft;
                 cardsOnBoard[idx2].style.top = tempTop;
                 [cardsOnBoard[idx1], cardsOnBoard[idx2]] = [cardsOnBoard[idx2], cardsOnBoard[idx1]];
-                await new Promise(r => setTimeout(r, 600));
+                await new Promise(r => setTimeout(r, 500));
             }
             // Reset to grid
             gameBoard.innerHTML = '';
