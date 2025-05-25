@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Challenge!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap');
+
+        :root {
+            --blippi-orange: #FFA500; /* Bright Orange */
+            --blippi-blue: #007BFF;   /* Bright Blue */
+            --card-back-color: #4A90E2; /* A slightly different blue for card back */
+            --text-color-light: #FFFFFF;
+            --text-color-dark: #333333;
+            --success-color: #4CAF50;
+            --failure-color: #F44336;
+            --font-title: 'Fredoka One', cursive;
+            --font-text: 'Nunito', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-text);
+            background-color: #f0f8ff; /* Light sky blue background */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--text-color-dark);
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            background-color: var(--text-color-light);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 95%; /* Adjusted for potentially wider grids */
+            width: auto; /* Allow it to size based on content */
+        }
+
+        h1 {
+            font-family: var(--font-title);
+            color: var(--blippi-orange);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px var(--blippi-blue);
+        }
+
+        .instructions {
+            font-size: 1.2em;
+            color: var(--blippi-blue);
+            margin-bottom: 20px;
+            min-height: 40px; 
+            font-weight: bold;
+        }
+
+        #difficultySelection {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        #difficultySelection h2 {
+            font-family: var(--font-title);
+            color: var(--blippi-blue);
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        #difficultySelection label {
+            font-size: 1.1em;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+            display: inline-block; /* Better spacing for radio */
+        }
+        #difficultySelection label:hover {
+            background-color: #e0e0e0;
+        }
+        #difficultySelection input[type="radio"] {
+            margin-right: 8px;
+            accent-color: var(--blippi-orange);
+        }
+
+
+        .grid-container {
+            display: grid;
+            /* gap will be set by CSS, can be overridden by JS if needed for difficulty */
+            gap: 15px;
+            /* width and height are removed; will be determined by content and grid-template settings */
+            margin: 0 auto 20px auto;
+            perspective: 1000px;
+            position: relative;
+        }
+
+        .card {
+            width: 100px; /* Base size, adjust in media query if needed */
+            height: 100px;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .card-front {
+            background-color: #fff;
+            color: var(--text-color-dark);
+        }
+
+        .card-back {
+            background-color: var(--card-back-color);
+            color: var(--text-color-light);
+            transform: rotateY(180deg);
+            font-size: 50px;
+        }
+        
+        .card.highlight .card-inner {
+            animation: pulse 0.7s infinite alternate;
+        }
+        
+        .card.wiggle {
+            animation: wiggle 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 0 0 0px var(--blippi-orange); }
+            to { transform: scale(1.1); box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 0 0 10px rgba(255, 165, 0, 0.5); }
+        }
+        
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        button {
+            font-family: var(--font-text);
+            font-weight: bold;
+            background-color: var(--blippi-orange);
+            color: var(--text-color-light);
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background-color: #e68a00;
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+
+        #playAgainButton, #startButton {
+            margin-top: 10px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 9999;
+        }
+
+        .confetto {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            animation: fall 3s linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-20vh) rotateZ(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(120vh) rotateZ(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) { /* Tablet and smaller */
+            .game-container {
+                 padding: 15px;
+            }
+             .card {
+                width: 80px;
+                height: 80px;
+            }
+            .card-face {
+                font-size: 35px;
+            }
+            .card-back {
+                font-size: 40px;
+            }
+            .grid-container {
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) { /* Mobile */
+            h1 {
+                font-size: 2em;
+            }
+            .instructions {
+                font-size: 1em;
+            }
+            .card {
+                width: 65px; 
+                height: 65px;
+            }
+            .card-face {
+                font-size: 28px;
+            }
+             .card-back {
+                font-size: 35px;
+            }
+            .grid-container {
+                gap: 8px;
+            }
+            button {
+                font-size: 1em;
+                padding: 10px 20px;
+            }
+            #difficultySelection h2 {
+                font-size: 1.3em;
+            }
+            #difficultySelection label {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>Memory Challenge!</h1>
+        
+        <div id="difficultySelection">
+            <h2>Select Difficulty:</h2>
+            <div>
+                <label><input type="radio" name="difficulty" value="easy" checked> Easy (2x2)</label>
+                <label><input type="radio" name="difficulty" value="medium"> Medium (2x3)</label>
+                <label><input type="radio" name="difficulty" value="hard"> Hard (3x4)</label>
+            </div>
+        </div>
+
+        <div id="instructions" class="instructions">Welcome! Select a difficulty and start the game!</div>
+        
+        <div id="gameBoard" class="hidden">
+            <div id="gridContainer" class="grid-container">
+                <!-- Cards will be generated here by JavaScript -->
+            </div>
+        </div>
+
+        <button id="startButton">Start Game</button>
+        <button id="playAgainButton" class="hidden">Play Again</button>
+    </div>
+
+    <div id="confettiContainer" class="confetti-container"></div>
+
+    <script>
+        const vehicleEmojis = ['�', '�', '�', '�', '�', '🦊', '🐻', '�', '�', '�', '🦁', '�', '🐷', '�', '🐵', '�'];
+        const gridContainer = document.getElementById('gridContainer');
+        const instructionsDiv = document.getElementById('instructions');
+        const playAgainButton = document.getElementById('playAgainButton');
+        const startButton = document.getElementById('startButton');
+        const gameBoard = document.getElementById('gameBoard');
+        const confettiContainer = document.getElementById('confettiContainer');
+        const difficultySelectionDiv = document.getElementById('difficultySelection');
+
+        const DIFFICULTY_LEVELS = {
+            easy: { rows: 2, cols: 2, name: "Easy", shuffles: 3 },
+            medium: { rows: 2, cols: 3, name: "Medium", shuffles: 5 },
+            hard: { rows: 3, cols: 4, name: "Hard", shuffles: 7 }
+        };
+        let currentDifficultySetting = DIFFICULTY_LEVELS.easy; // Default
+
+        let currentCardsData = [];
+        let targetEmoji = '';  
+        let targetCardId = -1; // We'll use emoji to find the card after shuffle for simplicity
+        let canClick = false;                                                              
+        let gameInProgress = false;
+
+        const GAME_STATE_TIMEOUTS = {
+            SHOW_ALL: 2500,
+            HIGHLIGHT_TARGET: 2500,
+            PRE_SHUFFLE_DELAY: 500,
+            SHUFFLE_ANIMATION_SWAP: 600,
+            POST_GUESS_REVEAL: 1500
+        };
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function selectEmojisForGame(numEmojis) {
+            if (vehicleEmojis.length < numEmojis) {
+                console.error("Not enough unique emojis for the selected difficulty!");
+                // Fallback or error handling
+                return vehicleEmojis.slice(0, vehicleEmojis.length); 
+            }
+            const shuffledAllEmojis = shuffleArray([...vehicleEmojis]);
+            return shuffledAllEmojis.slice(0, numEmojis);
+        }
+
+        function createCardElement(emoji, id) {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.id = id; 
+            card.dataset.emoji = emoji; // Store emoji on the element for easier access
+
+            const cardInner = document.createElement('div');
+            cardInner.classList.add('card-inner');
+
+            const cardFront = document.createElement('div');
+            cardFront.classList.add('card-face', 'card-front');
+            cardFront.textContent = emoji;
+
+            const cardBack = document.createElement('div');
+            cardBack.classList.add('card-face', 'card-back');
+            cardBack.textContent = '❓';
+
+            cardInner.appendChild(cardFront);
+            cardInner.appendChild(cardBack);
+            card.appendChild(cardInner);
+
+            card.addEventListener('click', () => handleCardClick(card));
+            return card;
+        }
+        
+        async function initGame() {
+            gameInProgress = true;
+            canClick = false;
+            playAgainButton.classList.add('hidden');
+            instructionsDiv.textContent = 'Get ready...';
+            gridContainer.innerHTML = '';
+            currentCardsData = [];
+            clearConfetti();
+
+            const numCards = currentDifficultySetting.rows * currentDifficultySetting.cols;
+            const selectedEmojis = selectEmojisForGame(numCards);
+
+            if (selectedEmojis.length < numCards) {
+                instructionsDiv.textContent = "Error: Not enough vehicles for this level!";
+                startButton.classList.remove('hidden');
+                difficultySelectionDiv.classList.remove('hidden');
+                gameBoard.classList.add('hidden');
+                return;
+            }
+            
+            // Apply grid dimensions based on difficulty
+            gridContainer.style.gridTemplateColumns = `repeat(${currentDifficultySetting.cols}, 1fr)`;
+            gridContainer.style.gridTemplateRows = `repeat(${currentDifficultySetting.rows}, 1fr)`;
+            // Card sizes and gap are primarily controlled by CSS and media queries now
+
+            selectedEmojis.forEach((emoji, index) => {
+                const cardElement = createCardElement(emoji, index);
+                // Storing emoji on data-attribute of cardElement, so currentCardsData might just need domElement
+                currentCardsData.push({ domElement: cardElement, emoji: emoji, id: index });
+                gridContainer.appendChild(cardElement);
+            });
+
+            instructionsDiv.textContent = 'Look at all the vehicles!';
+            await sleep(GAME_STATE_TIMEOUTS.SHOW_ALL);
+
+            const targetIndexInSelected = Math.floor(Math.random() * selectedEmojis.length);
+            targetEmoji = selectedEmojis[targetIndexInSelected];
+            
+            // Find the card element to highlight (before shuffle)
+            // Note: DOM elements are already in grid, their order matches selectedEmojis initially.
+            const targetCardElementInitial = gridContainer.children[targetIndexInSelected];
+            if (targetCardElementInitial) {
+                 targetCardElementInitial.classList.add('highlight');
+            }
+            instructionsDiv.innerHTML = `Find the <span style="font-size:1.5em;">${targetEmoji}</span>!`;
+            await sleep(GAME_STATE_TIMEOUTS.HIGHLIGHT_TARGET);
+            if (targetCardElementInitial) {
+                targetCardElementInitial.classList.remove('highlight');
+            }
+
+
+            instructionsDiv.textContent = 'Get ready to shuffle!';
+            currentCardsData.forEach(cardData => cardData.domElement.classList.add('flipped'));
+            await sleep(GAME_STATE_TIMEOUTS.PRE_SHUFFLE_DELAY);
+
+            instructionsDiv.textContent = 'Shuffling...';
+            await animateShuffle(currentDifficultySetting.shuffles);
+            
+            instructionsDiv.innerHTML = `Where is the <span style="font-size:1.5em;">${targetEmoji}</span>? Click a card!`;
+            canClick = true;
+        }
+
+        async function animateShuffle(numShuffles) {
+            const cardsInGrid = Array.from(gridContainer.children);
+            
+            for (let i = 0; i < numShuffles; i++) {
+                const rects = cardsInGrid.map(card => card.getBoundingClientRect());
+                const gridRect = gridContainer.getBoundingClientRect();
+
+                cardsInGrid.forEach((card, idx) => {
+                    card.style.position = 'absolute';
+                    card.style.left = `${rects[idx].left - gridRect.left}px`;
+                    card.style.top = `${rects[idx].top - gridRect.top}px`;
+                    card.style.transition = 'left 0.5s ease-in-out, top 0.5s ease-in-out';
+                });
+                
+                await sleep(50);
+
+                let idx1 = Math.floor(Math.random() * cardsInGrid.length);
+                let idx2 = Math.floor(Math.random() * cardsInGrid.length);
+                while (idx1 === idx2) {
+                    idx2 = Math.floor(Math.random() * cardsInGrid.length);
+                }
+
+                const card1 = cardsInGrid[idx1];
+                const card2 = cardsInGrid[idx2];
+
+                const tempLeft = card1.style.left;
+                const tempTop = card1.style.top;
+                card1.style.left = card2.style.left;
+                card1.style.top = card2.style.top;
+                card2.style.left = tempLeft;
+                card2.style.top = tempTop;
+                
+                [cardsInGrid[idx1], cardsInGrid[idx2]] = [cardsInGrid[idx2], cardsInGrid[idx1]];
+                
+                await sleep(GAME_STATE_TIMEOUTS.SHUFFLE_ANIMATION_SWAP);
+            }
+            
+            gridContainer.innerHTML = '';
+            const newCurrentCardsData = [];
+            cardsInGrid.forEach(card => {
+                card.style.position = 'relative';
+                card.style.left = '';
+                card.style.top = '';
+                card.style.transition = ''; // Clear transition used for shuffle
+                // Re-add the specific card transition for flipping/wiggle if needed (it's on .card class already)
+                gridContainer.appendChild(card);
+                
+                // Rebuild currentCardsData based on new DOM order, though emoji is on dataset
+                const emoji = card.dataset.emoji;
+                const id = parseInt(card.dataset.id); // original id, might not be that useful post-shuffle
+                newCurrentCardsData.push({ domElement: card, emoji: emoji, id: id });
+            });
+            currentCardsData = newCurrentCardsData; // Reflects new visual order
+        }
+
+
+        async function handleCardClick(clickedCardElement) {
+            if (!canClick || !clickedCardElement.classList.contains('flipped')) {
+                return;
+            }
+            
+            const clickedEmoji = clickedCardElement.dataset.emoji;
+            canClick = false;
+            clickedCardElement.classList.remove('flipped');
+
+            if (clickedEmoji === targetEmoji) {
+                instructionsDiv.innerHTML = `You found the <span style="font-size:1.5em;">${targetEmoji}</span>! Great job! 🎉`;
+                triggerConfetti();
+            } else {
+                instructionsDiv.innerHTML = `Oops! That's a <span style="font-size:1.5em;">${clickedEmoji}</span>. The target was <span style="font-size:1.5em;">${targetEmoji}</span>.`;
+                
+                // Find the actual target card DOM element based on its emoji
+                const correctCardElement = Array.from(gridContainer.children).find(card => card.dataset.emoji === targetEmoji);
+
+                if (correctCardElement && correctCardElement !== clickedCardElement) {
+                    await sleep(300); // Small delay before revealing correct one
+                    if(correctCardElement.classList.contains('flipped')) { // Only flip if it's still face down
+                       correctCardElement.classList.remove('flipped');
+                    }
+                }
+            }
+
+            await sleep(GAME_STATE_TIMEOUTS.POST_GUESS_REVEAL);
+
+            Array.from(gridContainer.children).forEach(card => card.classList.remove('flipped'));
+            
+            playAgainButton.classList.remove('hidden');
+            gameInProgress = false;
+        }
+
+        function triggerConfetti() {
+            const colors = [getComputedStyle(document.documentElement).getPropertyValue('--blippi-orange').trim(), 
+                            getComputedStyle(document.documentElement).getPropertyValue('--blippi-blue').trim(), 
+                            '#FFEB3B'];
+            for (let i = 0; i < 100; i++) {
+                const confetto = document.createElement('div');
+                confetto.classList.add('confetto');
+                confetto.style.left = Math.random() * 100 + 'vw';
+                confetto.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetto.style.animationDelay = Math.random() * 0.5 + 's';
+                confettiContainer.appendChild(confetto);
+                setTimeout(() => {
+                    confetto.remove();
+                }, 3500);
+            }
+        }
+        
+        function clearConfetti() {
+            confettiContainer.innerHTML = '';
+        }
+        
+        startButton.addEventListener('click', () => {
+            const selectedDifficultyValue = document.querySelector('input[name="difficulty"]:checked').value;
+            currentDifficultySetting = DIFFICULTY_LEVELS[selectedDifficultyValue];
+
+            startButton.classList.add('hidden');
+            difficultySelectionDiv.classList.add('hidden');
+            gameBoard.classList.remove('hidden');
+            instructionsDiv.textContent = "Loading game..."; // Initial message before initGame takes over
+            initGame();
+        });
+
+        playAgainButton.addEventListener('click', () => {
+            if(gameInProgress) return;
+            // Difficulty remains the same as last game
+            initGame();
+        });
+
+    </script>
+</body>
+</html>
