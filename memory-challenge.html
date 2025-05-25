@@ -499,13 +499,32 @@
             { id: 'turtle', name: 'Turtle', imageSrc: 'memory-game-assets/pets/turtle.jpg' }
         ];
 
-        const LEVELS = {
-            easy:   { name: 'Easy', rows: 2, cols: 2, shuffles: 7, shuffleSpeed: 500 },
-            medium: { name: 'Medium', rows: 2, cols: 2, shuffles: 15, shuffleSpeed: 250 }, // 1.5x faster than easy
-            hard:   { name: 'Hard', rows: 2, cols: 2, shuffles: 25, shuffleSpeed: 200 }    // 2x faster than medium
-        };
-        let currentLevelKey = 'easy';
-        let currentDifficulty = LEVELS[currentLevelKey];
+        // LEVELS now depend on number of cards selected
+        function getLevelsByNumCards(numCards) {
+            if (numCards === 4) {
+                return {
+                    easy:   { name: 'Easy', rows: 2, cols: 2, shuffles: 7, shuffleSpeed: 500 },
+                    medium: { name: 'Medium', rows: 2, cols: 2, shuffles: 15, shuffleSpeed: 333 },
+                    hard:   { name: 'Hard', rows: 2, cols: 2, shuffles: 25, shuffleSpeed: 167 }
+                };
+            } else if (numCards === 6) {
+                return {
+                    easy:   { name: 'Easy', rows: 2, cols: 3, shuffles: 10, shuffleSpeed: 500 },
+                    medium: { name: 'Medium', rows: 2, cols: 3, shuffles: 18, shuffleSpeed: 333 },
+                    hard:   { name: 'Hard', rows: 2, cols: 3, shuffles: 30, shuffleSpeed: 167 }
+                };
+            } else {
+                // fallback for other numbers
+                return {
+                    easy:   { name: 'Easy', rows: 2, cols: Math.ceil(numCards/2), shuffles: 10, shuffleSpeed: 500 },
+                    medium: { name: 'Medium', rows: 2, cols: Math.ceil(numCards/2), shuffles: 18, shuffleSpeed: 333 },
+                    hard:   { name: 'Hard', rows: 2, cols: Math.ceil(numCards/2), shuffles: 30, shuffleSpeed: 167 }
+                };
+            }
+        }
+        var currentLevelKey = 'easy';
+        var currentDifficulty = getLevelsByNumCards(4)[currentLevelKey];
+        // (Removed duplicate declarations of currentLevelKey and currentDifficulty)
         let cardsOnBoard = [];
         let targetPet = null;
         let canClickCard = false;
@@ -520,6 +539,10 @@
         }
 
         function createLevelButtons() {
+            // Clear previous buttons
+            levelMenuContainer.innerHTML = '';
+            var numCards = getSelectedNumCards ? getSelectedNumCards() : 4;
+            var LEVELS = getLevelsByNumCards(numCards);
             Object.keys(LEVELS).forEach(key => {
                 const level = LEVELS[key];
                 const button = document.createElement('button');
@@ -535,6 +558,8 @@
         function selectLevel(levelKey) {
             if (gameActive) return;
             currentLevelKey = levelKey;
+            var numCards = getSelectedNumCards ? getSelectedNumCards() : 4;
+            var LEVELS = getLevelsByNumCards(numCards);
             currentDifficulty = LEVELS[currentLevelKey];
             Array.from(levelMenuContainer.children).forEach(btn => {
                 btn.classList.toggle('active', btn.id === `level-${levelKey}-button`);
@@ -589,8 +614,17 @@
             targetPet = petsForGame[Math.floor(Math.random() * petsForGame.length)];
 
             // Set grid
-            let cols = currentDifficulty.cols;
-            let rows = Math.ceil(numCards / cols);
+            let cols, rows;
+            if (numCards === 4) {
+                cols = 2;
+                rows = 2;
+            } else if (numCards === 6) {
+                cols = 3;
+                rows = 2;
+            } else {
+                cols = currentDifficulty.cols;
+                rows = Math.ceil(numCards / cols);
+            }
             gameBoard.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
             gameBoard.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
 
@@ -615,8 +649,14 @@
             targetPet = petsForGame[Math.floor(Math.random() * petsForGame.length)];
 
             // Set grid
-            let cols = currentDifficulty.cols;
-            let rows = Math.ceil(numCards / cols);
+            let cols, rows;
+            if (numCards === 4) {
+                cols = 2;
+                rows = 2;
+            } else {
+                cols = currentDifficulty.cols;
+                rows = Math.ceil(numCards / cols);
+            }
             gameBoard.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
             gameBoard.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
 
@@ -756,6 +796,16 @@
 
         createLevelButtons();
         setupBoard_for_Init();
+        // Update difficulty buttons when number of cards changes
+        document.querySelectorAll('input[name="numCards"]').forEach(input => {
+            input.addEventListener('change', () => {
+                createLevelButtons();
+                // Also update currentDifficulty to match new LEVELS
+                var numCards = getSelectedNumCards ? getSelectedNumCards() : 4;
+                var LEVELS = getLevelsByNumCards(numCards);
+                currentDifficulty = LEVELS[currentLevelKey];
+            });
+        });
         resetGameUI();
         messageArea.textContent = "Select difficulty and click Start!";
         // --- GAME LOGIC REPLACEMENT END ---
