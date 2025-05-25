@@ -156,7 +156,8 @@
             min-width: 150px;
         }
         #actionButton:hover:not(:disabled) { background-color: #27ae60; }
-        #actionButton:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }        .game-board-shell {
+        #actionButton:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }        
+        .game-board-shell {
             display: grid;
             grid-template-columns: repeat(2, 1fr); /* Always 2x2 for 4 cards */
             gap: 10px;
@@ -370,25 +371,13 @@
         const messageArea = document.getElementById('message-area');
         const winModalOverlay = document.getElementById('winModalOverlay');
         const winModalMessage = document.getElementById('winModalMessage');
-          const appColors = {
-            mcOrange: '#FF6F00',
-            mcBlue: '#005A9C',
-            mcYellow: '#f1c40f',
-            vehicleCardPurple: '#8A2BE2',
-            vehicleCardBlue: '#007BFF',
-            white: '#FFFFFF',
-            black: '#000000',
-            excavatorYellow: '#FFFF00',
-            gray: 'gray',
-            skyblue: 'skyblue',
-            green: 'green',
-            lightgray: 'lightgray',
-            red: 'red'
-        };
 
-        const petDefinitions = [            { id: 'bird', name: 'Bird', imageSrc: 'memory-game-assets/pets/bird.jpg' },
+        // --- GAME LOGIC REPLACEMENT START ---
+        const petDefinitions = [
+            { id: 'bird', name: 'Bird', imageSrc: 'memory-game-assets/pets/bird.jpg' },
             { id: 'bunny', name: 'Bunny', imageSrc: 'memory-game-assets/pets/bunny.jpg' },
-            { id: 'cat', name: 'Cat', imageSrc: 'memory-game-assets/pets/cat.jpg' },            { id: 'dog', name: 'Dog', imageSrc: 'memory-game-assets/pets/dog.jpg' },
+            { id: 'cat', name: 'Cat', imageSrc: 'memory-game-assets/pets/cat.jpg' },
+            { id: 'dog', name: 'Dog', imageSrc: 'memory-game-assets/pets/dog.jpg' },
             { id: 'ferret', name: 'Ferret', imageSrc: 'memory-game-assets/pets/ferret.jpg' },
             { id: 'fish', name: 'Fish', imageSrc: 'memory-game-assets/pets/fish.jpg' },
             { id: 'guinea-pig', name: 'Guinea Pig', imageSrc: 'memory-game-assets/pets/guinea-pig.jpg' },
@@ -397,22 +386,26 @@
             { id: 'mouse', name: 'Mouse', imageSrc: 'memory-game-assets/pets/mouse.jpg' },
             { id: 'turtle', name: 'Turtle', imageSrc: 'memory-game-assets/pets/turtle.jpg' }
         ];
-        
-        const LEVELS = { // numCards is fixed at 4 for shell game
-            easy:   { name: 'Easy', numCards: 4, shuffleTimeFactor: 1.0, shuffleMoves: 8 }, // Slower
-            medium: { name: 'Medium', numCards: 4, shuffleTimeFactor: 0.75, shuffleMoves: 12 }, // Medium
-            hard:   { name: 'Hard', numCards: 4, shuffleTimeFactor: 0.5, shuffleMoves: 16 }  // Faster
+
+        const LEVELS = {
+            easy:   { name: 'Easy', rows: 2, cols: 2, shuffles: 3 },
+            medium: { name: 'Medium', rows: 2, cols: 3, shuffles: 5 },
+            hard:   { name: 'Hard', rows: 3, cols: 4, shuffles: 7 }
         };
         let currentLevelKey = 'easy';
-
-        let cardsOnBoard = []; 
-        let targetCardDefinition = null;
-        let cardPositions = []; 
-        let gameActive = false;
+        let currentDifficulty = LEVELS[currentLevelKey];
+        let cardsOnBoard = [];
+        let targetPet = null;
         let canClickCard = false;
-        let isShuffling = false;
+        let gameActive = false;
 
-        function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array;}
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
 
         function createLevelButtons() {
             Object.keys(LEVELS).forEach(key => {
@@ -428,272 +421,198 @@
         }
 
         function selectLevel(levelKey) {
-            if (gameActive || isShuffling) return;
+            if (gameActive) return;
             currentLevelKey = levelKey;
+            currentDifficulty = LEVELS[currentLevelKey];
             Array.from(levelMenuContainer.children).forEach(btn => {
                 btn.classList.toggle('active', btn.id === `level-${levelKey}-button`);
             });
             resetGameUI();
         }
-        
-        function createCardElement(petDef) {            const card = document.createElement('div');
-            card.className = 'card-shell'; 
-            card.dataset.id = petDef.id;
-            card.dataset.name = petDef.name;
-            
+
+        function createCardElement(pet, id) {
+            const card = document.createElement('div');
+            card.className = 'card-shell';
+            card.dataset.id = pet.id;
+            card.dataset.name = pet.name;
+            card.dataset.index = id;
+
             const cardInner = document.createElement('div');
             cardInner.className = 'card-shell-inner';
-            
+
             const cardFront = document.createElement('div');
-            // Set bg-purple only for the target card, bg-blue for others
-            const bgColorClass = petDef.id === targetCardDefinition?.id ? 'bg-purple' : 'bg-blue';
-            cardFront.className = `card-shell-face card-shell-front ${bgColorClass}`;
-            
+            cardFront.className = 'card-shell-face card-shell-front bg-blue';
             const img = document.createElement('img');
-            img.src = petDef.imageSrc;
-            img.alt = petDef.name;
-            img.className = 'card-svg'; // Reuse the same class for styling
+            img.src = pet.imageSrc;
+            img.alt = pet.name;
+            img.className = 'card-svg';
             cardFront.appendChild(img);
-            
+
             const cardBack = document.createElement('div');
             cardBack.className = 'card-shell-face card-shell-back';
-            
+
             cardInner.appendChild(cardFront);
             cardInner.appendChild(cardBack);
             card.appendChild(cardInner);
-            
+
             card.addEventListener('click', () => handleCardClick(card));
             return card;
-        }        
+        }
+
         function setupBoard() {
             messageArea.textContent = "Getting ready...";
             actionButton.disabled = true;
             gameBoard.innerHTML = '';
             cardsOnBoard = [];
-            cardPositions = [];
 
-            const levelConf = LEVELS[currentLevelKey];
-            gameBoard.className = 'game-board-shell';
+            const numCards = currentDifficulty.rows * currentDifficulty.cols;
+            const availablePets = shuffleArray([...petDefinitions]);
+            const petsForGame = availablePets.slice(0, numCards);
+            targetPet = petsForGame[Math.floor(Math.random() * petsForGame.length)];
 
-            // Randomly select 4 unique pets for the game
-            let availablePets = shuffleArray([...petDefinitions]);
-            let itemsForLevel = availablePets.slice(0, 4); // Take the first 4 shuffled pets
-            
-            targetCardDefinition = itemsForLevel[Math.floor(Math.random() * itemsForLevel.length)];
+            // Set grid
+            gameBoard.style.gridTemplateColumns = `repeat(${currentDifficulty.cols}, 1fr)`;
+            gameBoard.style.gridTemplateRows = `repeat(${currentDifficulty.rows}, 1fr)`;
 
-            // Create the 4 cards
-            itemsForLevel.forEach(petDef => {
-                const cardElement = createCardElement(petDef);
-                cardsOnBoard.push(cardElement);
-                gameBoard.appendChild(cardElement);
+            petsForGame.forEach((pet, idx) => {
+                const card = createCardElement(pet, idx);
+                cardsOnBoard.push(card);
+                gameBoard.appendChild(card);
             });
-            cardsOnBoard.forEach(card => card.classList.add('flipped'));
+            cardsOnBoard.forEach(card => card.classList.remove('flipped'));
 
-            // Store initial positions for the shuffle animation
-            const boardRect = gameBoard.getBoundingClientRect();
-            cardsOnBoard.forEach(cardEl => {
-                const rect = cardEl.getBoundingClientRect();
-                cardPositions.push({
-                    top: rect.top - boardRect.top,
-                    left: rect.left - boardRect.left
-                });
-            });
-                    
+            setTimeout(() => highlightTargetCard(), 1200);
         }
 
-        function startGameSequence() {
-            // First show all cards face up for a moment
-            messageArea.textContent = "Look at all the pets...";
-            cardsOnBoard.forEach(card => card.classList.remove('flipped'));
-            
-            // After 2 seconds, highlight the target card
+        function highlightTargetCard() {
+            messageArea.textContent = `Find the ${targetPet.name}!`;
+            const targetCard = cardsOnBoard.find(card => card.dataset.id === targetPet.id);
+            if (targetCard) {
+                targetCard.classList.add('highlight-mc-target');
+            }
             setTimeout(() => {
-                messageArea.textContent = `Find the ${targetCardDefinition.name}!`;
-                const targetCardElement = cardsOnBoard.find(c => c.dataset.id === targetCardDefinition.id);
-                if (targetCardElement) {
-                    targetCardElement.classList.add('highlight-mc-target');
-                }
-                 
-                setTimeout(() => {
-                    if (targetCardElement) targetCardElement.classList.remove('highlight-mc-target');
-                    flipAllToBackAndPrepareShuffle();
-                }, 3000);
+                //if (targetCard) targetCard.classList.remove('highlight-mc-target');
+                flipAllToBackAndPrepareShuffle();
             }, 2000);
         }
 
-        function flipAllToBackAndPrepareShuffle() { /* ... same as before ... */ 
+        function flipAllToBackAndPrepareShuffle() {
             messageArea.textContent = 'Watch closely...';
             cardsOnBoard.forEach(card => card.classList.add('flipped'));
-            setTimeout(startShuffleAnimation, 1000);
+            setTimeout(() => startShuffleAnimation(), 1000);
         }
-
-
 
         async function startShuffleAnimation() {
-            if (isShuffling || cardPositions.length !== cardsOnBoard.length) return;
-            
-            isShuffling = true;
-            canClickCard = false;
-            actionButton.disabled = true;
             messageArea.textContent = 'Shuffling!';
-
-            let animatedCardsData = [];
-            cardsOnBoard.forEach((card, index) => {
+            let cardPositions = cardsOnBoard.map(card => card.getBoundingClientRect());
+            let boardRect = gameBoard.getBoundingClientRect();
+            // Set absolute positions for animation
+            cardsOnBoard.forEach((card, idx) => {
                 card.style.position = 'absolute';
-                // Use the *stored* initial grid position corresponding to this card's current index in cardsOnBoard
-                // This ensures cards "lift" from their correct spots if cardsOnBoard was pre-shuffled visually.
-                const initialPos = cardPositions[index];
-                card.style.top = initialPos.top + 'px';
-                card.style.left = initialPos.left + 'px';
-
-                animatedCardsData.push({
-                    element: card,
-                    currentVisualSlotIndex: index
-                });
-            }); 
-
-            // animatedCardsData now tracks the element and which *original slot position* it's currently in or moving to.
-            // The slot indices (0, 1, 2, 3) correspond to the entries in cardPositions.
-            // let animatedCardsData = [];
-            // cardsOnBoard.forEach((card, index) => {
-            //     animatedCardsData.push({
-            //         element: card,
-            //         currentVisualSlotIndex: index // The index of the cardPosition it's currently at
-            //     });
-            // });
- 
-
-            const levelConf = LEVELS[currentLevelKey];
-            const numShuffleMoves = levelConf.shuffleMoves;
-            const shuffleSpeedFactor = levelConf.shuffleTimeFactor;
-
-            for (let i = 0; i < numShuffleMoves; i++) {
-                // Pick two different *elements* to swap.
-                let elementIdx1 = Math.floor(Math.random() * animatedCardsData.length);
-                let elementIdx2 = Math.floor(Math.random() * animatedCardsData.length);
-                while (elementIdx2 === elementIdx1) {
-                    elementIdx2 = Math.floor(Math.random() * animatedCardsData.length);
-                }
-
-                const cardData1 = animatedCardsData[elementIdx1];
-                const cardData2 = animatedCardsData[elementIdx2];
-
-                // Target visual positions are the *original grid positions* of each other's *current slots*.
-                const targetVisualPosForCard1 = cardPositions[cardData2.currentVisualSlotIndex];
-                const targetVisualPosForCard2 = cardPositions[cardData1.currentVisualSlotIndex];
-
-                cardData1.element.style.top = targetVisualPosForCard1.top + 'px';
-                cardData1.element.style.left = targetVisualPosForCard1.left + 'px';
-                
-                cardData2.element.style.top = targetVisualPosForCard2.top + 'px';
-                cardData2.element.style.left = targetVisualPosForCard2.left + 'px';
-
-                // Swap their currentVisualSlotIndex trackers
-                let tempSlotIndex = cardData1.currentVisualSlotIndex;
-                cardData1.currentVisualSlotIndex = cardData2.currentVisualSlotIndex;
-                cardData2.currentVisualSlotIndex = tempSlotIndex;
-                
-                await new Promise(resolve => setTimeout(resolve, 400 * shuffleSpeedFactor));
+                card.style.left = `${cardPositions[idx].left - boardRect.left}px`;
+                card.style.top = `${cardPositions[idx].top - boardRect.top}px`;
+                card.style.transition = 'left 0.5s, top 0.5s';
+            });
+            await new Promise(r => setTimeout(r, 50));
+            for (let i = 0; i < currentDifficulty.shuffles; i++) {
+                let idx1 = Math.floor(Math.random() * cardsOnBoard.length);
+                let idx2 = Math.floor(Math.random() * cardsOnBoard.length);
+                while (idx1 === idx2) idx2 = Math.floor(Math.random() * cardsOnBoard.length);
+                // Swap positions
+                let tempLeft = cardsOnBoard[idx1].style.left;
+                let tempTop = cardsOnBoard[idx1].style.top;
+                cardsOnBoard[idx1].style.left = cardsOnBoard[idx2].style.left;
+                cardsOnBoard[idx1].style.top = cardsOnBoard[idx2].style.top;
+                cardsOnBoard[idx2].style.left = tempLeft;
+                cardsOnBoard[idx2].style.top = tempTop;
+                [cardsOnBoard[idx1], cardsOnBoard[idx2]] = [cardsOnBoard[idx2], cardsOnBoard[idx1]];
+                await new Promise(r => setTimeout(r, 600));
             }
-            
-            // The elements are now visually in their final shuffled spots.
-            // We need to update the `cardsOnBoard` array to reflect this new visual order for the DOM.
-            // Sort animatedCardsData by the slot they ended up in to reconstruct the visual order.
-            cardsOnBoard = animatedCardsData
-                .sort((a, b) => a.currentVisualSlotIndex - b.currentVisualSlotIndex)
-                .map(data => data.element);
-
-            
-
-            // Reset styles and re-append to DOM in the new visual order to go back to grid flow.
-            // This step ensures the DOM order matches the visual order if that's important later,
-            // and cleans up absolute positioning.
+            // Reset to grid
+            gameBoard.innerHTML = '';
             cardsOnBoard.forEach(card => {
                 card.style.position = '';
-                card.style.top = '';
                 card.style.left = '';
+                card.style.top = '';
+                card.style.transition = '';
+                gameBoard.appendChild(card);
             });
- 
-
-            gameBoard.innerHTML = ''; // Clear board
-            cardsOnBoard.forEach(card => gameBoard.appendChild(card)); // Re-add in new visual order 
-
-            isShuffling = false;
             canClickCard = true;
-            actionButton.disabled = false; 
-            messageArea.textContent = `Where is the ${targetCardDefinition.name}? Click a card!`;
+            messageArea.textContent = `Where is the ${targetPet.name}? Click a card!`;
         }
 
-        function handleCardClick(clickedCardElement) { /* ... same as before ... */ 
-            if (!canClickCard || isShuffling || !gameActive) return;
-            canClickCard = false; actionButton.disabled = true;
-            clickedCardElement.classList.remove('flipped');            if (clickedCardElement.dataset.id === targetCardDefinition.id) {
-                clickedCardElement.classList.add('target-revealed');
-                messageArea.textContent = `Yeah! You found the ${targetCardDefinition.name}!`;
-                winModalMessage.textContent = `You found the ${targetCardDefinition.name}!`;
-            // Show the Firework animation 3 times
-            const fireworks = [];
-            for (let i = 0; i < 3; i++) {
-                const firework = document.createElement('div');
-                firework.className = 'firework';
-                firework.innerHTML = '<div class="before"></div><div class="after"></div>';
-                // Stagger each firework slightly for a more dynamic effect
-                firework.style.animationDelay = `${i * 0.2}s`;
-                document.body.appendChild(firework);
-                fireworks.push(firework);
-            }
-
-            winModalOverlay.classList.add('show');
-            setTimeout(() => {
-                winModalOverlay.classList.remove('show');
-                // Remove all fireworks
-                fireworks.forEach(fw => { if (fw.parentNode) fw.parentNode.removeChild(fw); });
-                resetGameUI('Play Again?');
-            }, 2500);
-            } else {
-                clickedCardElement.classList.add('incorrect-revealed');
-                messageArea.textContent = `Oops! That's not the ${targetCardDefinition.name}.`;
+        function handleCardClick(card) {
+            if (!canClickCard) return;
+            canClickCard = false;
+            card.classList.remove('flipped');
+            if (card.dataset.id === targetPet.id) {
+                card.classList.add('target-revealed');
+                messageArea.textContent = `Yeah! You found the ${targetPet.name}!`;
+                winModalMessage.textContent = `You found the ${targetPet.name}!`;
+                // Firework animation
+                const fireworks = [];
+                for (let i = 0; i < 3; i++) {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.innerHTML = '<div class="before"></div><div class="after"></div>';
+                    firework.style.animationDelay = `${i * 0.2}s`;
+                    document.body.appendChild(firework);
+                    fireworks.push(firework);
+                }
+                winModalOverlay.classList.add('show');
                 setTimeout(() => {
-                    const correctCardEl = cardsOnBoard.find(c => c.dataset.id === targetCardDefinition.id && c !== clickedCardElement);
-                    if (correctCardEl) { correctCardEl.classList.remove('flipped'); correctCardEl.classList.add('target-revealed', 'highlight-mc-target'); }
+                    winModalOverlay.classList.remove('show');
+                    fireworks.forEach(fw => { if (fw.parentNode) fw.parentNode.removeChild(fw); });
+                    resetGameUI('Play Again?');
+                }, 2500);
+            } else {
+                card.classList.add('incorrect-revealed');
+                messageArea.textContent = `Oops! That's not the ${targetPet.name}.`;
+                setTimeout(() => {
+                    const correctCard = cardsOnBoard.find(c => c.dataset.id === targetPet.id && c !== card);
+                    if (correctCard) {
+                        correctCard.classList.remove('flipped');
+                        correctCard.classList.add('target-revealed', 'highlight-mc-target');
+                    }
                     setTimeout(() => {
-                        if (correctCardEl) {
-                            correctCardEl.classList.remove('highlight-mc-target-aaa');
-                            if(clickedCardElement.dataset.id !== targetCardDefinition.id) {
-                                correctCardEl.classList.add('flipped'); correctCardEl.classList.remove('target-revealed');
+                        if (correctCard) {
+                            correctCard.classList.remove('highlight-mc-target');
+                            if(card.dataset.id !== targetPet.id) {
+                                correctCard.classList.add('flipped');
+                                correctCard.classList.remove('target-revealed');
                             }
                         }
-                        clickedCardElement.classList.add('flipped'); clickedCardElement.classList.remove('incorrect-revealed');
+                        card.classList.add('flipped');
+                        card.classList.remove('incorrect-revealed');
                         resetGameUI('Try Again?');
                     }, 2000);
                 }, 1500);
             }
         }
-        
-        function resetGameUI(buttonText = "Start Game") { /* ... same as before ... */ 
-            gameActive = false; canClickCard = false; isShuffling = false;
-            actionButton.textContent = buttonText; actionButton.disabled = false;
+
+        function resetGameUI(buttonText = "Start Game") {
+            gameActive = false;
+            canClickCard = false;
+            actionButton.textContent = buttonText;
+            actionButton.disabled = false;
             if (buttonText === "Start Game" || buttonText === "Play Again?" || buttonText === "Try Again?") {
-                 messageArea.textContent = "Select difficulty and click Start!";
-                 if (buttonText === "Try Again?") messageArea.textContent = "Give it another go!";
+                messageArea.textContent = "Select difficulty and click Start!";
+                if (buttonText === "Try Again?") messageArea.textContent = "Give it another go!";
             }
         }
 
-        actionButton.addEventListener('click', () => { /* ... same as before ... */ 
-             if (actionButton.textContent === "Start Game" || actionButton.textContent === "Play Again?" || actionButton.textContent === "Try Again?") {
-                gameActive = true; setupBoard();
-                 
-                setTimeout(() => {
-                    startGameSequence();
-                }, 100);
+        actionButton.addEventListener('click', () => {
+            if (actionButton.textContent === "Start Game" || actionButton.textContent === "Play Again?" || actionButton.textContent === "Try Again?") {
+                gameActive = true;
+                setupBoard();
             }
         });
- 
+
         createLevelButtons();
         setupBoard();
         resetGameUI();
         messageArea.textContent = "Select difficulty and click Start!";
-
+        // --- GAME LOGIC REPLACEMENT END ---
     </script>
     <a href="index.html" class="home-button">
         🏠 Back to Main Menu
