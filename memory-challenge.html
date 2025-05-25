@@ -229,7 +229,73 @@
         }
         a.home-button:active { transform: translateY(1px); box-shadow: 0 2px #c0392b; }
 
-        /* --- Firework Animation --- */
+         
+        /* Custom checkbox style for Number of Cards */
+        .num-cards-checkbox {
+            position: relative;
+            padding-left: 30px;
+            cursor: pointer;
+            font-size: 1.05em;
+            color: #f0e68c;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .num-cards-checkbox input[type="radio"] {
+            opacity: 0;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 22px;
+            height: 22px;
+            margin: 0;
+            z-index: 2;
+            cursor: pointer;
+        }
+        .custom-checkbox {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 22px;
+            height: 22px;
+            background: #222e3a;
+            border: 2px solid var(--mc-yellow);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s;
+        }
+        .num-cards-checkbox input[type="radio"]:checked ~ .custom-checkbox {
+            background: var(--mc-yellow);
+            border-color: var(--mc-yellow);
+        }
+        .custom-checkbox:after {
+            content: '';
+            display: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            border: solid #222e3a;
+            border-width: 0 0.18em 0.18em 0;
+            transform: rotate(45deg);
+            margin-left: 5px;
+            margin-top: 1px;
+        }
+        .num-cards-checkbox input[type="radio"]:checked ~ .custom-checkbox:after {
+            display: block;
+            content: '';
+            width: 8px;
+            height: 14px;
+            border: solid #222e3a;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+            margin-left: 6px;
+            margin-top: -2px;
+        }
+        
+         /* --- Firework Animation --- */
         .firework {
             position: fixed;
             left: 0; top: 0; width: 100vw; height: 100vh;
@@ -310,8 +376,8 @@
         }
 
         @keyframes pulse-mc {
-            0%, 100% { box-shadow: 0 0 8px var(--mc-yellow), 0 0 15px var(--mc-yellow); transform: scale(1); }
-            50% { box-shadow: 0 0 15px var(--mc-yellow), 0 0 25px var(--mc-yellow); transform: scale(1.03); }
+            0%, 100% { box-shadow: 0 0 8px var(--mc-orange), 0 0 15px var(--mc-orange); transform: scale(1); }
+            50% { box-shadow: 0 0 15px var(--mc-orange), 0 0 25px var(--mc-orange); transform: scale(1.03); }
         }
         .highlight-mc-target .card-shell-inner { animation: pulse-mc 1s infinite alternate; }
         @keyframes shake {
@@ -353,7 +419,7 @@
 
     <div class="game-desc" style="max-width: 500px; margin: 0 auto 18px auto; color: #f0e68c; font-size: .9rem; text-align: center;">
         Test your memory and attention!<br>
-        <b>How to play:</b> Watch as four cute pet cards are shuffled. Remember the position of the highlighted pet, then try to find it after the shuffle!<br>
+        <b>How to play:</b> Choose 4 or 6 cards to play with. Watch as the cards are shuffled and one pet is highlighted. Remember its position, then try to find it after the shuffle!<br>
         <ul style="margin: 10px 0 0 0; padding-left: 1.2em; text-align: left; display: inline-block;">
             <li>Choose your difficulty and press <b>Start Game</b>.</li>
             <li>All cards are revealed. Memorize the highlighted pet!</li>
@@ -365,6 +431,21 @@
         Play as many times as you like!
     </div>
 
+        <div id="num-cards-selection" style="margin-bottom: 10px; display: flex; align-items: center; gap: 18px;">
+            <span style="font-weight:600; color:#f0e68c;">Number of Cards:</span>
+            <label class="num-cards-checkbox">
+                <input type="radio" name="numCards" value="4" checked>
+                <span class="custom-checkbox"></span>
+                4
+            </label>
+            <label class="num-cards-checkbox">
+                <input type="radio" name="numCards" value="6">
+                <span class="custom-checkbox"></span>
+                6
+            </label>
+        </div>
+        
+    
     <div class="menus-wrapper">
         <div class="menu-container level-menu-container">
             <h2 class="menu-title">Select Difficulty:</h2>
@@ -372,7 +453,9 @@
         </div>
     </div>
 
+
     <div id="game-interaction-area">
+        
         <div id="message-area">Select difficulty and click Start!</div>
         <div id="action-button-container">
             <button id="actionButton">Start Game</button>
@@ -415,13 +498,32 @@
             { id: 'turtle', name: 'Turtle', imageSrc: 'memory-game-assets/pets/turtle.jpg' }
         ];
 
-        const LEVELS = {
-            easy:   { name: 'Easy', rows: 2, cols: 2, shuffles: 7, shuffleSpeed: 500 },
-            medium: { name: 'Medium', rows: 2, cols: 2, shuffles: 15, shuffleSpeed: 250 }, // 1.5x faster than easy
-            hard:   { name: 'Hard', rows: 2, cols: 2, shuffles: 25, shuffleSpeed: 200 }    // 2x faster than medium
-        };
-        let currentLevelKey = 'easy';
-        let currentDifficulty = LEVELS[currentLevelKey];
+        // LEVELS now depend on number of cards selected
+        function getLevelsByNumCards(numCards) {
+            if (numCards === 4) {
+                return {
+                    easy:   { name: 'Easy', rows: 2, cols: 2, shuffles: 7, shuffleSpeed: 500 },
+                    medium: { name: 'Medium', rows: 2, cols: 2, shuffles: 15, shuffleSpeed: 300 },
+                    hard:   { name: 'Hard', rows: 2, cols: 2, shuffles: 25, shuffleSpeed: 167 }
+                };
+            } else if (numCards === 6) {
+                return {
+                    easy:   { name: 'Easy', rows: 2, cols: 3, shuffles: 10, shuffleSpeed: 500 },
+                    medium: { name: 'Medium', rows: 2, cols: 3, shuffles: 18, shuffleSpeed: 300 },
+                    hard:   { name: 'Hard', rows: 2, cols: 3, shuffles: 30, shuffleSpeed: 167 }
+                };
+            } else {
+                // fallback for other numbers
+                return {
+                    easy:   { name: 'Easy', rows: 2, cols: Math.ceil(numCards/2), shuffles: 10, shuffleSpeed: 500 },
+                    medium: { name: 'Medium', rows: 2, cols: Math.ceil(numCards/2), shuffles: 18, shuffleSpeed: 300 },
+                    hard:   { name: 'Hard', rows: 2, cols: Math.ceil(numCards/2), shuffles: 30, shuffleSpeed: 167 }
+                };
+            }
+        }
+        var currentLevelKey = 'easy';
+        var currentDifficulty = getLevelsByNumCards(4)[currentLevelKey];
+        // (Removed duplicate declarations of currentLevelKey and currentDifficulty)
         let cardsOnBoard = [];
         let targetPet = null;
         let canClickCard = false;
@@ -436,6 +538,10 @@
         }
 
         function createLevelButtons() {
+            // Clear previous buttons
+            levelMenuContainer.innerHTML = '';
+            var numCards = getSelectedNumCards ? getSelectedNumCards() : 4;
+            var LEVELS = getLevelsByNumCards(numCards);
             Object.keys(LEVELS).forEach(key => {
                 const level = LEVELS[key];
                 const button = document.createElement('button');
@@ -451,6 +557,8 @@
         function selectLevel(levelKey) {
             if (gameActive) return;
             currentLevelKey = levelKey;
+            var numCards = getSelectedNumCards ? getSelectedNumCards() : 4;
+            var LEVELS = getLevelsByNumCards(numCards);
             currentDifficulty = LEVELS[currentLevelKey];
             Array.from(levelMenuContainer.children).forEach(btn => {
                 btn.classList.toggle('active', btn.id === `level-${levelKey}-button`);
@@ -466,9 +574,7 @@
             card.dataset.index = id;
 
             const cardInner = document.createElement('div');
-            cardInner.className = 'card-shell-inner';
-
-            const cardFront = document.createElement('div');
+            cardInner.className = 'card-shell-inner';            const cardFront = document.createElement('div');
             cardFront.className = 'card-shell-face card-shell-front bg-blue';
             const img = document.createElement('img');
             img.src = pet.imageSrc;
@@ -487,20 +593,37 @@
             return card;
         }
 
+
+        function getSelectedNumCards() {
+            const selected = document.querySelector('input[name="numCards"]:checked');
+            return selected ? parseInt(selected.value, 10) : 4;
+        }
+
         function setupBoard_for_Init() {
             messageArea.textContent = "Getting ready...";
             actionButton.disabled = true;
             gameBoard.innerHTML = '';
             cardsOnBoard = [];
 
-            const numCards = currentDifficulty.rows * currentDifficulty.cols;
+            const numCards = getSelectedNumCards();
             const availablePets = shuffleArray([...petDefinitions]);
             const petsForGame = availablePets.slice(0, numCards);
             targetPet = petsForGame[Math.floor(Math.random() * petsForGame.length)];
 
             // Set grid
-            gameBoard.style.gridTemplateColumns = `repeat(${currentDifficulty.cols}, 1fr)`;
-            gameBoard.style.gridTemplateRows = `repeat(${currentDifficulty.rows}, 1fr)`;
+            let cols, rows;
+            if (numCards === 4) {
+                cols = 2;
+                rows = 2;
+            } else if (numCards === 6) {
+                cols = 3;
+                rows = 2;
+            } else {
+                cols = currentDifficulty.cols;
+                rows = Math.ceil(numCards / cols);
+            }
+            gameBoard.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            gameBoard.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
 
             petsForGame.forEach((pet, idx) => {
                 const card = createCardElement(pet, idx);
@@ -517,14 +640,25 @@
             gameBoard.innerHTML = '';
             cardsOnBoard = [];
 
-            const numCards = currentDifficulty.rows * currentDifficulty.cols;
+            const numCards = getSelectedNumCards();
             const availablePets = shuffleArray([...petDefinitions]);
             const petsForGame = availablePets.slice(0, numCards);
             targetPet = petsForGame[Math.floor(Math.random() * petsForGame.length)];
 
             // Set grid
-            gameBoard.style.gridTemplateColumns = `repeat(${currentDifficulty.cols}, 1fr)`;
-            gameBoard.style.gridTemplateRows = `repeat(${currentDifficulty.rows}, 1fr)`;
+            let cols, rows;
+            if (numCards === 4) {
+                cols = 2;
+                rows = 2;
+            } else if (numCards === 6) {
+                cols = 3;
+                rows = 2;
+            } else {
+                cols = currentDifficulty.cols;
+                rows = Math.ceil(numCards / cols);
+            }
+            gameBoard.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            gameBoard.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
 
             petsForGame.forEach((pet, idx) => {
                 const card = createCardElement(pet, idx);
@@ -540,10 +674,13 @@
             messageArea.textContent = `Find the ${targetPet.name}!`;
             const targetCard = cardsOnBoard.find(card => card.dataset.id === targetPet.id);
             if (targetCard) {
+                
                 targetCard.classList.add('highlight-mc-target');
             }
             setTimeout(() => {
-                if (targetCard) targetCard.classList.remove('highlight-mc-target');
+                if (targetCard) {
+                    targetCard.classList.remove('highlight-mc-target');
+                }
                 flipAllToBackAndPrepareShuffle();
             }, 2000);
         }
@@ -658,10 +795,42 @@
                 gameActive = true;
                 setupBoard();
             }
-        });
-
-        createLevelButtons();
+        });        createLevelButtons();
         setupBoard_for_Init();
+
+        // Listen for both click and change events on number of cards selection
+        document.querySelectorAll('input[name="numCards"]').forEach(input => {
+            const updateGameState = function() {
+                // Update LEVELS and currentDifficulty
+                const numCards = parseInt(this.value, 10);
+                window.LEVELS = getLevelsByNumCards(numCards);
+                currentDifficulty = window.LEVELS[currentLevelKey];
+
+                // Update level buttons to match new number of cards
+                if (levelMenuContainer) {
+                    levelMenuContainer.innerHTML = '';
+                    createLevelButtons();
+                }
+
+                // Reset the board with new number of cards
+                setupBoard_for_Init();
+                resetGameUI();
+
+                // Update grid layout
+                const gameBoard = document.getElementById('gameBoardShell');
+                if (numCards === 4) {
+                    gameBoard.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                    gameBoard.style.gridTemplateRows = 'repeat(2, 1fr)';
+                } else if (numCards === 6) {
+                    gameBoard.style.gridTemplateColumns = 'repeat(3, 1fr)';
+                    gameBoard.style.gridTemplateRows = 'repeat(2, 1fr)';
+                }
+            };
+
+            // Add both click and change event listeners
+            input.addEventListener('click', updateGameState);
+            input.addEventListener('change', updateGameState);
+        });
         resetGameUI();
         messageArea.textContent = "Select difficulty and click Start!";
         // --- GAME LOGIC REPLACEMENT END ---
