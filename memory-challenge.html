@@ -415,9 +415,9 @@
         ];
 
         const LEVELS = {
-            easy:   { name: 'Easy', rows: 2, cols: 2, shuffles: 7 },
-            medium: { name: 'Medium', rows: 2, cols: 3, shuffles: 15 },
-            hard:   { name: 'Hard', rows: 2, cols: 2, shuffles: 20 }
+            easy:   { name: 'Easy', rows: 2, cols: 2, shuffles: 7, shuffleSpeed: 500 },
+            medium: { name: 'Medium', rows: 2, cols: 2, shuffles: 15, shuffleSpeed: 250 }, // 1.5x faster than easy
+            hard:   { name: 'Hard', rows: 2, cols: 2, shuffles: 25, shuffleSpeed: 200 }    // 2x faster than medium
         };
         let currentLevelKey = 'easy';
         let currentDifficulty = LEVELS[currentLevelKey];
@@ -577,7 +577,7 @@
                 cardsOnBoard[idx2].style.left = tempLeft;
                 cardsOnBoard[idx2].style.top = tempTop;
                 [cardsOnBoard[idx1], cardsOnBoard[idx2]] = [cardsOnBoard[idx2], cardsOnBoard[idx1]];
-                await new Promise(r => setTimeout(r, 500));
+                await new Promise(r => setTimeout(r, currentDifficulty.shuffleSpeed));
             }
             // Reset to grid
             gameBoard.innerHTML = '';
