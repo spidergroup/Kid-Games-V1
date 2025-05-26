@@ -619,20 +619,20 @@
                         }
                     } else if (currentCategory === 'alphabet') {
                         textSpan.style.fontSize = 'clamp(5.4rem, 30vw / var(--card-cols, 4), 9rem)';
-                        // Assign a unique, brighter color for each letter A-L                        
+                        // Assign a unique, brighter color for each letter A-L                          
                         const letterColors = [                            
-                            '#FF1744', // A - Crimson Red
-                            '#D500F9', // B - Magenta
-                            '#2979FF', // C - Azure Blue
-                            '#1DE9B6', // D - Aqua Green
-                            '#3c1642', // E - Emerald Green
-                            '#FFEA00', // F - Sunflower Yellow
-                            '#FF9100', // G - Tangerine Orange
-                            '#A1887F', // H - Taupe
-                            '#BDBDBD', // I - Silver Gray
-                            '#00B0FF', // J - Sky Blue
-                            '#C6FF00', // K - Neon Lime
-                            '#FF4081'  // L - Hot Pink
+                            '#bc6c25', // A - Burnt Orange
+                            '#003049', // B - Dark Navy
+                            '#6030e8', // C - Royal Purple
+                            '#023e8a', // D - Navy Blue
+                            '#3c1642', // E - Deep Purple
+                            '#fca311', // F - Orange
+                            '#9e2a2b', // G - Burgundy Red
+                            '#c9a227', // H - Golden Yellow                            
+                            '#1e6f8c', // I - Steel Blue
+                            '#ef476f', // J - Bright Pink
+                            '#3772ff', // K - Electric Blue
+                            '#4f772d'  // L - Forest Green
                         ];
                         const idx = 'ABCDEFGHIJKL'.indexOf(itemValue.toString().toUpperCase());
                         if (idx >= 0 && idx < letterColors.length) {
