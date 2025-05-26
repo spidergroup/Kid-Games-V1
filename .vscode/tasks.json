@@ -1,0 +1,110 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Project",
+            "type": "npm",
+            "script": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Minify to Dist",
+            "type": "shell",
+            "windows": {
+                "command": "powershell",
+                "args": [
+                    "-NoProfile",
+                    "-ExecutionPolicy", "Bypass",
+                    "-Command", "& {",
+                    "if (!(Test-Path 'dist')) { New-Item -ItemType Directory -Force -Path 'dist' };",
+                    "Get-ChildItem -Recurse -Include *.js,*.css,*.html |",
+                    "ForEach-Object {",
+                    "    $distPath = Join-Path 'dist' $_.Name;",
+                    "    switch ($_.Extension) {",
+                    "        '.js'   { node_modules\\.bin\\terser $_.FullName -o $distPath }",
+                    "        '.css'  { node_modules\\.bin\\cleancss -o $distPath $_.FullName }",
+                    "        '.html' { node_modules\\.bin\\html-minifier --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype --minify-css true --minify-js true -o $distPath $_.FullName }",
+                    "    }",
+                    "}"
+                ]
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Minify Current to Dist",
+            "type": "shell",
+            "windows": {
+                "command": "powershell",
+                "args": [
+                    "-NoProfile",
+                    "-ExecutionPolicy", "Bypass",
+                    "-Command", "& {",
+                    "if (!(Test-Path 'dist')) { New-Item -ItemType Directory -Force -Path 'dist' };",
+                    "switch ([System.IO.Path]::GetExtension('${file}')) {",
+                    "    '.js'   { node_modules\\.bin\\terser '${file}' -o 'dist\\${fileBasename}' }",
+                    "    '.css'  { node_modules\\.bin\\cleancss -o 'dist\\${fileBasename}' '${file}' }",
+                    "    '.html' { node_modules\\.bin\\html-minifier --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype --minify-css true --minify-js true -o 'dist\\${fileBasename}' '${file}' }",
+                    "    default { Write-Error 'Unsupported file type' }",
+                    "}"
+                ]
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Copy Assets to Dist",
+            "type": "shell",
+            "windows": {
+                "command": "powershell",
+                "args": [
+                    "-NoProfile",
+                    "-ExecutionPolicy", "Bypass",
+                    "-Command", "& {",
+                    "if (!(Test-Path 'dist')) { New-Item -ItemType Directory -Force -Path 'dist' };",
+                    "Copy-Item -Force -Recurse 'memory-game-assets' 'dist/';",
+                    "Copy-Item -Force *.svg,*.ico,*.png 'dist/'",
+                    "}"
+                ]
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build Project",
+            "dependsOn": ["Minify to Dist", "Copy Assets to Dist"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

@@ -1,0 +1,39 @@
+{
+    "js": {
+        "mangle": true,
+        "compress": {
+            "sequences": true,
+            "dead_code": true,
+            "conditionals": true,
+            "booleans": true,
+            "unused": true,
+            "if_return": true,
+            "join_vars": true,
+            "drop_console": true
+        },
+        "output": {
+            "beautify": false
+        }
+    },
+    "css": {
+        "compress": true
+    },
+    "html": {
+        "removeComments": true,
+        "removeCommentsFromCDATA": true,
+        "removeCDATASectionsFromCDATA": true,
+        "collapseWhitespace": true,
+        "collapseBooleanAttributes": true,
+        "removeAttributeQuotes": true,
+        "removeRedundantAttributes": true,
+        "useShortDoctype": true,
+        "removeEmptyAttributes": true,
+        "removeEmptyElements": false,
+        "removeOptionalTags": true,
+        "removeScriptTypeAttributes": true,
+        "removeStyleLinkTypeAttributes": true,
+        "minifyJS": true,
+        "minifyCSS": true
+    },
+    "skipFiles": ["dist/**/*"]
+}
