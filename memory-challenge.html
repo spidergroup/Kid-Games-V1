@@ -156,16 +156,25 @@
             min-width: 150px;
         }
         #actionButton:hover:not(:disabled) { background-color: #27ae60; }
-        #actionButton:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }        
-        .game-board-shell {
+        #actionButton:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }          .game-board-shell {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Always 2x2 for 4 cards */
-            gap: 10px;
-            width: 290px; /* (140 * 2) + 10 gap */
-            height: 290px; /* (140 * 2) + 10 gap */
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            width: 280px;
+            height: 280px;
             margin: 15px auto;
             position: relative;
             justify-self: center;
+        }
+        /* Specific styles for 6-card layout */
+        .game-board-shell.six-cards {
+            grid-template-columns: repeat(3, 1fr);
+            width: 280px;
+            height: 190px;
+        }
+        .game-board-shell.six-cards .card-shell {
+            width: 88px;
+            height: 88px;
         }
 
         .card-shell {
@@ -385,14 +394,29 @@
             25% { transform: translateX(-5px) rotateY(0deg); }
             50% { transform: translateX(5px) rotateY(0deg); }
             75% { transform: translateX(-5px) rotateY(0deg); }
-        }        /* Responsive adjustments for shell game board */
-         @media (min-width: 380px) { /* Slightly larger cards */
+        }        /* Responsive adjustments for shell game board */         @media (min-width: 380px) {
             .game-board-shell { width: 330px; height: 330px; }
             .card-shell { width: 160px; height: 160px; }
+            .game-board-shell.six-cards { 
+                width: 330px;
+                height: 220px;
+            }
+            .game-board-shell.six-cards .card-shell {
+                width: 105px;
+                height: 105px;
+            }
         }
-        @media (min-width: 640px) { /* Even larger for wider screens */
+        @media (min-width: 640px) {
             .game-board-shell { width: 440px; height: 440px; }
             .card-shell { width: 200px; height: 200px; }
+            .game-board-shell.six-cards { 
+                width: 440px;
+                height: 290px;
+            }
+            .game-board-shell.six-cards .card-shell {
+                width: 140px;
+                height: 140px;
+            }
         }
 
 
@@ -817,13 +841,14 @@
                 resetGameUI();
 
                 // Update grid layout
-                const gameBoard = document.getElementById('gameBoardShell');
-                if (numCards === 4) {
+                const gameBoard = document.getElementById('gameBoardShell');                if (numCards === 4) {
                     gameBoard.style.gridTemplateColumns = 'repeat(2, 1fr)';
                     gameBoard.style.gridTemplateRows = 'repeat(2, 1fr)';
+                    gameBoard.classList.remove('six-cards');
                 } else if (numCards === 6) {
                     gameBoard.style.gridTemplateColumns = 'repeat(3, 1fr)';
                     gameBoard.style.gridTemplateRows = 'repeat(2, 1fr)';
+                    gameBoard.classList.add('six-cards');
                 }
             };
 
