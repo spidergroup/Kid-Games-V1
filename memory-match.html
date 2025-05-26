@@ -163,10 +163,18 @@
             background-color: rgba(41, 128, 185, 0.7);
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="70" fill="rgba(255,255,255,0.8)" style="filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.4));">?</text></svg>');
             background-size: 50%; background-repeat: no-repeat; background-position: center;
-        }
-        .card-back {
+        }        .card-back {
             background-color: rgba(255, 255, 255, 0.25);
             transform: rotateY(180deg);
+        }
+        /* Specific background for number and alphabet cards */
+        .card-back span {
+            background-color: #f3f0e7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
         }
         .card-back img {
             max-width: 95%;
@@ -590,20 +598,20 @@
                     // Make numbers 100% bigger for Numbers 1-12 category
                     if (currentCategory === 'numbers') {
                         textSpan.style.fontSize = 'clamp(5.4rem, 30vw / var(--card-cols, 4), 9rem)';
-                        // Assign a unique color for each number 1-12
-                        const numberColors = [
-                            '#B80000', // 1 - Red
-                            '#006400', // 2 - Green
-                            '#003399', // 3 - Blue
-                            '#C97E00', // 4 - Orange
-                            '#5A189A', // 5 - Purple
-                            '#007777', // 6 - Teal
-                            '#C2185B', // 7 - Pink
-                            '#8B4513', // 8 - Brown
-                            '#228B22', // 9 - Forest Green
-                            '#1E3A5C', // 10 - Navy
-                            '#B8860B', // 11 - Gold
-                            '#333333'  // 12 - Dark Gray
+                        // Assign a unique color for each number 1-12                            
+                        const numberColors = [                            
+                            '#bc6c25', // 1 - Burnt Orange
+                            '#003049', // 2 - Dark Navy
+                            '#6030e8', // 3 - Royal Purple
+                            '#023e8a', // 4 - Navy Blue
+                            '#3c1642', // 5 - Deep Purple
+                            '#fca311', // 6 - Orange
+                            '#9e2a2b', // 7 - Burgundy Red
+                            '#c9a227', // 8 - Golden Yellow                            
+                            '#1e6f8c', // 9 - Steel Blue
+                            '#ef476f', // 10 - Bright Pink
+                            '#3772ff', // 11 - Electric Blue
+                            '#4f772d'  // 12 - Forest Green
                         ];
                         const idx = parseInt(itemValue, 10) - 1;
                         if (!isNaN(idx) && idx >= 0 && idx < numberColors.length) {
@@ -611,20 +619,20 @@
                         }
                     } else if (currentCategory === 'alphabet') {
                         textSpan.style.fontSize = 'clamp(5.4rem, 30vw / var(--card-cols, 4), 9rem)';
-                        // Assign a unique, brighter color for each letter A-L
-                        const letterColors = [
-                            '#FF1744', // A - Bright Red
-                            '#D500F9', // B - Bright Purple
-                            '#2979FF', // C - Bright Blue
-                            '#1DE9B6', // D - Bright Teal
-                            '#00E676', // E - Bright Green
-                            '#FFEA00', // F - Bright Yellow
-                            '#FF9100', // G - Bright Orange
-                            '#A1887F', // H - Lighter Brown
-                            '#BDBDBD', // I - Lighter Gray
-                            '#00B0FF', // J - Bright Light Blue
-                            '#C6FF00', // K - Bright Lime
-                            '#FF4081'  // L - Bright Pink
+                        // Assign a unique, brighter color for each letter A-L                          
+                        const letterColors = [                            
+                            '#bc6c25', // A - Burnt Orange
+                            '#003049', // B - Dark Navy
+                            '#6030e8', // C - Royal Purple
+                            '#023e8a', // D - Navy Blue
+                            '#3c1642', // E - Deep Purple
+                            '#fca311', // F - Orange
+                            '#9e2a2b', // G - Burgundy Red
+                            '#c9a227', // H - Golden Yellow                            
+                            '#1e6f8c', // I - Steel Blue
+                            '#ef476f', // J - Bright Pink
+                            '#3772ff', // K - Electric Blue
+                            '#4f772d'  // L - Forest Green
                         ];
                         const idx = 'ABCDEFGHIJKL'.indexOf(itemValue.toString().toUpperCase());
                         if (idx >= 0 && idx < letterColors.length) {
