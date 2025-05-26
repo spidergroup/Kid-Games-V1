@@ -590,20 +590,20 @@
                     // Make numbers 100% bigger for Numbers 1-12 category
                     if (currentCategory === 'numbers') {
                         textSpan.style.fontSize = 'clamp(5.4rem, 30vw / var(--card-cols, 4), 9rem)';
-                        // Assign a unique color for each number 1-12
+                        // Assign a unique color for each number 1-12                        
                         const numberColors = [
-                            '#B80000', // 1 - Red
-                            '#006400', // 2 - Green
-                            '#003399', // 3 - Blue
-                            '#C97E00', // 4 - Orange
-                            '#5A189A', // 5 - Purple
-                            '#007777', // 6 - Teal
-                            '#C2185B', // 7 - Pink
-                            '#8B4513', // 8 - Brown
-                            '#228B22', // 9 - Forest Green
-                            '#1E3A5C', // 10 - Navy
-                            '#B8860B', // 11 - Gold
-                            '#333333'  // 12 - Dark Gray
+                            '#83c5be', // 1 - Seafoam Green
+                            '#fcf6bd', // 2 - Light Yellow
+                            '#d0f4de', // 3 - Mint Green
+                            '#a9def9', // 4 - Light Blue
+                            '#e4c1f9', // 5 - Lavender
+                            '#fcbf49', // 6 - Golden Yellow
+                            '#e29578', // 7 - Coral
+                            '#e5989b', // 8 - Rose Pink
+                            '#06d6a0', // 9 - Turquoise
+                            '#a7c957', // 10 - Lime Green
+                            '#8338ec', // 11 - Purple
+                            '#fefae0'  // 12 - Cream
                         ];
                         const idx = parseInt(itemValue, 10) - 1;
                         if (!isNaN(idx) && idx >= 0 && idx < numberColors.length) {
@@ -612,7 +612,7 @@
                     } else if (currentCategory === 'alphabet') {
                         textSpan.style.fontSize = 'clamp(5.4rem, 30vw / var(--card-cols, 4), 9rem)';
                         // Assign a unique, brighter color for each letter A-L
-                        const letterColors = [
+                        const letterColors = [                            
                             '#FF1744', // A - Bright Red
                             '#D500F9', // B - Bright Purple
                             '#2979FF', // C - Bright Blue
