@@ -8,7 +8,7 @@ Welcome to Playful Wonders! This project is a collection of interactive, web-bas
 - **Kid-Friendly Interface:** Bright, colorful, and easy to navigate.
 - **Multiple Games:**
   - **Starfall Frenzy:** Catch as many falling stars as you can! Improves reflexes and hand-eye coordination.
-  - **Picture Perfect Pairs:** Classic memory match game. Flip cards to find all the matching pairs and boost memory skills.
+  - **Picture Perfect Pairs:** Classic matching game. Flip cards to find all the matching pairs and boost memory skills.
   - **Memory Challenge:** Watch as four pet cards are shuffled, memorize the highlighted pet, and try to find it after the shuffle! Great for memory and focus.
 - **No Ads, No Tracking:** 100% safe for children.
 - **Easy to Extend:** Add new games by updating the `games-data.js` file and creating a new HTML game file.
@@ -22,7 +22,7 @@ Welcome to Playful Wonders! This project is a collection of interactive, web-bas
 - `index.html` - Main landing page and game gallery
 - `js/games-data.js` - Game metadata (names, descriptions, URLs)
 - `js/main.js` - Gallery rendering and navigation logic
-- `memory-match.html` - Memory match game
+- `matching-game.html` - Matching game
 - `memory-challenge.html` - Memory challenge (find the pet) game
 - `star-catchers.html` - Star catching game
 - `memory-game-assets/` - Game images and assets
