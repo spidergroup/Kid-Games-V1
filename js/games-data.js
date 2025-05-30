@@ -10,12 +10,11 @@ const allGames = [
         keywords: ["memory game for kids", "matching game for children", "brain training game", "cognitive skills game", "preschool memory game", "concentration game"]
     },
     {
-        id: 2,
-        title: "Memory Challenge",
-        image: "memory-challenge.svg",
-        url: "memory-challenge.html",
-        description: "Can you follow the hidden card? Test your memory and concentration in this exciting card-tracking challenge. Choose different difficulty levels and see if you can keep up!",
-        keywords: ["memory game", "card tracking game", "concentration game", "kids puzzle game", "brain training", "cognitive skills game"]
+        id: 2,        title: "Three Card Monte",
+        image: "three-card-monte.svg",
+        url: "three-card-monte.html",
+        description: "Find the marked card in this classic game of quick hands! Watch closely as the cards shuffle and test your focus and concentration. Can you keep track of the winning card?",
+        keywords: ["three card monte", "card tracking game", "concentration game", "kids puzzle game", "brain training", "focus game"]
     },
     {
         id: 3,
