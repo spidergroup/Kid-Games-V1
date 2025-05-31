@@ -165,19 +165,18 @@
             text-align: center;
             margin-bottom: 10px;
         }
-        
-        #actionButton {
-            padding: 7px 14px; /* 30% smaller */
-            font-size: 0.7rem; /* 30% smaller */
+          #actionButton {
+            padding: 8.8px 17.6px; /* 10% larger */
+            font-size: 0.99rem; /* 10% larger */
             font-weight: 600;
-            border-radius: 17.5px;
+            border-radius: 19.25px; /* 10% larger */
             background-color: #2ecc71;
             color: white;
             border: none;
             cursor: pointer;
             transition: background-color 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            min-width: 105px;
+            box-shadow: 0 2.2px 4.4px rgba(0,0,0,0.2); /* 10% larger */
+            min-width: 115.5px; /* 10% larger */
         }
         #actionButton:hover:not(:disabled) { background-color: #27ae60; }
         #actionButton:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }        .game-board-shell {
@@ -323,23 +322,19 @@
         #outerGameSection {
             position: relative;
             z-index: 10;
-        }
-
-        a.home-button {
+        }        a.home-button {
             position: relative;
             z-index: 1000; /* Always on top */
             display: inline-block;
-            margin-top: 10px; /* Reduced from 20px */
-            padding: 10px 20px;
+            margin-top: 10px;
+            padding: 7px 14px; /* 30% smaller */
             background-color: #e74c3c;
             color: white;
             text-decoration: none;
-            border-radius: 20px;
-            font-size: 1rem;
+            border-radius: 14px; /* 30% smaller */
+            font-size: 0.7rem; /* 30% smaller */
             font-weight: 500;
-            box-shadow: 0 3px #c0392b;
-            position: relative;
-            z-index: 100;
+            box-shadow: 0 2.1px #c0392b; /* 30% smaller */
             transition: background-color 0.2s, transform 0.1s;
         }
 
