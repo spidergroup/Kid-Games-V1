@@ -192,11 +192,11 @@
         .game-board-shell.six-cards {
             grid-template-columns: repeat(3, 1fr);
             width: 280px;
-            height: 190px;
+            height: 220px;
         }
         .game-board-shell.six-cards .card-shell {
-            width: 88px;
-            height: 88px;
+            width: 110px;
+            height: 110px;
         }
 
         /* Specific styles for 3-card layout */
@@ -224,6 +224,7 @@
             .game-board-shell.three-cards {
                 gap: 4px;
                 padding: 4px;
+                height: 120px;
             }
 
             .game-board-shell.three-cards .card-shell {
@@ -669,15 +670,16 @@
         let currentLevelKey = 'easy';
         let currentDifficulty = getLevelsByNumCards(getSelectedNumCards())[currentLevelKey];
 
-        // Add event listeners for number of cards selection
+        // Add event listeners for number of cards selection        
         document.querySelectorAll('input[name="numCards"]').forEach(radio => {
             radio.addEventListener('change', () => {
                 const numCards = parseInt(radio.value, 10);
                 currentDifficulty = getLevelsByNumCards(numCards)[currentLevelKey];
                 updateGameBoardClass();
                 createLevelButtons();
-                resetGameUI();
+                resetGameUI('Start Game');
                 setupBoard_for_Init();
+                actionButton.disabled = false; // Enable the Start Game button
             });
         });
 
@@ -910,7 +912,6 @@
         }
 
         async function startShuffleAnimation() {
-            hideMenuButton(); // Hide menu button when shuffling starts
             messageArea.textContent = 'Shuffling!';
             let cardPositions = cardsOnBoard.map(card => card.getBoundingClientRect());
             let boardRect = gameBoard.getBoundingClientRect();
@@ -947,7 +948,6 @@
             });
             canClickCard = true;
             messageArea.textContent = `Where is the ${targetPet.name}? Click a card!`;
-            showMenuButton(); // Show menu button when shuffling is complete
         }
 
         function handleCardClick(card) {
@@ -997,16 +997,15 @@
                     }, 2000);
                 }, 1500);
             }
-        }
-
-        function resetGameUI(buttonText = "Start Game") {
+        }        function resetGameUI(buttonText = "Start Game") {
             gameActive = false;
             canClickCard = false;
             actionButton.textContent = buttonText;
-            actionButton.disabled = false;
+            
+            // Always enable the button when resetting UI with these messages
             if (buttonText === "Start Game" || buttonText === "Play Again?" || buttonText === "Try Again?") {
-                messageArea.textContent = "Select difficulty and click Start!";
-                if (buttonText === "Try Again?") messageArea.textContent = "Give it another go!";
+                messageArea.textContent = buttonText === "Try Again?" ? "Give it another go!" : "Select difficulty and click Start!";
+                actionButton.disabled = false;
             }
         }
 
