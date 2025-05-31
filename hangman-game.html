@@ -51,11 +51,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            
             width: 100%;
             max-width: 950px;
-            margin: 0 auto;
-            padding: 15px;
+            margin: 0 auto; 
         }
 
         .game-info-wrapper {
@@ -110,12 +109,13 @@
             color: #ff7675;
             font-weight: bold;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        }        .keyboard {
+        }        
+        .keyboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(35px, 1fr));
             gap: 5px;
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             margin-top: 20px;
             padding: 10px;
             background-color: rgba(255, 255, 255, 0.1);
@@ -124,8 +124,8 @@
         }
 
         .keyboard button {
-            padding: 7px 14px;
-            font-size: 0.7rem;
+            padding: 7px 10px;
+            font-size: 1.5rem;
             font-weight: 500;
             border: none;
             background-color: var(--mc-blue);
@@ -465,7 +465,7 @@
         function Draw(part) {
             switch (part) {
                 case 'gallows':
-                    ctx.strokeStyle = '#444';
+                    ctx.strokeStyle = '#FF6F00';
                     ctx.lineWidth = 10;
                     ctx.beginPath();
                     ctx.moveTo(175, 225);
