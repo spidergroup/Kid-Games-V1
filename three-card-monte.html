@@ -66,11 +66,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            
             min-height: 100vh;
             padding: 15px;
             box-sizing: border-box;
             overflow-x: hidden;
+            position: relative;
+            z-index: 1;
         }
 
         .game-title-main {
@@ -89,6 +91,8 @@
             width: 100%;
             max-width: 440px; /* Adjusted for simpler menu */
             margin-bottom: 15px;
+            position: relative;
+            z-index: 20;
         }
 
         .menu-container {
@@ -144,6 +148,8 @@
             width: 100%;
             max-width: 600px;
             margin: 0 auto 10px auto;
+            position: relative;
+            z-index: 20;
         }
 
         #action-button-container {
@@ -174,17 +180,15 @@
             min-width: 105px;
         }
         #actionButton:hover:not(:disabled) { background-color: #27ae60; }
-        #actionButton:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }          .game-board-shell {
+        #actionButton:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }        .game-board-shell {
+            position: relative;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 8px;
             width: 280px;
             height: 280px;
             margin: 15px auto;
-            position: relative;
-            justify-self: center;
             z-index: 10;
-            /* Create stacking context */
             transform-style: preserve-3d;
             perspective: 1000px;
         }
@@ -192,7 +196,8 @@
         .game-board-shell.six-cards {
             grid-template-columns: repeat(3, 1fr);
             width: 280px;
-            height: 220px;
+            height: 190px;
+            gap: 6px;
         }
         .game-board-shell.six-cards .card-shell {
             width: 110px;
@@ -205,7 +210,7 @@
             flex-direction: row;
             width: 100%;
             max-width: 360px;
-            height: auto;
+            height: 160px;
             gap: 10px;
             padding: 10px;
             margin: 15px auto;
@@ -272,19 +277,23 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        /* Game section wrapper styles */
-        #outerGameSection {
+        /* Game section wrapper styles */        #outerGameSection {
             width: 100%;
             display: flex;
             justify-content: center;
             position: relative;
-            z-index: 5;
+            z-index: 10;
+            height: auto;
+            min-height: 200px; /* Add minimum height to prevent layout shifts */
         }
 
         #innerGameSection {
             width: 100%;
             position: relative;
-            z-index: 5;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Change to flex-start to prevent vertical centering */
         }
 
         .card-shell {
@@ -298,6 +307,33 @@
             margin-left: auto;
             margin-right: auto;
         }
+
+        /* Ensure elements maintain proper z-index hierarchy */
+        body {
+            position: relative;
+            z-index: 1;
+        }
+
+        .menus-wrapper, #game-interaction-area {
+            position: relative;
+            z-index: 20;
+        }
+
+        #outerGameSection {
+            position: relative;
+            z-index: 10;
+        }
+
+        a.home-button {
+            position: relative;
+            z-index: 1000; /* Always on top */
+        }
+
+        /* Maintain z-index during transitions */
+        .card-shell[style*="position: absolute"] {
+            z-index: 15 !important;
+        }
+
         .card-shell-inner {
             position: relative;
             width: 100%;
@@ -352,17 +388,27 @@
             transform: scale(0.7); transition: transform 0.3s ease-in-out;
         }
         .modal-overlay.show .modal-content { transform: scale(1); }
-        .modal-content h2 { color: white; font-size: 2rem; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-
-        a.home-button {
-            display: inline-block; margin-top: 20px; padding: 10px 20px;
-            background-color: #e74c3c; color: white; text-decoration: none;
-            border-radius: 20px; font-size: 1rem; font-weight: 500;
+        .modal-content h2 { color: white; font-size: 2rem; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }        a.home-button {
+            display: inline-block; 
+            margin-top: 20px; 
+            padding: 10px 20px;
+            background-color: #e74c3c; 
+            color: white; 
+            text-decoration: none;
+            border-radius: 20px; 
+            font-size: 1rem; 
+            font-weight: 500;
             box-shadow: 0 3px #c0392b;
             position: relative;
-            z-index: 1;
+            z-index: 100;
         }
-        a.home-button:active { transform: translateY(1px); box-shadow: 0 2px #c0392b; }
+        a.home-button:active { 
+            transform: translateY(1px); 
+            box-shadow: 0 2px #c0392b; 
+        }
+        a.home-button:hover {
+            background-color: #d62c1a;
+        }
 
          
         /* Custom checkbox style for Number of Cards */
@@ -443,7 +489,7 @@
             height: 5px;
             border-radius: 50%;
             content: '';
-            box-shadow: 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff;
+            box-shadow: 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff;
             animation: bang 1s ease-out forwards, gravity 1s ease-in forwards, position 5s linear forwards;
         }
         .firework > .after {
@@ -520,12 +566,21 @@
             25% { transform: translateX(-5px) rotateY(0deg); }
             50% { transform: translateX(5px) rotateY(0deg); }
             75% { transform: translateX(-5px) rotateY(0deg); }
-        }        /* Responsive adjustments for shell game board */         @media (min-width: 380px) {
-            .game-board-shell { width: 330px; height: 330px; }
-            .card-shell { width: 160px; height: 160px; }
+        }        /* Responsive adjustments for shell game board */        @media (min-width: 380px) {
+            .game-board-shell { 
+                width: 330px; 
+                height: 330px; 
+            }
+            .game-board-shell.three-cards {
+                height: 180px;
+            }
+            .card-shell { 
+                width: 160px; 
+                height: 160px; 
+            }
             .game-board-shell.six-cards { 
                 width: 330px;
-                height: 220px;
+                height: 240px;
             }
             .game-board-shell.six-cards .card-shell {
                 width: 105px;
@@ -533,17 +588,26 @@
             }
         }
         @media (min-width: 640px) {
-            .game-board-shell { width: 440px; height: 440px; }
-            .card-shell { width: 200px; height: 200px; }
+            .game-board-shell { 
+                width: 440px; 
+                height: 440px; 
+            }
+            .game-board-shell.three-cards {
+                height: 200px;
+            }
+            .card-shell { 
+                width: 200px; 
+                height: 200px; 
+            }
             .game-board-shell.six-cards { 
                 width: 440px;
-                height: 290px;
+                height: 300px;
             }
             .game-board-shell.six-cards .card-shell {
                 width: 140px;
                 height: 140px;
             }
-        } 
+        }
 
         #innerGameSection {  
             width: 100%;
@@ -670,11 +734,27 @@
         let currentLevelKey = 'easy';
         let currentDifficulty = getLevelsByNumCards(getSelectedNumCards())[currentLevelKey];
 
-        // Add event listeners for number of cards selection        
+        // Add event listeners for number of cards selection          
         document.querySelectorAll('input[name="numCards"]').forEach(radio => {
             radio.addEventListener('change', () => {
+                // Reset any ongoing animations
+                if (cardsOnBoard) {
+                    cardsOnBoard.forEach(card => {
+                        card.style.position = '';
+                        card.style.left = '';
+                        card.style.top = '';
+                        card.style.margin = '';
+                        card.style.transition = '';
+                        card.style.zIndex = '';
+                    });
+                }
+                // Reset game board height
+                gameBoard.style.height = '';
+                
                 const numCards = parseInt(radio.value, 10);
                 currentDifficulty = getLevelsByNumCards(numCards)[currentLevelKey];
+                gameActive = false; // Ensure game is stopped
+                canClickCard = false; // Reset click state
                 updateGameBoardClass();
                 createLevelButtons();
                 resetGameUI('Start Game');
@@ -911,13 +991,23 @@
             setTimeout(() => startShuffleAnimation(), 1000);
         }
 
-        async function startShuffleAnimation() {
-            messageArea.textContent = 'Shuffling!';
-            let cardPositions = cardsOnBoard.map(card => card.getBoundingClientRect());
+        async function startShuffleAnimation() {            messageArea.textContent = 'Shuffling!';
+            gameBoard.style.height = `${gameBoard.offsetHeight}px`; // Fix the height
+            let cardPositions = cardsOnBoard.map(card => {
+                const rect = card.getBoundingClientRect();
+                const computedStyle = window.getComputedStyle(card);
+                return {
+                    left: rect.left,
+                    top: rect.top,
+                    marginLeft: computedStyle.marginLeft,
+                    marginRight: computedStyle.marginRight
+                };
+            });
             let boardRect = gameBoard.getBoundingClientRect();
             // Set absolute positions for animation
             cardsOnBoard.forEach((card, idx) => {
                 card.style.position = 'absolute';
+                card.style.margin = '0';
                 card.style.left = `${cardPositions[idx].left - boardRect.left}px`;
                 card.style.top = `${cardPositions[idx].top - boardRect.top}px`;
                 card.style.transition = 'left 0.5s, top 0.5s';
