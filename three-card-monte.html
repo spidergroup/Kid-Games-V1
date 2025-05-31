@@ -285,6 +285,7 @@
             z-index: 10;
             height: auto;
             min-height: 200px; /* Add minimum height to prevent layout shifts */
+            margin-bottom: 30px; /* Add space after the game board */
         }
 
         #innerGameSection {
@@ -327,6 +328,19 @@
         a.home-button {
             position: relative;
             z-index: 1000; /* Always on top */
+            display: inline-block;
+            margin-top: 10px; /* Reduced from 20px */
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            box-shadow: 0 3px #c0392b;
+            position: relative;
+            z-index: 100;
+            transition: background-color 0.2s, transform 0.1s;
         }
 
         /* Maintain z-index during transitions */
@@ -390,7 +404,7 @@
         .modal-overlay.show .modal-content { transform: scale(1); }
         .modal-content h2 { color: white; font-size: 2rem; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }        a.home-button {
             display: inline-block; 
-            margin-top: 20px; 
+            margin-top: 10px; 
             padding: 10px 20px;
             background-color: #e74c3c; 
             color: white; 
@@ -489,7 +503,7 @@
             height: 5px;
             border-radius: 50%;
             content: '';
-            box-shadow: 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff;
+            box-shadow: 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff;
             animation: bang 1s ease-out forwards, gravity 1s ease-in forwards, position 5s linear forwards;
         }
         .firework > .after {
