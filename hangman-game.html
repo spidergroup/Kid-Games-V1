@@ -343,7 +343,7 @@
             updateIncorrectLettersDisplay();
             resetKeyboard();
             drawHangman(); // Initial gallows or empty state
-            messagePopupEl.style.display = 'none';
+            messagePopupEl.classList.remove('show');
         }
 
         function updateWordDisplay() {
@@ -423,12 +423,10 @@
             if (incorrectGuesses >= MAX_INCORRECT_GUESSES) {
                 showPopup("Game Over 😕", `The word was: ${currentWord}`);
             }
-        }
-
-        function showPopup(title, message) {
+        }        function showPopup(title, message) {
             popupTitleEl.textContent = title;
             popupMessageEl.textContent = message;
-            messagePopupEl.style.display = 'flex';
+            messagePopupEl.classList.add('show');
         }
 
         function drawHangman() {
