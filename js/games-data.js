@@ -29,6 +29,7 @@ const allGames = [
         image: "hangman-game.svg",
         url: "hangman-game.html",
         description: "Challenge your vocabulary skills in this classic word guessing game! Try to figure out the mystery word before the stick figure is complete. A fun and educational way to expand your word knowledge.",
-        keywords: ["word game", "hangman game", "vocabulary game", "spelling game", "educational game", "word guessing game"]
+        keywords: ["online word game", "hangman game", "guess the word", "vocabulary game", "classic word game", "spelling game", "educational game", "word guessing game"]
+
     }
 ];
