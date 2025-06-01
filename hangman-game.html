@@ -292,6 +292,34 @@
         a.home-button:active {
             transform: translateY(1px);
             box-shadow: 0 1px #c0392b;
+        }        button.new-word-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 7px 14px;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            background-color: #2ecc71;
+            color: white;
+            text-decoration: none;
+            border-radius: 14px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 1000;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button.new-word-button:hover {
+            background-color: #2ecc71;
+            transform: translateY(-1px);
+        }
+
+        button.new-word-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px #c0392b;
         }
 
         .menu-button {
@@ -470,11 +498,11 @@
             <p id="popupMessage"></p>            <button id="playAgainButton">Play Again</button>
             
         </div>
-    </div>
+    </div>    <div>
 
-    <div>
+        <button class="new-word-button" id="newWordBtn">New Word</button>
         <a href="index.html" class="home-button">🏠 Back to Main Menu</a>
-    </div>    <!-- Load word list first -->
+    </div><!-- Load word list first -->
     <script src="js/hangman-game.js"></script>
     <script>
         // --- CONFIGURATION ---
@@ -741,10 +769,9 @@
                     ctx.stroke();
                     break;
             }
-        }
-
-        // --- EVENT LISTENERS ---
+        }        // --- EVENT LISTENERS ---
         playAgainButton.addEventListener('click', initializeGame);
+        document.getElementById('newWordBtn').addEventListener('click', initializeGame);
         document.getElementById('categorySelect').addEventListener('change', function(e) {
             currentCategory = e.target.value;
             initializeGame();
