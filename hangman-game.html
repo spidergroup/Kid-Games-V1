@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hangman Fun Quest</title>    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Free Online Hangman Game – Play the Classic Word Puzzle Now</title>    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         /* CSS RESET */
         *, *::before, *::after {
@@ -245,6 +245,46 @@
             box-shadow: 0 1px #c0392b;
         }
 
+        .menu-button {
+            display: block;
+            margin-top: 15px;
+            padding: 8.8px 17.6px;
+            font-size: 0.99rem;
+            font-weight: 600;
+            background-color: var(--mc-blue);
+            color: white;
+            border: none;
+            border-radius: 19.25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2.2px 4.4px rgba(0,0,0,0.2);
+            min-width: 115.5px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .menu-button:hover {
+            background-color: #004a80;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        a.home-button {
+            display: inline-block;
+            margin-top: 30px; /* 30% smaller */
+            padding: 7px 14px; /* 30% smaller */
+            background-color: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 14px; /* 30% smaller */
+            font-size: 0.7rem; /* 30% smaller */
+            font-weight: 500;
+            box-shadow: 0 2.1px #c0392b; /* 30% smaller */
+        }
+        a.home-button:active { transform: translateY(1px); box-shadow: 0 2px #c0392b; }
+
+
+
         /* Responsive adjustments */
         @media (max-width: 600px) {
             h1 {
@@ -279,7 +319,9 @@
 </head>
 <body>
 
-    <h1>Hangman Fun Quest</h1>
+    <h1>Hangman Game</h1>
+
+    <h2 class="game-desc" style="max-width: 850px; margin: 0 auto 18px auto; color: #f0e68c; font-size: .9rem; text-align: center; font-weight: normal;">Enjoy the classic Hangman word game for free, right in your browser! Test your vocabulary and guessing skills by uncovering the hidden word before the stick figure is fully drawn. Choose letters wisely and beat the clock. No downloads, no sign-up – just pure word game fun!</h2>
 
     <div class="game-container">
         
@@ -298,9 +340,13 @@
     <div class="message-popup" id="messagePopup">
         <div class="message-popup-content">
             <h2 id="popupTitle"></h2>
-            <p id="popupMessage"></p>
-            <button id="playAgainButton">Play Again</button>
+            <p id="popupMessage"></p>            <button id="playAgainButton">Play Again</button>
+            
         </div>
+    </div>
+
+    <div>
+        <a href="index.html" class="home-button">🏠 Back to Main Menu</a>
     </div>
 
     <script>

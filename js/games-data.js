@@ -21,7 +21,14 @@ const allGames = [
         title: "Starfall Frenzy",
         image: "star-catchers-card.svg",
         url: "star-catchers.html",
-        description: "Join the cosmic fun in Starfall Frenzy! Collect as many stars as you can before they vanish. A delightful game that helps children develop quick reflexes and concentration skills.",
-        keywords: ["star catching game", "kids reflex game", "hand-eye coordination game", "online game for kids", "preschool games", "action game for children"]
+        description: "Join the cosmic fun in Starfall Frenzy! Collect as many stars as you can before they vanish. A delightful game that helps children develop quick reflexes and concentration skills.",        keywords: ["star catching game", "kids reflex game", "hand-eye coordination game", "online game for kids", "preschool games", "action game for children"]
+    },
+    {
+        id: 4,
+        title: "Hangman Game",
+        image: "hangman-game.svg",
+        url: "hangman-game.html",
+        description: "Challenge your vocabulary skills in this classic word guessing game! Try to figure out the mystery word before the stick figure is complete. A fun and educational way to expand your word knowledge.",
+        keywords: ["word game", "hangman game", "vocabulary game", "spelling game", "educational game", "word guessing game"]
     }
 ];
