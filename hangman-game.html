@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free Online Hangman Game – Play with Multiple Categories and Difficulty Levels</title>
     <meta name="description" content="Play the enhanced Hangman word game online for free! Features multiple categories including animals, places, movies, and more. Choose from easy, medium, or hard difficulty levels. Perfect for vocabulary building and entertainment.">
@@ -72,85 +72,8 @@
             --text-light: #f0e68c;
             --white: #FFFFFF;
             --black: #000000;
-        }        /* Firework Animation */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            z-index: 1000;
-            pointer-events: none;
-        }
-        
-        .modal-overlay.show {
-            opacity: 1;
-        }
-        
-        .modal {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            padding: 2rem;
-            border-radius: 1rem;
-            transform: scale(0.7);
-            transition: transform 0.3s ease-in-out;
-            color: white;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .modal-overlay.show .modal {
-            transform: scale(1);
-        }
-        
-        .firework,
-        .firework::before,
-        .firework::after {
-            --initialSize: 0.5vmin;
-            --finalSize: 45vmin;
-            --particleSize: 0.2vmin;
-            --color1: yellow;
-            --color2: khaki;
-            --color3: white;
-            --color4: lime;
-            --color5: gold;
-            --color6: mediumseagreen;
-            --y: -30vmin;
-            --x: -50%;
-            --initialY: 60vmin;
-            content: "";
-            animation: firework 2s infinite;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, var(--y));
-            width: var(--initialSize);
-            aspect-ratio: 1;
-            background: 
-                radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 0% 0%,
-                radial-gradient(circle, var(--color2) var(--particleSize), #0000 0) 100% 0%,
-                radial-gradient(circle, var(--color3) var(--particleSize), #0000 0) 100% 100%,
-                radial-gradient(circle, var(--color4) var(--particleSize), #0000 0) 0% 100%,
-                radial-gradient(circle, var(--color5) var(--particleSize), #0000 0) 50% 0%,
-                radial-gradient(circle, var(--color6) var(--particleSize), #0000 0) 50% 100%,
-                radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 0% 50%,
-                radial-gradient(circle, var(--color2) var(--particleSize), #0000 0) 100% 50%
-                ;
-            background-size: var(--initialSize) var(--initialSize);
-            background-repeat: no-repeat;
-            z-index: 999;
-        }
-
-        @keyframes firework {
-            0% { transform: translate(var(--x), var(--initialY)); width: var(--initialSize); opacity: 1; }
-            50% { width: 0.5vmin; opacity: 1; }
-            100% { width: var(--finalSize); opacity: 0; }
-        }
+        }      
+        /* Firework Animation and Modal CSS REMOVED */
 
         body {
             font-family: var(--font-family-main);
@@ -501,7 +424,7 @@
         }
 
         /* Interactive Hint Icon */
-        .hint-info-icon {
+        .hint-info-icon { /* This class might be unused now if you fully transitioned to hint-icon-container */
             cursor: pointer;
             font-size: 1.2em;
             vertical-align: middle;
@@ -528,24 +451,24 @@
             filter: none;
         }
 
-        /* Existing hint animation can be reused or adapted */
-        @keyframes hintUsed { /* This was for the group, can be repurposed or a new one made */
+        /* Hint Animation for individual bulbs */
+        @keyframes hintUsed { 
             0% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.2); opacity: 0.5; }
             100% { transform: scale(0); opacity: 0; }
         }
 
         .hint-icon-container {
-            display: inline-block; /* Allows bulbs to sit next to each other */
+            display: inline-block; 
             vertical-align: middle;
         }
 
         .hint-bulb {
             display: inline-block;
             cursor: pointer;
-            font-size: 1.2em; /* Or your preferred size */
+            font-size: 1.2em; 
             transition: transform 0.2s ease, opacity 0.2s ease;
-            margin: 0 2px; /* Optional spacing between bulbs */
+            margin: 0 2px; 
             user-select: none;
         }
 
@@ -555,7 +478,7 @@
 
         .hint-bulb.used {
             animation: hintUsed 0.3s ease-out forwards;
-            pointer-events: none; /* Prevent further interaction during/after animation */
+            pointer-events: none; 
         }
 
         /* Responsive adjustments */
@@ -619,13 +542,13 @@
                 <canvas id="hangmanCanvas" width="180" height="250"></canvas>
             </div>
             <div class="word-status-container">
-                <!-- In your .game-info-wrapper -->
                 <p class="guesses-remaining">
                     Guesses Left: <span id="guessesLeft">6</span>
                     <span class="tooltip-wrapper">
-                        <!-- This span will now be a CONTAINER for individual bulb icons -->
                         <span class="hint-icon-container"></span>
-                        
+                        <!-- You might want a text indicator for hints if needed: 
+                             <span id="hintsLeftText" style="font-size: 0.8em; margin-left: 5px;"></span> 
+                        -->
                     </span>
                 </p>
                 <div class="word-display" id="wordDisplay"></div>
@@ -698,9 +621,10 @@
         // --- GAME STATE VARIABLES ---
         let currentWord = '';
         let revealedWord = [];
-        let guessedLetters = [];        let incorrectGuesses = 0;
-        let hintsRemaining = 1; // Default to easy mode
-        let maxHints = 1; // Default to easy mode
+        let guessedLetters = [];        
+        let incorrectGuesses = 0;
+        let hintsRemaining = 1; // Default
+        let maxHints = 1; // Default
 
         // Function to set hints based on difficulty
         function setHintsForDifficulty(difficulty) {
@@ -720,53 +644,42 @@
 
         /**
          * Reveals one hidden letter in the current word.
-         * @param {string} word - The original word (e.g., "FROG")
-         * @param {string[]} revealed - Array representing revealed letters (e.g., ["F", "_", "_", "G"])
-         * @returns {string[]} Updated revealed array with one more letter shown
          */
         function giveHint(word, revealed) {
-            // Find all indices of unrevealed letters
             const hiddenIndices = [];
             for (let i = 0; i < word.length; i++) {
                 if (revealed[i] === "_" || revealed[i] === "") {
                     hiddenIndices.push(i);
                 }
             }
-
-            // If there are no hidden letters left, return as is
             if (hiddenIndices.length === 0) return revealed;
-
-            // Pick one random hidden index to reveal
             const randomIndex = hiddenIndices[Math.floor(Math.random() * hiddenIndices.length)];
             revealed[randomIndex] = word[randomIndex].toUpperCase();
-
             return revealed;
         }
  
 
         const hintIconContainer = document.querySelector('.hint-icon-container');
-        const hintsLeftTextEl = document.getElementById('hintsLeftText'); // For the text display
+        const hintsLeftTextEl = document.getElementById('hintsLeftText'); // Make sure this element exists if you use it
 
         function updateHintsDisplay() {
             if (!hintIconContainer) return;
-
-            hintIconContainer.innerHTML = ''; // Clear existing bulbs
+            hintIconContainer.innerHTML = ''; 
 
             if (hintsRemaining > 0) {
-                hintIconContainer.style.display = 'inline-block'; // Show container
+                hintIconContainer.style.display = 'inline-block'; 
                 for (let i = 0; i < hintsRemaining; i++) {
                     const bulbSpan = document.createElement('span');
                     bulbSpan.classList.add('hint-bulb');
                     bulbSpan.textContent = '💡';
-                    bulbSpan.addEventListener('click', handleHintClick); // Add click listener to each bulb
+                    bulbSpan.addEventListener('click', handleHintClick); 
                     hintIconContainer.appendChild(bulbSpan);
                 }
             } else {
-                hintIconContainer.style.display = 'none'; // Hide container if no hints
+                hintIconContainer.style.display = 'none'; 
             }
 
-            // Update the optional text display
-            if (hintsLeftTextEl) {
+            if (hintsLeftTextEl) { // Optional text display
                 if (hintsRemaining > 0) {
                     hintsLeftTextEl.textContent = `(${hintsRemaining} hint${hintsRemaining !== 1 ? 's' : ''} left)`;
                 } else {
@@ -777,16 +690,13 @@
 
 
         function handleHintClick(event) {
-            const clickedBulb = event.target; // The specific 💡 span that was clicked
+            const clickedBulb = event.target; 
 
             if (hintsRemaining <= 0 || !currentWord || clickedBulb.classList.contains('used')) {
-                return; // No hints left, game not started, or bulb already used
+                return; 
             }
 
-            clickedBulb.classList.add('used'); // Add class to trigger animation
-
-            // Apply the actual hint logic
-            // This part is similar to your old handleHint function
+            clickedBulb.classList.add('used'); 
             revealedWord = giveHint(currentWord, revealedWord);
             
             for (let i = 0; i < currentWord.length; i++) {
@@ -796,44 +706,30 @@
                     }
                 }
             }
-
-            hintsRemaining--; // Decrement hints AFTER processing
-
-            // Update game displays
+            hintsRemaining--; 
             updateWordDisplay();
             updateKeyboard();
             checkWinCondition();
 
-            // After animation, remove the bulb from DOM (optional, CSS can just hide it)
-            // And then refresh the hint display to show correct count / text
             setTimeout(() => {
-                // If you want to physically remove it:
-                // if (clickedBulb.parentNode) {
-                //     clickedBulb.parentNode.removeChild(clickedBulb);
-                // }
-                // Then call updateHintsDisplay() again to redraw with one less,
-                // OR just update the text count if you are not removing.
-                // For simplicity with the current animation, let's let updateHintsDisplay handle redraw
-                updateHintsDisplay(); // This will redraw with one less bulb and update text
-            }, 300); // Match animation duration
-
+                updateHintsDisplay(); 
+            }, 300); 
             event.stopPropagation();
         }
 
-
-        // In your handleHint function, make sure the animation is triggered correctly.
-        function handleHint(event) {
+        // Old handleHint function is no longer primary, but kept for reference or if needed later
+        // The click listener in DOMContentLoaded for .hint-info-icon also needs adjustment if that icon is gone
+        function handleHint(event) { // This function might be redundant now
             if (hintsRemaining <= 0 || !currentWord) return;
             
-            const hintIcon = document.querySelector('.hint-info-icon');
-            if (hintIcon && hintsRemaining > 0) { // Check hintsRemaining > 0 before adding class
-                hintIcon.classList.add('hint-used'); // Trigger animation
-            }
+            // This targets an old icon, which might not exist or be used the same way
+            // const hintIcon = document.querySelector('.hint-info-icon'); 
+            // if (hintIcon && hintsRemaining > 0) { 
+            //     hintIcon.classList.add('hint-used'); 
+            // }
 
-            // Update revealed word with hint
             revealedWord = giveHint(currentWord, revealedWord);
             
-            // Add the newly revealed letter to guessed letters
             for (let i = 0; i < currentWord.length; i++) {
                 if (currentWord[i] === revealedWord[i]) {
                     if (!guessedLetters.includes(currentWord[i])) {
@@ -841,17 +737,11 @@
                     }
                 }
             }
-
-            // Update displays
             hintsRemaining--;
             updateWordDisplay();
             updateKeyboard();
-            updateHintsDisplay(); // This will now update bulbs and visibility
-            
-            // Check if won
+            updateHintsDisplay();
             checkWinCondition();
-
-            // Prevent tooltip from closing immediately (if you had one)
             if (event) {
                 event.stopPropagation();
             }
@@ -859,7 +749,7 @@
 
         function initializeGame() {
             const difficulty = document.getElementById('difficultySelect').value;
-            setHintsForDifficulty(difficulty); // This sets hintsRemaining
+            setHintsForDifficulty(difficulty); 
 
             currentWord = selectRandomWord();
             revealedWord = Array(currentWord.length).fill('_');
@@ -871,73 +761,64 @@
             updateIncorrectLettersDisplay();
             resetKeyboard();
             resetCanvas();
-            
-            updateHintsDisplay(); // CRITICAL: Call this to draw the initial bulbs
+            updateHintsDisplay(); 
         }
 
-        // Add click handler for tooltip        
-        document.addEventListener('DOMContentLoaded', () => {            // Initialize canvas
+        document.addEventListener('DOMContentLoaded', () => {            
             gameCanvas = document.getElementById('hangmanCanvas');
             if (gameCanvas) {
                 gameCanvas.width = 200;
                 gameCanvas.height = 250;
                 gameCtx = gameCanvas.getContext('2d');
                 resetCanvas();
-            }            // Add hint icon click handler
-            const hintIcon = document.querySelector('.hint-info-icon');
-            if (hintIcon) {
-                hintIcon.addEventListener('click', (e) => {
-                    if (hintsRemaining > 0) {
-                        handleHint(e);
-                    }
-                });
+            }            
+            // The click handler for the old .hint-info-icon might need to be removed or adapted
+            // as individual .hint-bulb elements now have their own listeners.
+            const oldHintIcon = document.querySelector('.hint-info-icon'); // This is the old single icon
+            if (oldHintIcon) {
+                // If you're keeping .hint-info-icon for some other purpose, this is fine.
+                // If it's completely replaced by hint-icon-container, this listener might not be needed
+                // or might call a different function.
+                // For now, let's assume individual bulbs are the primary interaction.
+                // oldHintIcon.addEventListener('click', (e) => {
+                //     if (hintsRemaining > 0) {
+                //         // Decide what clicking the wrapper/old icon should do now.
+                //         // Maybe it triggers the first available hint bulb?
+                //         const firstBulb = hintIconContainer.querySelector('.hint-bulb:not(.used)');
+                //         if(firstBulb) firstBulb.click();
+                //     }
+                // });
             }
-
-            // Initialize game
             initializeGame();
         });
 
         // --- GAME LOGIC ---            
         function selectRandomWord() {
-            // Check if hangmanData is loaded
             if (typeof hangmanData === 'undefined') {
                 console.error('Word list not loaded properly');
-                return "FALLBACK"; // Fallback word in case of error
+                return "FALLBACK"; 
             }
-
             let wordPool;
-            
-            // First, get words for the selected category
             if (currentCategory === 'all') {
-                wordPool = [...hangmanData.wordList]; // Create a copy of the full word list
+                wordPool = [...hangmanData.wordList]; 
             } else if (currentCategory in hangmanData.categories) {
-                wordPool = [...hangmanData.categories[currentCategory]]; // Create a copy of the category words
+                wordPool = [...hangmanData.categories[currentCategory]]; 
             } else {
-                wordPool = [...hangmanData.wordList]; // Fallback to full list
+                wordPool = [...hangmanData.wordList]; 
             }
-
-            // Then, filter by difficulty
             if (currentDifficulty in hangmanData.difficulty) {
                 const difficultyWords = new Set(hangmanData.difficulty[currentDifficulty]);
                 wordPool = wordPool.filter(word => difficultyWords.has(word));
             }
-
-            // If no words match both category and difficulty, try just the category
             if (wordPool.length === 0 && currentCategory !== 'all' && currentCategory in hangmanData.categories) {
                 wordPool = [...hangmanData.categories[currentCategory]];
             }
-
-            // If still empty, fallback to full word list
             if (wordPool.length === 0) {
                 wordPool = [...hangmanData.wordList];
             }
-
-            // Remove the current word from the pool if it exists
             if (currentWord) {
                 wordPool = wordPool.filter(word => word !== currentWord);
             }
-
-            // If we've used all words in the pool, use the full pool
             if (wordPool.length === 0) {
                 if (currentCategory === 'all') {
                     wordPool = [...hangmanData.wordList];
@@ -947,7 +828,6 @@
                     wordPool = [...hangmanData.wordList];
                 }
             }
-
             return wordPool[Math.floor(Math.random() * wordPool.length)];
         }
 
@@ -983,14 +863,11 @@
 
         function handleGuess(letter) {
             if (guessedLetters.includes(letter) || incorrectGuesses >= MAX_INCORRECT_GUESSES || revealedWord.join('') === currentWord) {
-                return; // Already guessed or game over
+                return; 
             }
-
             guessedLetters.push(letter);
             disableKeyboardButton(letter);
-
             if (currentWord.includes(letter)) {
-                // Correct guess
                 for (let i = 0; i < currentWord.length; i++) {
                     if (currentWord[i] === letter) {
                         revealedWord[i] = letter;
@@ -999,7 +876,6 @@
                 updateWordDisplay();
                 checkWinCondition();
             } else {
-                // Incorrect guess
                 incorrectGuesses++;
                 updateGuessesLeftDisplay();
                 updateIncorrectLettersDisplay();
@@ -1016,33 +892,15 @@
                     break;
                 }
             }
-        }        function checkWinCondition() {
+        }        
+        
+        function checkWinCondition() {
             if (revealedWord.join('') === currentWord) {
-                // Show fireworks celebration
-                showFireworks(3);
-                // Create and show modal
-                const modalOverlay = document.createElement('div');
-                modalOverlay.className = 'modal-overlay';
-                const modal = document.createElement('div');
-                modal.className = 'modal';
-                modal.innerHTML = '<h2>Congratulations! 🎉</h2>';
-                modalOverlay.appendChild(modal);
-                document.body.appendChild(modalOverlay);
-                
-                // Force reflow for animation
-                void modalOverlay.offsetWidth;
-                modalOverlay.classList.add('show');
-                
-                // Remove modal after 2 seconds
-                setTimeout(() => {
-                    modalOverlay.classList.remove('show');
-                    setTimeout(() => modalOverlay.remove(), 300); // Wait for fade out
-                }, 2000);
-
-                // Show popup with slight delay
+                // Fireworks and temporary modal removed
+                // Show main popup with a short delay (or no delay)
                 setTimeout(() => {
                     showPopup("You Win! 🎉", `The word was: ${currentWord}`);
-                }, 2500);
+                }, 100); // Adjusted delay
             }
         }
 
@@ -1050,7 +908,9 @@
             if (incorrectGuesses >= MAX_INCORRECT_GUESSES) {
                 showPopup("Game Over 😕", `The word was: ${currentWord}`);
             }
-        }        function showPopup(title, message) {
+        }        
+        
+        function showPopup(title, message) {
             popupTitleEl.textContent = title;
             popupMessageEl.textContent = message;
             messagePopupEl.classList.add('show');
@@ -1063,7 +923,8 @@
             setTimeout(() => {
                 messagePopupEl.classList.remove('show');
             }, 2000);
-        }        // Game canvas reference
+        }        
+        
         let gameCanvas = null;
         let gameCtx = null;
 
@@ -1073,110 +934,77 @@
                 gameCtx = gameCanvas.getContext('2d');
             }
             gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-            // Draw gallows
             Draw('gallows');
         }
-
-        // --- CANVAS DRAWING ---        
+     
         const draws = [
-            'gallows',
-            'head',
-            'body',
-            'rightHarm',
-            'leftHarm',
-            'rightLeg',
-            'leftLeg',
-            'rightFoot',
-            'leftFoot',
-            'rightToe',
-            'leftToe',
+            'gallows', 'head', 'body', 'rightHarm', 'leftHarm', 
+            'rightLeg', 'leftLeg', 'rightFoot', 'leftFoot', 'rightToe', 'leftToe'
         ];        
         
         function Draw(part) {
             if (!gameCtx) return;
+            gameCtx.strokeStyle = '#FF6F00'; // Moved common style out if possible, or keep per part
             
             switch (part) {
-                case 'gallows':                    gameCtx.strokeStyle = '#FF6F00';
+                case 'gallows':                    
                     gameCtx.lineWidth = 10;
                     gameCtx.beginPath();
-                    gameCtx.moveTo(175, 225);
-                    gameCtx.lineTo(5, 225);
-                    gameCtx.moveTo(40, 225);
-                    gameCtx.lineTo(25, 5);
-                    gameCtx.lineTo(100, 5);
-                    gameCtx.lineTo(100, 25);
+                    gameCtx.moveTo(175, 225); gameCtx.lineTo(5, 225);
+                    gameCtx.moveTo(40, 225); gameCtx.lineTo(25, 5);
+                    gameCtx.lineTo(100, 5); gameCtx.lineTo(100, 25);
                     gameCtx.stroke();
                     break;
-
                 case 'head':
-                    ctx.lineWidth = 5;
-                    ctx.beginPath();
-                    ctx.arc(100, 50, 25, 0, Math.PI * 2, true);
-                    ctx.closePath();
-                    ctx.stroke();
+                    gameCtx.lineWidth = 5; // Use gameCtx consistently
+                    gameCtx.beginPath();
+                    gameCtx.arc(100, 50, 25, 0, Math.PI * 2, true);
+                    gameCtx.closePath(); gameCtx.stroke();
                     break;
-
                 case 'body':
-                    ctx.beginPath();
-                    ctx.moveTo(100, 75);
-                    ctx.lineTo(100, 140);
-                    ctx.stroke();
+                    gameCtx.lineWidth = 5; gameCtx.beginPath();
+                    gameCtx.moveTo(100, 75); gameCtx.lineTo(100, 140);
+                    gameCtx.stroke();
                     break;
-
                 case 'rightHarm':
-                    ctx.beginPath();
-                    ctx.moveTo(100, 85);
-                    ctx.lineTo(60, 100);
-                    ctx.stroke();
+                    gameCtx.lineWidth = 5; gameCtx.beginPath();
+                    gameCtx.moveTo(100, 85); gameCtx.lineTo(60, 100);
+                    gameCtx.stroke();
                     break;
-
                 case 'leftHarm':
-                    ctx.beginPath();
-                    ctx.moveTo(100, 85);
-                    ctx.lineTo(140, 100);
-                    ctx.stroke();
+                    gameCtx.lineWidth = 5; gameCtx.beginPath();
+                    gameCtx.moveTo(100, 85); gameCtx.lineTo(140, 100);
+                    gameCtx.stroke();
                     break;
-
                 case 'rightLeg':
-                    ctx.beginPath();
-                    ctx.moveTo(100, 140);
-                    ctx.lineTo(80, 190);
-                    ctx.stroke();
+                    gameCtx.lineWidth = 5; gameCtx.beginPath();
+                    gameCtx.moveTo(100, 140); gameCtx.lineTo(80, 190);
+                    gameCtx.stroke();
                     break;
-
                 case 'rightFoot':
-                    ctx.beginPath();
-                    ctx.moveTo(82, 190);
-                    ctx.lineTo(70, 185);
-                    ctx.stroke();
+                    gameCtx.lineWidth = 5; gameCtx.beginPath();
+                    gameCtx.moveTo(82, 190); gameCtx.lineTo(70, 185);
+                    gameCtx.stroke();
                     break;
-
                 case 'leftLeg':
-                    ctx.beginPath();
-                    ctx.moveTo(100, 140);
-                    ctx.lineTo(125, 190);
-                    ctx.stroke();
+                    gameCtx.lineWidth = 5; gameCtx.beginPath();
+                    gameCtx.moveTo(100, 140); gameCtx.lineTo(125, 190);
+                    gameCtx.stroke();
                     break;
-
                 case 'leftFoot':
-                    ctx.beginPath();
-                    ctx.moveTo(122, 190);
-                    ctx.lineTo(135, 185);
-                    ctx.stroke();
+                    gameCtx.lineWidth = 5; gameCtx.beginPath();
+                    gameCtx.moveTo(122, 190); gameCtx.lineTo(135, 185);
+                    gameCtx.stroke();
                     break;
-
                 case 'rightToe':
-                    ctx.beginPath();
-                    ctx.moveTo(70, 185);
-                    ctx.lineTo(65, 195);
-                    ctx.stroke();
+                    gameCtx.lineWidth = 5; gameCtx.beginPath();
+                    gameCtx.moveTo(70, 185); gameCtx.lineTo(65, 195);
+                    gameCtx.stroke();
                     break;
-
                 case 'leftToe':
-                    ctx.beginPath();
-                    ctx.moveTo(135, 185);
-                    ctx.lineTo(140, 195);
-                    ctx.stroke();
+                    gameCtx.lineWidth = 5; gameCtx.beginPath();
+                    gameCtx.moveTo(135, 185); gameCtx.lineTo(140, 195);
+                    gameCtx.stroke();
                     break;
             }
         }
@@ -1185,22 +1013,12 @@
             if (incorrectGuesses > 0 && incorrectGuesses <= draws.length) {
                 Draw(draws[incorrectGuesses - 1]);
             }
-        }        // Firework celebration function
-        function showFireworks(times = 3) {
-            for (let i = 0; i < times; i++) {
-                const firework = document.createElement('div');
-                firework.className = 'firework';
-                firework.style.animationDelay = `${i * 0.2}s`;
-                document.body.appendChild(firework);
-                setTimeout(() => {
-                    if (firework.parentNode) firework.parentNode.removeChild(firework);
-                }, 2000);
-            }
-        }
+        }        
+        // Firework celebration function REMOVED
 
         // --- INITIALIZE ---
         createKeyboard();
-        initializeGame();
+        // initializeGame(); // Moved to DOMContentLoaded
 
         // --- EVENT LISTENERS ---        
         playAgainButton.addEventListener('click', initializeGame);
@@ -1213,6 +1031,8 @@
             currentDifficulty = e.target.value;
             initializeGame();
         });
+
+        document.getElementById('newWordBtn').addEventListener('click', initializeGame); // Added listener for new word button
         
     </script>
 </body>
