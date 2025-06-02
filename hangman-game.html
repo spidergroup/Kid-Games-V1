@@ -528,24 +528,34 @@
             filter: none;
         }
 
-        /* Hint Icon Animation */
-        @keyframes hintUsed {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.2);
-                opacity: 0.5;
-            }
-            100% {
-                transform: scale(0);
-                opacity: 0;
-            }
+        /* Existing hint animation can be reused or adapted */
+        @keyframes hintUsed { /* This was for the group, can be repurposed or a new one made */
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(0); opacity: 0; }
         }
 
-        .hint-used {
+        .hint-icon-container {
+            display: inline-block; /* Allows bulbs to sit next to each other */
+            vertical-align: middle;
+        }
+
+        .hint-bulb {
+            display: inline-block;
+            cursor: pointer;
+            font-size: 1.2em; /* Or your preferred size */
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            margin: 0 2px; /* Optional spacing between bulbs */
+            user-select: none;
+        }
+
+        .hint-bulb:hover {
+            transform: scale(1.2);
+        }
+
+        .hint-bulb.used {
             animation: hintUsed 0.3s ease-out forwards;
+            pointer-events: none; /* Prevent further interaction during/after animation */
         }
 
         /* Responsive adjustments */
@@ -609,10 +619,13 @@
                 <canvas id="hangmanCanvas" width="180" height="250"></canvas>
             </div>
             <div class="word-status-container">
+                <!-- In your .game-info-wrapper -->
                 <p class="guesses-remaining">
                     Guesses Left: <span id="guessesLeft">6</span>
                     <span class="tooltip-wrapper">
-                        <span class="hint-info-icon"></span>
+                        <!-- This span will now be a CONTAINER for individual bulb icons -->
+                        <span class="hint-icon-container"></span>
+                        
                     </span>
                 </p>
                 <div class="word-display" id="wordDisplay"></div>
@@ -729,10 +742,94 @@
 
             return revealed;
         }
+ 
 
+        const hintIconContainer = document.querySelector('.hint-icon-container');
+        const hintsLeftTextEl = document.getElementById('hintsLeftText'); // For the text display
+
+        function updateHintsDisplay() {
+            if (!hintIconContainer) return;
+
+            hintIconContainer.innerHTML = ''; // Clear existing bulbs
+
+            if (hintsRemaining > 0) {
+                hintIconContainer.style.display = 'inline-block'; // Show container
+                for (let i = 0; i < hintsRemaining; i++) {
+                    const bulbSpan = document.createElement('span');
+                    bulbSpan.classList.add('hint-bulb');
+                    bulbSpan.textContent = '💡';
+                    bulbSpan.addEventListener('click', handleHintClick); // Add click listener to each bulb
+                    hintIconContainer.appendChild(bulbSpan);
+                }
+            } else {
+                hintIconContainer.style.display = 'none'; // Hide container if no hints
+            }
+
+            // Update the optional text display
+            if (hintsLeftTextEl) {
+                if (hintsRemaining > 0) {
+                    hintsLeftTextEl.textContent = `(${hintsRemaining} hint${hintsRemaining !== 1 ? 's' : ''} left)`;
+                } else {
+                    hintsLeftTextEl.textContent = '(No hints left)';
+                }
+            }
+        }
+
+
+        function handleHintClick(event) {
+            const clickedBulb = event.target; // The specific 💡 span that was clicked
+
+            if (hintsRemaining <= 0 || !currentWord || clickedBulb.classList.contains('used')) {
+                return; // No hints left, game not started, or bulb already used
+            }
+
+            clickedBulb.classList.add('used'); // Add class to trigger animation
+
+            // Apply the actual hint logic
+            // This part is similar to your old handleHint function
+            revealedWord = giveHint(currentWord, revealedWord);
+            
+            for (let i = 0; i < currentWord.length; i++) {
+                if (currentWord[i] === revealedWord[i]) {
+                    if (!guessedLetters.includes(currentWord[i])) {
+                        guessedLetters.push(currentWord[i]);
+                    }
+                }
+            }
+
+            hintsRemaining--; // Decrement hints AFTER processing
+
+            // Update game displays
+            updateWordDisplay();
+            updateKeyboard();
+            checkWinCondition();
+
+            // After animation, remove the bulb from DOM (optional, CSS can just hide it)
+            // And then refresh the hint display to show correct count / text
+            setTimeout(() => {
+                // If you want to physically remove it:
+                // if (clickedBulb.parentNode) {
+                //     clickedBulb.parentNode.removeChild(clickedBulb);
+                // }
+                // Then call updateHintsDisplay() again to redraw with one less,
+                // OR just update the text count if you are not removing.
+                // For simplicity with the current animation, let's let updateHintsDisplay handle redraw
+                updateHintsDisplay(); // This will redraw with one less bulb and update text
+            }, 300); // Match animation duration
+
+            event.stopPropagation();
+        }
+
+
+        // In your handleHint function, make sure the animation is triggered correctly.
         function handleHint(event) {
             if (hintsRemaining <= 0 || !currentWord) return;
             
+            const hintIcon = document.querySelector('.hint-info-icon');
+            if (hintIcon && hintsRemaining > 0) { // Check hintsRemaining > 0 before adding class
+                hintIcon.classList.add('hint-used'); // Trigger animation
+            }
+
             // Update revealed word with hint
             revealedWord = giveHint(currentWord, revealedWord);
             
@@ -749,72 +846,33 @@
             hintsRemaining--;
             updateWordDisplay();
             updateKeyboard();
-            updateHintsDisplay();
+            updateHintsDisplay(); // This will now update bulbs and visibility
             
             // Check if won
             checkWinCondition();
 
-            // Prevent tooltip from closing immediately
+            // Prevent tooltip from closing immediately (if you had one)
             if (event) {
                 event.stopPropagation();
-            }
-        }        
-        function updateHintsDisplay() {
-            const tooltip = document.querySelector('.tooltip');
-            const hintsSpan = document.querySelector('.hints-remaining');
-            const hintsAvailable = document.querySelectorAll('.hints-available');
-            const hintIcon = document.querySelector('.hint-info-icon');
-            
-            if (tooltip && hintsAvailable) {
-                // Update all instances of hints-available
-                hintsAvailable.forEach(span => {
-                    span.textContent = hintsRemaining;
-                });
-
-                // Update the full tooltip text
-                tooltip.innerHTML = `You have <span class="hints-available">${hintsRemaining}</span> hint${hintsRemaining !== 1 ? 's' : ''} remaining`;
-                
-                // Update tooltip state
-                tooltip.dataset.hints = hintsRemaining;
-                tooltip.style.cursor = hintsRemaining > 0 ? 'pointer' : 'default';
-                tooltip.style.opacity = hintsRemaining > 0 ? '1' : '0.5';
-            }            // Update the hint icons
-            if (hintIcon) {
-                const bulbs = '💡'.repeat(hintsRemaining);
-                hintIcon.textContent = hintsRemaining > 0 ? bulbs : '';
-                hintIcon.dataset.hints = hintsRemaining;
-                
-                // Add animation class for removing bulb
-                if (hintsRemaining < maxHints) {
-                    hintIcon.classList.add('hint-used');
-                    setTimeout(() => hintIcon.classList.remove('hint-used'), 300);
-                }
-            }
-
-            // No need for counter when using multiple icons
-            if (hintsSpan) {
-                hintsSpan.textContent = '';
             }
         }
 
         function initializeGame() {
-            // Set hints based on difficulty
             const difficulty = document.getElementById('difficultySelect').value;
-            setHintsForDifficulty(difficulty);
+            setHintsForDifficulty(difficulty); // This sets hintsRemaining
 
-            // Rest of initialization
             currentWord = selectRandomWord();
             revealedWord = Array(currentWord.length).fill('_');
             guessedLetters = [];
             incorrectGuesses = 0;
             
-            // Update displays
             updateWordDisplay();
             updateGuessesLeftDisplay();
             updateIncorrectLettersDisplay();
-            updateHintsDisplay();
             resetKeyboard();
             resetCanvas();
+            
+            updateHintsDisplay(); // CRITICAL: Call this to draw the initial bulbs
         }
 
         // Add click handler for tooltip        
