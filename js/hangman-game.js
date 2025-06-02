@@ -2,7 +2,7 @@
 
 const hangmanData = {      wordList: [
         // Common Objects
-        "BOOK", "BALL", "CAKE", "DOOR", "DESK", "LAMP", "KEYS", "TOYS", "BIKE", "GAME",
+        "BOOK", "BALL", "CAKE", "DOOR", "DESK", "LAMP", "BIKE", "GAME",
         // Nature
         "TREE", "LEAF", "STAR", "MOON", "RAIN", "WIND", "SNOW", "SAND", "ROCK", "BIRD",
         // Colors
@@ -17,7 +17,7 @@ const hangmanData = {      wordList: [
         "PIZZA", "CHOCOLATE", "DONUT", "SANDWICH", "SPAGHETTI", "TACO", 
         "POPCORN", "CUPCAKE", "SMOOTHIE",
         // Body parts
-        "HEAD", "HAND", "FOOT", "FACE", "NOSE", "EARS", "HAIR", "EYE", "ARM", "LEG",
+        "HEAD", "HAND", "FOOT", "FACE", "NOSE", "EAR", "HAIR", "EYE", "ARM", "LEG",
         // Feelings
         "HAPPY", "LOVE",
         // Family & People
@@ -92,7 +92,7 @@ const hangmanData = {      wordList: [
         everyday: [
             // Easy (3-5 letters)
             // Common objects
-            "BOOK", "BALL", "CAKE", "DOOR", "DESK", "LAMP", "KEYS", "TOYS", "BIKE", "GAME",
+            "BOOK", "BALL", "CAKE", "DOOR", "DESK", "LAMP", "BIKE", "GAME",
             // Nature
             "TREE", "LEAF", "STAR", "MOON", "RAIN", "WIND", "SNOW", "SAND", "ROCK", "BIRD",
             // Colors
@@ -102,7 +102,7 @@ const hangmanData = {      wordList: [
             // Food & Drinks
             "FOOD", "MILK", "MEAT", "BREAD", "SOUP", "FISH", "RICE", "EGG", "CAKE", "PIE",
             // Body parts
-            "HEAD", "HAND", "FOOT", "FACE", "NOSE", "EARS", "HAIR", "EYE", "ARM", "LEG",
+            "HEAD", "HAND", "FOOT", "FACE", "NOSE", "EAR", "HAIR", "EYE", "ARM", "LEG",
             // Feelings
              "HAPPY", "LOVE",
             // Family & People
