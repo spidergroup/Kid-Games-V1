@@ -500,41 +500,52 @@
             margin-left: 8px;
         }
 
+        /* Interactive Hint Icon */
         .hint-info-icon {
-            cursor: help;
-            font-size: 1.1em;
+            cursor: pointer;
+            font-size: 1.2em;
+            vertical-align: middle;
+            transition: all 0.3s ease;
+            user-select: none;
         }
 
-        .tooltip {
-            position: absolute;
-            background: var(--mc-yellow);
-            color: var(--black);
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.9em;
-            white-space: nowrap;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            margin-bottom: 8px;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease, visibility 0.2s ease;
+        .hint-info-icon:hover {
+            transform: scale(1.2);
+            filter: brightness(1.2);
         }
 
-        .tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 6px solid transparent;
-            border-top-color: var(--mc-yellow);
+        .hint-info-icon:active {
+            transform: scale(0.9);
         }
 
-        .tooltip-wrapper:hover .tooltip {
-            opacity: 1;
-            visibility: visible;
+        .hint-info-icon[data-hints="0"] {
+            cursor: default;
+            opacity: 0.5;
+        }
+
+        .hint-info-icon[data-hints="0"]:hover {
+            transform: none;
+            filter: none;
+        }
+
+        /* Hint Icon Animation */
+        @keyframes hintUsed {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+
+        .hint-used {
+            animation: hintUsed 0.3s ease-out forwards;
         }
 
         /* Responsive adjustments */
@@ -601,8 +612,7 @@
                 <p class="guesses-remaining">
                     Guesses Left: <span id="guessesLeft">6</span>
                     <span class="tooltip-wrapper">
-                        <span class="hint-info-icon">💡</span>
-                        <span class="tooltip">You have <span class="hints-available"></span> hint remaining</span>
+                        <span class="hint-info-icon"></span>
                     </span>
                 </p>
                 <div class="word-display" id="wordDisplay"></div>
@@ -674,9 +684,160 @@
 
         // --- GAME STATE VARIABLES ---
         let currentWord = '';
-        let guessedLetters = [];
-        let incorrectGuesses = 0;
-        let revealedWord = []; // Array of letters or underscores
+        let revealedWord = [];
+        let guessedLetters = [];        let incorrectGuesses = 0;
+        let hintsRemaining = 1; // Default to easy mode
+        let maxHints = 1; // Default to easy mode
+
+        // Function to set hints based on difficulty
+        function setHintsForDifficulty(difficulty) {
+            switch(difficulty) {
+                case 'easy':
+                    maxHints = 1;
+                    break;
+                case 'medium':
+                case 'hard':
+                    maxHints = 2;
+                    break;
+                default:
+                    maxHints = 1;
+            }
+            hintsRemaining = maxHints;
+        }
+
+        /**
+         * Reveals one hidden letter in the current word.
+         * @param {string} word - The original word (e.g., "FROG")
+         * @param {string[]} revealed - Array representing revealed letters (e.g., ["F", "_", "_", "G"])
+         * @returns {string[]} Updated revealed array with one more letter shown
+         */
+        function giveHint(word, revealed) {
+            // Find all indices of unrevealed letters
+            const hiddenIndices = [];
+            for (let i = 0; i < word.length; i++) {
+                if (revealed[i] === "_" || revealed[i] === "") {
+                    hiddenIndices.push(i);
+                }
+            }
+
+            // If there are no hidden letters left, return as is
+            if (hiddenIndices.length === 0) return revealed;
+
+            // Pick one random hidden index to reveal
+            const randomIndex = hiddenIndices[Math.floor(Math.random() * hiddenIndices.length)];
+            revealed[randomIndex] = word[randomIndex].toUpperCase();
+
+            return revealed;
+        }
+
+        function handleHint(event) {
+            if (hintsRemaining <= 0 || !currentWord) return;
+            
+            // Update revealed word with hint
+            revealedWord = giveHint(currentWord, revealedWord);
+            
+            // Add the newly revealed letter to guessed letters
+            for (let i = 0; i < currentWord.length; i++) {
+                if (currentWord[i] === revealedWord[i]) {
+                    if (!guessedLetters.includes(currentWord[i])) {
+                        guessedLetters.push(currentWord[i]);
+                    }
+                }
+            }
+
+            // Update displays
+            hintsRemaining--;
+            updateWordDisplay();
+            updateKeyboard();
+            updateHintsDisplay();
+            
+            // Check if won
+            checkWinCondition();
+
+            // Prevent tooltip from closing immediately
+            if (event) {
+                event.stopPropagation();
+            }
+        }        
+        function updateHintsDisplay() {
+            const tooltip = document.querySelector('.tooltip');
+            const hintsSpan = document.querySelector('.hints-remaining');
+            const hintsAvailable = document.querySelectorAll('.hints-available');
+            const hintIcon = document.querySelector('.hint-info-icon');
+            
+            if (tooltip && hintsAvailable) {
+                // Update all instances of hints-available
+                hintsAvailable.forEach(span => {
+                    span.textContent = hintsRemaining;
+                });
+
+                // Update the full tooltip text
+                tooltip.innerHTML = `You have <span class="hints-available">${hintsRemaining}</span> hint${hintsRemaining !== 1 ? 's' : ''} remaining`;
+                
+                // Update tooltip state
+                tooltip.dataset.hints = hintsRemaining;
+                tooltip.style.cursor = hintsRemaining > 0 ? 'pointer' : 'default';
+                tooltip.style.opacity = hintsRemaining > 0 ? '1' : '0.5';
+            }            // Update the hint icons
+            if (hintIcon) {
+                const bulbs = '💡'.repeat(hintsRemaining);
+                hintIcon.textContent = hintsRemaining > 0 ? bulbs : '';
+                hintIcon.dataset.hints = hintsRemaining;
+                
+                // Add animation class for removing bulb
+                if (hintsRemaining < maxHints) {
+                    hintIcon.classList.add('hint-used');
+                    setTimeout(() => hintIcon.classList.remove('hint-used'), 300);
+                }
+            }
+
+            // No need for counter when using multiple icons
+            if (hintsSpan) {
+                hintsSpan.textContent = '';
+            }
+        }
+
+        function initializeGame() {
+            // Set hints based on difficulty
+            const difficulty = document.getElementById('difficultySelect').value;
+            setHintsForDifficulty(difficulty);
+
+            // Rest of initialization
+            currentWord = selectRandomWord();
+            revealedWord = Array(currentWord.length).fill('_');
+            guessedLetters = [];
+            incorrectGuesses = 0;
+            
+            // Update displays
+            updateWordDisplay();
+            updateGuessesLeftDisplay();
+            updateIncorrectLettersDisplay();
+            updateHintsDisplay();
+            resetKeyboard();
+            resetCanvas();
+        }
+
+        // Add click handler for tooltip        
+        document.addEventListener('DOMContentLoaded', () => {            // Initialize canvas
+            gameCanvas = document.getElementById('hangmanCanvas');
+            if (gameCanvas) {
+                gameCanvas.width = 200;
+                gameCanvas.height = 250;
+                gameCtx = gameCanvas.getContext('2d');
+                resetCanvas();
+            }            // Add hint icon click handler
+            const hintIcon = document.querySelector('.hint-info-icon');
+            if (hintIcon) {
+                hintIcon.addEventListener('click', (e) => {
+                    if (hintsRemaining > 0) {
+                        handleHint(e);
+                    }
+                });
+            }
+
+            // Initialize game
+            initializeGame();
+        });
 
         // --- GAME LOGIC ---            
         function selectRandomWord() {
@@ -730,20 +891,6 @@
             }
 
             return wordPool[Math.floor(Math.random() * wordPool.length)];
-        }
-
-        function initializeGame() {
-            currentWord = selectRandomWord();
-            guessedLetters = [];
-            incorrectGuesses = 0;
-            revealedWord = Array(currentWord.length).fill('_');
-            
-            updateWordDisplay();
-            updateGuessesLeftDisplay();
-            updateIncorrectLettersDisplay();
-            resetKeyboard();
-            drawHangman(); // Initial gallows or empty state
-            messagePopupEl.classList.remove('show');
         }
 
         function updateWordDisplay() {
@@ -858,29 +1005,18 @@
             setTimeout(() => {
                 messagePopupEl.classList.remove('show');
             }, 2000);
-        }
+        }        // Game canvas reference
+        let gameCanvas = null;
+        let gameCtx = null;
 
-        function drawHangman() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Always draw the gallows
+        function resetCanvas() {
+            if (!gameCanvas) {
+                gameCanvas = document.getElementById('hangmanCanvas');
+                gameCtx = gameCanvas.getContext('2d');
+            }
+            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            // Draw gallows
             Draw('gallows');
-            
-            // Draw parts based on incorrect guesses
-            for (let i = 0; i < incorrectGuesses; i++) {
-                Draw(draws[i + 1]); // +1 because gallows is already drawn
-            }
-        }        // Firework celebration function
-        function showFireworks(times = 3) {
-            for (let i = 0; i < times; i++) {
-                const firework = document.createElement('div');
-                firework.className = 'firework';
-                firework.style.animationDelay = `${i * 0.2}s`;
-                document.body.appendChild(firework);
-                setTimeout(() => {
-                    if (firework.parentNode) firework.parentNode.removeChild(firework);
-                }, 2000);
-            }
         }
 
         // --- CANVAS DRAWING ---        
@@ -896,21 +1032,22 @@
             'leftFoot',
             'rightToe',
             'leftToe',
-        ];
-
+        ];        
+        
         function Draw(part) {
+            if (!gameCtx) return;
+            
             switch (part) {
-                case 'gallows':
-                    ctx.strokeStyle = '#FF6F00';
-                    ctx.lineWidth = 10;
-                    ctx.beginPath();
-                    ctx.moveTo(175, 225);
-                    ctx.lineTo(5, 225);
-                    ctx.moveTo(40, 225);
-                    ctx.lineTo(25, 5);
-                    ctx.lineTo(100, 5);
-                    ctx.lineTo(100, 25);
-                    ctx.stroke();
+                case 'gallows':                    gameCtx.strokeStyle = '#FF6F00';
+                    gameCtx.lineWidth = 10;
+                    gameCtx.beginPath();
+                    gameCtx.moveTo(175, 225);
+                    gameCtx.lineTo(5, 225);
+                    gameCtx.moveTo(40, 225);
+                    gameCtx.lineTo(25, 5);
+                    gameCtx.lineTo(100, 5);
+                    gameCtx.lineTo(100, 25);
+                    gameCtx.stroke();
                     break;
 
                 case 'head':
@@ -961,7 +1098,9 @@
                     ctx.moveTo(100, 140);
                     ctx.lineTo(125, 190);
                     ctx.stroke();
-                    break;                case 'leftFoot':
+                    break;
+
+                case 'leftFoot':
                     ctx.beginPath();
                     ctx.moveTo(122, 190);
                     ctx.lineTo(135, 185);
@@ -982,7 +1121,26 @@
                     ctx.stroke();
                     break;
             }
-        }        // --- INITIALIZE ---
+        }
+
+        function drawHangman() {
+            if (incorrectGuesses > 0 && incorrectGuesses <= draws.length) {
+                Draw(draws[incorrectGuesses - 1]);
+            }
+        }        // Firework celebration function
+        function showFireworks(times = 3) {
+            for (let i = 0; i < times; i++) {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.style.animationDelay = `${i * 0.2}s`;
+                document.body.appendChild(firework);
+                setTimeout(() => {
+                    if (firework.parentNode) firework.parentNode.removeChild(firework);
+                }, 2000);
+            }
+        }
+
+        // --- INITIALIZE ---
         createKeyboard();
         initializeGame();
 
