@@ -1,75 +1,93 @@
 // hangman-game.js - Word list and categories for the Hangman game
 
-const hangmanData = {    
-    wordList: [        // Common Words
-        "BLUE", "RED", "PINK", "GOLD", "GRAY", "TIME", "HOUR", "WEEK", "YEAR", "DAY",
-        "FOOD", "MILK", "MEAT", "BREAD", "SOUP", "FISH", "RICE", "EGGS", "CAKE", "PIE",
-        "HEAD", "HAND", "FOOT", "FACE", "NOSE", "EARS", "HAIR", "EYES", "ARM", "LEG",
-        "HAPPY", "LOVE", "MOM", "DAD", "AUNT", "KID", "BABY",
-        "HOME", "PARK", "SHOP", "ROOM", "YARD",
-
-        "ACTOR", "ADULT", "AGENT", "ANGER", "APPLE", "BEACH", "BIRTH", "BLACK", "BLAME", "BLOCK", "BLOOD", 
-        "BOARD", "BRAIN", "BRAND", "BREAD", "BREAK", "BROWN", "BRUSH", "BUDDY", "BUNCH", "BUYER", "CABIN",
-        "CANDY", "CARGO", "CARPET", "CHAIR", "CHAIN", "CHART", "CHECK", "CHEESE", "CHEST", "CHILD", "CLAIM",
-        "CLASS", "CLERK", "CLOCK", "CLOUD", "COACH", "COAST", "COURT", "CRACK", "CRAFT", "CREAM", "CRIME",
-        "CROSS", "CROWD", "DANCE", "DEATH", "DELAY", "DEPTH", "DEVIL", "DOUBT", "DRAFT", "DRAMA", "DREAM",
-        "DRESS", "DRINK", "DRIVE", "EARTH", "ENTRY", "ERROR", "EVENT", "EXAM", "EXTRA", "FACE", "FAITH",
-        "FAULT", "FIELD", "FIGHT", "FINAL", "FLASH", "FLOOR", "FOCUS", "FORCE", "FORM", "FRAME", "FRONT",
-        "FRUIT", "GLASS", "GRADE", "GRASS", "GUARD", "GUIDE", "HEART", "HEAT", "HELP", "HOLE", "HOME",
-        "HOPE", "HORSE", "HOTEL", "HOUSE", "HUMAN", "HUMOR", "HURT", "IMAGE", "ISSUE", "JUDGE", "JUICE",
-        "KNIFE", "LAUGH", "LEVEL", "LIGHT", "LIMIT", "LUNCH", "MAGIC", "MATCH", "METAL", "MONEY", "MONTH",
-        "MOTOR", "MOUSE", "MOUTH", "MOVIE", "MUSIC", "NIGHT", "NOISE", "NOVEL", "NURSE", "OCEAN", "OFFER",
-        "ORDER", "OWNER", "PAINT", "PANEL", "PAPER", "PARTY", "PEACE", "PHASE", "PHONE", "PHOTO", "PIECE",
-        "PILOT", "PITCH", "PLACE", "PLANE", "PLANT", "PLATE", "POINT", "POWER", "PRESS", "PRICE", "PRIDE",
-        "PRINT", "PRIZE", "PROOF", "QUEEN", "RADIO", "RANGE", "RATIO", "REACH", "RIVER", "ROAD", "ROCK",
-        "ROLE", "ROOF", "ROOM", "ROUND", "ROUTE", "RULE", "RUSH", "SCALE", "SCENE", "SCORE", "SENSE",
-        "SHAPE", "SHARE", "SHEEP", "SHEET", "SHIFT", "SHIRT", "SHOCK", "SHOOT", "SLEEP", "SMILE", "SMOKE",
-        "SNOW", "SOUP", "SPACE", "SPEED", "SPELL", "SPORT", "STAFF", "STAGE", "STAND", "START", "STATE",
-        "STEAM", "STEEL", "STICK", "STOCK", "STONE", "STORE", "STORM", "STORY", "STYLE", "SUGAR", "TABLE",
-        "TASTE", "THEME", "THING", "TITLE", "TOTAL", "TOUCH", "TOWER", "TRACK", "TRADE", "TRAIN", "TREND",
-        "TRIAL", "TRUCK", "TRUST", "TRUTH", "TURN", "TYPE", "UNIT", "VALUE", "VIDEO", "VIEW", "VOICE",
-        "WASTE", "WATER", "WAVE", "WHEEL", "WHITE", "WIND", "WINE", "WOMAN", "WOOD", "WORD", "WORK",
-        "WORLD", "YOUTH", "ZONE",
-
-        "ABILITY", "ACCOUNT", "ADDRESS", "ADVANCE", "AIRPORT", "ALCOHOL", "ANIMAL", "ANSWER", "ANXIETY",
-        "ARTICLE", "ATTEMPT", "AUTHOR", "AVERAGE", "BALANCE", "BATTLE", "BEAUTY", "BELIEF", "BENEFIT",
-        "BICYCLE", "BLANKET", "BOTTLE", "BROTHER", "BUDGET", "BUTTER", "BUTTON", "CABINET", "CAMERA",
-        "CANCER", "CAPTAIN", "CAREER", "CASTLE", "CENTER", "CHANNEL", "CHAPTER", "CHARITY", "CHICKEN",
-        "CLIMATE", "COLLEGE", "COMFORT", "COMPANY", "CONCERT", "CONTROL", "CORNER", "COUNTRY", "COUSIN",
-        "CREDIT", "CULTURE", "CURRENT", "DANGER", "DEALER", "DEBATE", "DEFENSE", "DEGREE", "DEMAND",
-        "DESIGN", "DESIRE", "DETAIL", "DEVICE", "DINNER", "DISEASE", "DISPLAY", "DIVORCE", "DOCTOR",
-        "DRIVER", "EDITOR", "EFFECT", "EFFORT", "EMPIRE", "ENERGY", "ENGINE", "ESCAPE", "ESTATE",
-        "EVENING", "EXPERT", "EXTENT", "FACTOR", "FAMILY", "FARMER", "FATHER", "FEMALE", "FIGURE",
-        "FINGER", "FOREST", "FUTURE", "GARDEN", "GENIUS", "GROUND", "GROWTH", "GUIDE", "HANDLE",
-        "HEALTH", "HEIGHT", "HISTORY", "INCOME", "INJURY", "INSECT", "INSIDE", "ISLAND", "JACKET",
-        "JUNIOR", "LADDER", "LAWYER", "LEADER", "LENGTH", "LETTER", "LIVING", "MARKET", "MASTER",
-        "MATTER", "MEMBER", "METHOD", "MINUTE", "MIRROR", "MOBILE", "MOTHER", "MUSCLE", "NATION",
-        "NATURE", "NOTICE", "NUMBER", "OBJECT", "OFFICE", "OPTION", "ORANGE", "PARENT", "PEOPLE",
-        "PERIOD", "PERSON", "PHONE", "PICTURE", "PLAYER", "PLENTY", "POETRY", "POLICE", "POLICY",
-        "POTATO", "POWER", "PROFIT", "PUBLIC", "PURPLE", "REASON", "RECORD", "REGION", "REPORT",
-        "RESULT", "RETURN", "REVENUE", "RHYTHM", "SAFETY", "SALARY", "SCHOOL", "SCREEN", "SCRIPT",
-        "SEARCH", "SEASON", "SECRET", "SECTOR", "SENIOR", "SERIES", "SERVER", "SERVICE", "SHADOW",
-        "SIGNAL", "SILVER", "SIMPLE", "SISTER", "SOCIETY", "SPIRIT", "SQUARE", "STABLE", "STATION",
-        "STATUS", "STREET", "STRING", "STUDIO", "SUMMER", "SURVEY", "SYSTEM", "TALENT", "TARGET",
-        "TENNIS", "THEORY", "THROAT", "TICKET", "TONGUE", "TRAVEL", "TROUBLE", "VALLEY", "VEHICLE",
-        "VOLUME", "WEALTH", "WEATHER", "WEIGHT", "WINDOW", "WINNER", "WINTER", "WONDER", "WORKER",
-        "WRITER", "YELLOW",
-
-        "ACCIDENT", "ANALYSIS", "ANXIETY", "APPROVAL", "ARGUMENT", "BASEBALL", "BIRTHDAY", "BRILLIANT",
-        "BUILDING", "BUSINESS", "CALENDAR", "CAMPAIGN", "CATEGORY", "CHAMPION", "CHARACTER", "CHEMICAL",
-        "CHILDREN", "CLOTHING", "COMPUTER", "CONFLICT", "CREATIVE", "CUSTOMER", "DATABASE", "DAUGHTER",
-        "DECISION", "DELIVERY", "DIAMOND", "DIRECTOR", "DISCOUNT", "DISTANCE", "DIVISION", "DOCUMENT",
-        "DRAWING", "EDUCATION", "ELEVATOR", "EMPLOYEE", "EMPLOYER", "ENGINEER", "ENTRANCE", "EVIDENCE",
-        "EXERCISE", "FESTIVAL", "FOOTBALL", "GUIDANCE", "HAPPINESS", "HOSPITAL", "INCIDENT", "INDUSTRY",
-        "INTERNET", "JUDGMENT", "KEYBOARD", "LANGUAGE", "LOCATION", "MAGAZINE", "MARRIAGE", "MATERIAL",
-        "MEDICINE", "MIDNIGHT", "MORTGAGE", "MOUNTAIN", "MUSICIAN", "OCCASION", "OFFICIAL", "PAINTING",
-        "PARTNER", "PASSENGER", "PATIENCE", "PAYMENT", "PERSONAL", "PHYSICAL", "POLITICS", "POSITION",
-        "POSITIVE", "POSSIBLE", "PRACTICE", "PRESENCE", "PRESSURE", "PRIORITY", "PROGRESS", "PROPERTY",
-        "PROPOSAL", "PURCHASE", "QUANTITY", "QUESTION", "REACTION", "REGISTER", "RELATION", "RESEARCH",
-        "RESIDENT", "RESOURCE", "RESPONSE", "SECURITY", "SENTENCE", "SHIPPING", "SHOPPING", "SOFTWARE",
-        "SOLUTION", "STANDARD", "STRATEGY", "STRENGTH", "STUDENT", "SUCCESS", "SUPPLIER", "SUPPORT",
-        "SWIMMING", "TEACHING", "TELEPHONE", "TRAINING", "EMPHASIS", "MAJORITY", "TOGETHER", "VEGETABLE",
-        "WEAKNESS", "WEDDING", "WRITING"
+const hangmanData = {      wordList: [
+        // Common Objects
+        "BOOK", "BALL", "CAKE", "DOOR", "DESK", "LAMP", "KEYS", "TOYS", "BIKE", "GAME",
+        // Nature
+        "TREE", "LEAF", "STAR", "MOON", "RAIN", "WIND", "SNOW", "SAND", "ROCK", "BIRD",
+        // Colors
+        "RED", "BLUE", "YELLOW", "GREEN", "ORANGE", "PURPLE", "BLACK", "WHITE", 
+        "GRAY", "BROWN", "PINK", "GOLD", "SILVER", "CYAN", "INDIGO", "VIOLET", 
+        "MAROON", "TEAL", "AQUA", "NAVY", "OLIVE", "CORAL", "PEACH", "LAVENDER", 
+        "TURQUOISE", "MAGENTA", "MINT", "LIME", "PLUM", "CRIMSON",
+        // Time
+        "TIME", "HOUR", "WEEK", "YEAR", "DAY",
+        // Food & Drinks
+        "FOOD", "MILK", "MEAT", "BREAD", "SOUP", "FISH", "RICE", "EGG", "CAKE", "PIE",
+        "PIZZA", "CHOCOLATE", "DONUT", "SANDWICH", "SPAGHETTI", "TACO", 
+        "POPCORN", "CUPCAKE", "SMOOTHIE",
+        // Body parts
+        "HEAD", "HAND", "FOOT", "FACE", "NOSE", "EARS", "HAIR", "EYE", "ARM", "LEG",
+        // Feelings
+        "HAPPY", "LOVE",
+        // Family & People
+        "MOM", "DAD", "AUNT", "KID", "BABY",
+        // Places
+        "HOME", "PARK", "SHOP", "ROOM", "YARD", "SYDNEY", "LONDON", "VENICE", "PARIS", 
+        "TOKYO", "ROME", "BERLIN", "MADRID", "ATHENS", "CAIRO", "DUBAI", "SEOUL", 
+        "MUMBAI", "MOSCOW", "PRAGUE", "VIENNA", "BANGKOK", "MIAMI", "BOSTON", "HAWAII", 
+        "LISBON", "MONACO", "SINGAPORE", "DELHI", "SHANGHAI", "CHICAGO", "TORONTO", 
+        "VEGAS", "DUBLIN", "MILAN", "ANGKOR",
+        // Animals
+        "ELEPHANT", "KANGAROO", "GIRAFFE", "PENGUIN", "DOLPHIN", "TIGER", "ZEBRA", 
+        "OCTOPUS", "CHAMELEON", "ALLIGATOR", "DOG", "CAT", "HORSE", "LION", "HUMAN", 
+        "MONKEY", "WHALE", "BAT", "BEAR", "DEER", "RABBIT", "CATTLE", "SHEEP", "GOAT", 
+        "PIG", "KOALA", "RHINOCEROS", "HIPPOPOTAMUS", "CAMEL", "SLOTH", "OTTER", 
+        "MEERKAT", "HAMSTER", "MOUSE", "RAT", "FOX", "WOLF", "DUCK", "SWAN", "CROW", 
+        "HAWK", "OWL", "FROG", "TOAD", "SEAL", "PANDA", "LLAMA", "SNAKE", "EAGLE", 
+        "SHARK", "TROUT", "CRAB", "SNAIL", "MOOSE", "BISON", "SKUNK", "MOLE", "TURTLE", 
+        "PARROT", "IGUANA", "GORILLA", "JAGUAR", "LEOPARD", "GAZELLE", "OSTRICH", 
+        "PEACOCK", "FLAMINGO",
+        // Fruits
+        "DATE", "KIWI", "LIME", "PLUM", "YUZU", "FIG", "GRAPE", "MANGO", "PEACH",
+        "GUAVA", "OLIVE", "ORANGE", "BANANA", "LYCHEE", "PAPAYA", "LONGAN", "LOQUAT", 
+        "SAPOTE", "DURIAN", "POMELO", "LEMON", "PINEAPPLE", "WATERMELON", "STRAWBERRY", 
+        "BLUEBERRY", "GRAPEFRUIT", "TANGERINE", "CLEMENTINE", "MANDARINE", "RASPBERRY", 
+        "BLACKBERRY", "CRANBERRY", "GOOSEBERRY", "BOYSENBERRY", "MULBERRY", "ELDERBERRY",
+        "HUCKLEBERRY", "APRICOT", "NECTARINE", "AVOCADO", "CANTALOUPE", "HONEYDEW", 
+        "GALIA", "STARFRUIT", "RAMBUTAN", "JACKFRUIT", "PERSIMMON", "POMEGRANATE", 
+        "TAMARIND", "SOURSOP", "MANGOSTEEN", "CANARY MELON", "WINTER MELON",
+        // Countries
+        "CANADA", "MEXICO", "CUBA", "HAITI", "JAMAICA", "PANAMA", "HONDURAS", "NICARAGUA",
+        "GUATEMALA", "BELIZE", "BAHAMAS", "BRAZIL", "ARGENTINA", "CHILE", "PERU", 
+        "COLOMBIA", "VENEZUELA", "ECUADOR", "BOLIVIA", "PARAGUAY", "URUGUAY", "GUYANA", 
+        "SURINAME", "FRANCE", "SPAIN", "ITALY", "GERMANY", "BRITAIN", "PORTUGAL", 
+        "IRELAND", "AUSTRIA", "BELGIUM", "DENMARK", "FINLAND", "GREECE", "HUNGARY", 
+        "ICELAND", "NORWAY", "POLAND", "ROMANIA", "RUSSIA", "SWEDEN", "SWITZERLAND", 
+        "UKRAINE", "CROATIA", "SERBIA", "SLOVAKIA", "SLOVENIA", "ALBANIA", "BULGARIA", 
+        "ESTONIA", "LATVIA", "LITHUANIA", "MOLDOVA", "MONACO", "MALTA", "LUXEMBOURG", 
+        "NETHERLANDS", "CHINA", "JAPAN", "INDIA", "KOREA", "VIETNAM", "THAILAND", 
+        "MALAYSIA", "INDONESIA", "SINGAPORE", "PAKISTAN", "NEPAL", "MYANMAR", "CAMBODIA", 
+        "MONGOLIA", "TAIWAN", "LAOS", "CYPRUS", "TURKEY", "ISRAEL", "JORDAN", "LEBANON", 
+        "SYRIA", "IRAQ", "IRAN", "QATAR", "KUWAIT", "YEMEN", "OMAN", "BAHRAIN", "EGYPT", 
+        "MOROCCO", "ALGERIA", "TUNISIA", "LIBYA", "SUDAN", "ETHIOPIA", "KENYA", "UGANDA", 
+        "TANZANIA", "ANGOLA", "NIGERIA", "GHANA", "MALI", "SENEGAL", "SOMALIA", "RWANDA", 
+        "CHAD", "NIGER", "NAMIBIA", "ZAMBIA", "ZIMBABWE", "BOTSWANA", "MOZAMBIQUE", 
+        "MADAGASCAR", "MALAWI", "CONGO", "AUSTRALIA", "FIJI", "SAMOA", "TONGA", 
+        "VANUATU", "PALAU",
+        // Movies
+        "TITANIC", "AVATAR", "BATMAN", "INCEPTION", "MATRIX", "JOKER", "FROZEN", 
+        "MINIONS", "SHREK", "GLADIATOR", "AVENGERS", "BARBIE", "AQUAMAN", 
+        "TRANSFORMERS", "SKYFALL", "ALADDIN",
+        // Fantasy
+        "DRAGON", "UNICORN", "WIZARD", "GOBLIN", "MERMAID", "PHOENIX", "ELF", 
+        "VAMPIRE", "OGRE", "WITCH",
+        // Nature
+        "RAINBOW", "THUNDER", "LIGHTNING", "HURRICANE", "BLIZZARD", "SUNSET", 
+        "FOREST", "MOUNTAIN", "OCEAN", "BREEZE",
+        // Common Professions and Objects
+        "DOCTOR", "TEACHER", "ENGINEER", "PILOT", "CHEF", "ARTIST", "PLUMBER",
+        "ARCHITECT", "FARMER", "NURSE", "APPLE", "HOUSE", "CHAIR", "TRAIN",
+        "TABLE", "WATER", "MUSIC", "HAPPY", "DANCE", "SMILE",
+        // Everyday Medium Words
+        "DOCTOR", "ARTIST", "FARMER", "PILOT", "MUSIC", "ACTION", "BATTLE", "CAMERA", 
+        "DINNER", "ESCAPE", "FAMILY", "GARDEN", "HEALTH", "ISLAND", "JACKET", "LEADER", 
+        "MARKET", "NATURE", "OFFICE", "PEOPLE", "REASON", "SCHOOL", "SUMMER", "TRAVEL", 
+        "WINDOW",
+        // Everyday Hard Words
+        "EDUCATION", "ENGINEER", "BUSINESS", "COMPUTER", "HOSPITAL", "MOUNTAIN", 
+        "PAINTING", "QUESTION", "SECURITY", "STANDARD", "SWIMMING", "TRAINING", 
+        "VEGETABLE"
     ],      categories: {
         everyday: [
             // Easy (3-5 letters)
@@ -82,9 +100,9 @@ const hangmanData = {
             // Time
             "TIME", "HOUR", "WEEK", "YEAR", "DAY",
             // Food & Drinks
-            "FOOD", "MILK", "MEAT", "BREAD", "SOUP", "FISH", "RICE", "EGGS", "CAKE", "PIE",
+            "FOOD", "MILK", "MEAT", "BREAD", "SOUP", "FISH", "RICE", "EGG", "CAKE", "PIE",
             // Body parts
-            "HEAD", "HAND", "FOOT", "FACE", "NOSE", "EARS", "HAIR", "EYES", "ARM", "LEG",
+            "HEAD", "HAND", "FOOT", "FACE", "NOSE", "EARS", "HAIR", "EYE", "ARM", "LEG",
             // Feelings
              "HAPPY", "LOVE",
             // Family & People
@@ -115,7 +133,7 @@ const hangmanData = {
                  "SEAL", "PANDA", "LLAMA", "SNAKE", "EAGLE", "SHARK", "TROUT", "CRAB",
                  "SNAIL", "MOOSE", "BISON", "SKUNK", "MOLE", "TURTLE", "PARROT", "IGUANA",
                  "GORILLA", "JAGUAR", "LEOPARD", "GAZELLE", "OSTRICH", "PEACOCK", "FLAMINGO"],
-        food: ["PIZZA", "CHOCOLATE", "DONUT", "SANDWICH", "SPAGHETTI", "ICECREAM", "TACO", 
+        food: ["PIZZA", "CHOCOLATE", "DONUT", "SANDWICH", "SPAGHETTI", "TACO", 
                "POPCORN", "CUPCAKE", "SMOOTHIE"],
         fruits: [
             // Easy fruits (3-5 letters)
