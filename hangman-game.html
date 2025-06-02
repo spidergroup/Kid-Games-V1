@@ -493,6 +493,50 @@
             box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.3);
         }
 
+        /* Tooltip styles */
+        .tooltip-wrapper {
+            display: inline-block;
+            position: relative;
+            margin-left: 8px;
+        }
+
+        .hint-info-icon {
+            cursor: help;
+            font-size: 1.1em;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: var(--mc-yellow);
+            color: var(--black);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            white-space: nowrap;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--mc-yellow);
+        }
+
+        .tooltip-wrapper:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 600px) {
             h1 {
@@ -554,7 +598,13 @@
                 <canvas id="hangmanCanvas" width="180" height="250"></canvas>
             </div>
             <div class="word-status-container">
-                <p class="guesses-remaining">Guesses Left: <span id="guessesLeft">6</span></p>
+                <p class="guesses-remaining">
+                    Guesses Left: <span id="guessesLeft">6</span>
+                    <span class="tooltip-wrapper">
+                        <span class="hint-info-icon">💡</span>
+                        <span class="tooltip">You have <span class="hints-available"></span> hint remaining</span>
+                    </span>
+                </p>
                 <div class="word-display" id="wordDisplay"></div>
                 <p class="incorrect-guesses-display">Incorrect Guesses: <span id="incorrectLetters" class="incorrect-letters"></span></p>
             </div>
