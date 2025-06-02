@@ -507,6 +507,12 @@
             // Populate category dropdown
             const categorySelect = document.getElementById('categorySelect');
             categorySelect.innerHTML = '<option value="all">All Categories</option>';
+            // Add common category first and select it by default
+            const commonOption = document.createElement('option');
+            commonOption.value = 'common';
+            commonOption.textContent = 'Common';
+            commonOption.selected = true;
+            categorySelect.appendChild(commonOption);
             
             // Get categories and sort them alphabetically
             const categories = Object.keys(window.hangmanData.categories).sort();
@@ -521,7 +527,7 @@
         });
         let WORD_LIST = []; // Will be set from hangman-game.js
         const MAX_INCORRECT_GUESSES = 8; // Corresponds to hangman parts (including toes)
-        let currentCategory = 'all'; // Default to all words
+        let currentCategory = 'common'; // Default to common words
         let currentDifficulty = 'medium'; // Default difficulty
 
         // --- DOM ELEMENTS ---
