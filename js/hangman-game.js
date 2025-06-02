@@ -1,13 +1,12 @@
 // hangman-game.js - Word list and categories for the Hangman game
 
 const hangmanData = {    
-    wordList: [
-        // Common Words
-        "ACT", "AGE", "AIR", "ARM", "ART", "BAG", "BAR", "BED", "BET", "BID", "BIT", "BOX", "BOY", "BUG", "BUS",
-        "CAB", "CAP", "CAR", "CAT", "CAN", "CRY", "CUP", "CUT", "DAD", "DAY", "DIG", "DOG", "DOT", "EAR", "EGG",
-        "EYE", "FAN", "FAT", "FEE", "FEW", "FIT", "FLY", "HAT", "LEG", "LIP", "MAP", "MOM", "NOW", "PAY", "PEN",
-        "RED", "RUN", "SAD", "SEA", "SKY", "SON", "SUN", "TAX", "TEA", "TOP", "TOY", "USE", "WAR", "WAY", "WHO",
-        "WIN", "YES",
+    wordList: [        // Common Words
+        "BLUE", "RED", "PINK", "GOLD", "GRAY", "TIME", "HOUR", "WEEK", "YEAR", "DAY",
+        "FOOD", "MILK", "MEAT", "BREAD", "SOUP", "FISH", "RICE", "EGGS", "CAKE", "PIE",
+        "HEAD", "HAND", "FOOT", "FACE", "NOSE", "EARS", "HAIR", "EYES", "ARM", "LEG",
+        "HAPPY", "LOVE", "MOM", "DAD", "AUNT", "KID", "BABY",
+        "HOME", "PARK", "SHOP", "ROOM", "YARD",
 
         "ACTOR", "ADULT", "AGENT", "ANGER", "APPLE", "BEACH", "BIRTH", "BLACK", "BLAME", "BLOCK", "BLOOD", 
         "BOARD", "BRAIN", "BRAND", "BREAD", "BREAK", "BROWN", "BRUSH", "BUDDY", "BUNCH", "BUYER", "CABIN",
@@ -71,15 +70,27 @@ const hangmanData = {
         "SOLUTION", "STANDARD", "STRATEGY", "STRENGTH", "STUDENT", "SUCCESS", "SUPPLIER", "SUPPORT",
         "SWIMMING", "TEACHING", "TELEPHONE", "TRAINING", "EMPHASIS", "MAJORITY", "TOGETHER", "VEGETABLE",
         "WEAKNESS", "WEDDING", "WRITING"
-    ],    
-    categories: {
-        common: [
+    ],      categories: {
+        everyday: [
             // Easy (3-5 letters)
-            "ACT", "AGE", "AIR", "ARM", "ART", "BAG", "BAR", "BED", "BET", "BID", "BIT", "BOX", "BOY", "BUG", "BUS",
-            "CAB", "CAP", "CAR", "CAT", "CAN", "CRY", "CUP", "CUT", "DAD", "DAY", "DIG", "DOG", "DOT", "EAR", "EGG",
-            "EYE", "FAN", "FAT", "FEE", "FEW", "FIT", "FLY", "HAT", "LEG", "LIP", "MAP", "MOM", "NOW", "PAY", "PEN",
-            "RED", "RUN", "SAD", "SEA", "SKY", "SON", "SUN", "TAX", "TEA", "TOP", "TOY", "USE", "WAR", "WAY", "WHO",
-            "WIN", "YES",
+            // Common objects
+            "BOOK", "BALL", "CAKE", "DOOR", "DESK", "LAMP", "KEYS", "TOYS", "BIKE", "GAME",
+            // Nature
+            "TREE", "LEAF", "STAR", "MOON", "RAIN", "WIND", "SNOW", "SAND", "ROCK", "BIRD",
+            // Colors
+            "BLUE", "RED", "PINK", "GOLD", "GRAY",
+            // Time
+            "TIME", "HOUR", "WEEK", "YEAR", "DAY",
+            // Food & Drinks
+            "FOOD", "MILK", "MEAT", "BREAD", "SOUP", "FISH", "RICE", "EGGS", "CAKE", "PIE",
+            // Body parts
+            "HEAD", "HAND", "FOOT", "FACE", "NOSE", "EARS", "HAIR", "EYES", "ARM", "LEG",
+            // Feelings
+             "HAPPY", "LOVE",
+            // Family & People
+            "MOM", "DAD", "AUNT", "KID", "BABY",
+            // Places
+            "HOME", "PARK", "SHOP", "ROOM", "YARD",
 
             // Medium (6-7 letters)
             "DOCTOR", "ARTIST", "FARMER", "PILOT", "MUSIC", "ACTION", "BATTLE", "CAMERA", "DINNER", "ESCAPE",
@@ -189,7 +200,7 @@ const hangmanData = {
             "DATE", "KIWI", "LIME", "PLUM", "YUZU", "FIG", "GRAPE", "MANGO", "PEACH",
             "GUAVA", "OLIVE",
 
-            // Easy common words (3-5 letters)
+            // Easy everyday words (3-5 letters)
             "ACT", "AGE", "AIR", "ARM", "ART", "BAG", "BAR", "BED", "BET", "BID", "BIT", "BOX", "BOY", "BUG", "BUS",
             "CAB", "CAP", "CAR", "CAT", "CAN", "CRY", "CUP", "CUT", "DAD", "DAY", "DIG", "DOG", "DOT", "EAR", "EGG",
             "EYE", "FAN", "FAT", "FEE", "FEW", "FIT", "FLY", "HAT", "LEG", "LIP", "MAP", "MOM", "NOW", "PAY", "PEN",
@@ -225,7 +236,7 @@ const hangmanData = {
             "ORANGE", "BANANA", "LYCHEE", "PAPAYA", "LONGAN", "LOQUAT", "SAPOTE", "DURIAN",
             "POMELO", "LEMON",
 
-            // Medium common words (6-7 letters)
+            // Medium everyday words (6-7 letters)
             "DOCTOR", "ARTIST", "FARMER", "PILOT", "MUSIC", "ACTION", "BATTLE", "CAMERA", "DINNER", "ESCAPE",
             "FAMILY", "GARDEN", "HEALTH", "ISLAND", "JACKET", "LEADER", "MARKET", "NATURE", "OFFICE", "PEOPLE",
             "REASON", "SCHOOL", "SUMMER", "TRAVEL", "WINDOW"
@@ -259,7 +270,7 @@ const hangmanData = {
             "POMEGRANATE", "TAMARIND", "SOURSOP", "MANGOSTEEN", "CANARY MELON",
             "WINTER MELON",
 
-            // Hard common words (8+ letters)
+            // Hard everyday words (8+ letters)
             "EDUCATION", "ENGINEER", "BUSINESS", "COMPUTER", "HOSPITAL", "MOUNTAIN", "PAINTING", "QUESTION", 
             "SECURITY", "STANDARD", "SWIMMING", "TRAINING", "VEGETABLE"
         ]
