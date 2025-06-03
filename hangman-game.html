@@ -35,7 +35,6 @@
       "image": "https://www.freeplayfulgames.com/hangman-game.png",
       "genre": "Word Game",
       "playMode": "SinglePlayer",
-      "gamePlatform": "Web Browser",
       "applicationCategory": "Game",
       "operatingSystem": "Any",
       "inLanguage": "en",
@@ -105,7 +104,7 @@
             
             width: 100%;
             max-width: 950px;
-            margin: 0 auto; 
+            margin: 0 auto 20px; /* Added margin-bottom */
         }
 
         .game-info-wrapper {
@@ -271,7 +270,7 @@
 
         a.home-button {
             display: inline-block;
-            margin-top: 10px;
+            /* Removed margin-top: 10px; */
             padding: 7px 14px;
             background-color: #e74c3c;
             color: white;
@@ -295,15 +294,15 @@
             box-shadow: 0 1px #c0392b;
         }        button.new-word-button {
             display: inline-block;
-            margin-top: 10px;
-            padding: 7px 14px;
+            /* Removed margin-top: 10px; */
+            padding: 8px 15px; /* Adjusted padding to match time display */
             transition: background-color 0.2s;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             background-color: #2ecc71;
             color: white;
             text-decoration: none;
-            border-radius: 14px;
-            font-size: 0.7rem;
+            border-radius: 20px; /* Adjusted border-radius to match time display */
+            font-size: 0.9rem; /* Adjusted font-size to match time display */
             font-weight: 500;
             position: relative;
             z-index: 1000;
@@ -349,7 +348,7 @@
 
         a.home-button {
             display: inline-block;
-            margin-top: 30px; /* 30% smaller */
+            /* Removed margin-top: 30px; */
             padding: 7px 14px; /* 30% smaller */
             background-color: #e74c3c;
             color: white;
@@ -458,6 +457,31 @@
             100% { transform: scale(0); opacity: 0; }
         }
 
+        /* Shake and Reveal Animation for Hinted Letter */
+        @keyframes shake-reveal {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-3px); }
+            40%, 80% { transform: translateX(3px); }
+            90% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .hinted-letter-animation {
+            display: inline-block; /* Needed for transform to work */
+            animation: shake-reveal 0.6s ease-out;
+        }
+
+        /* New animation for shaking hint bulb */
+        @keyframes shake-hint-bulb {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-2px); }
+            40%, 80% { transform: translateX(2px); }
+        }
+
+        .hint-bulb.shake-animation {
+            animation: shake-hint-bulb 0.3s ease-in-out;
+        }
+
         .hint-icon-container {
             display: inline-block; 
             vertical-align: middle;
@@ -551,18 +575,6 @@
                         -->
                     </span>
                 </p>
-                <div id="game-time-display" style="
-                    font-size: 0.9rem;
-                    font-weight: 500;
-                    color: #f1c40f;
-                    background-color: rgba(44, 62, 80, 0.6);
-                    padding: 8px 15px;
-                    border-radius: 20px;
-                    text-shadow: 1px 1px 2px black;
-                    min-width: 90px;
-                    text-align: center;
-                    max-width: 110px;
-                ">Time: 00:00</div>
                 <div class="word-display" id="wordDisplay"></div>
                 <p class="incorrect-guesses-display">Incorrect Guesses: <span id="incorrectLetters" class="incorrect-letters"></span></p>
             </div>
@@ -576,8 +588,20 @@
             <p id="popupMessage"></p>            <button id="playAgainButton">Play Again</button>
             
         </div>
-    </div>    <div>
-
+    </div>    
+    <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+        <div id="game-time-display" style="
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #f1c40f;
+            background-color: rgba(44, 62, 80, 0.6);
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-shadow: 1px 1px 2px black;
+            min-width: 90px;
+            text-align: center;
+            max-width: 110px;
+        ">Time: 00:00</div>
         <button class="new-word-button" id="newWordBtn">New Word</button>
         <a href="index.html" class="home-button">🏠 Back to Main Menu</a>
     </div><!-- Load word list first -->    <script src="js/hangman-game.js"></script>
@@ -637,10 +661,14 @@
         let incorrectGuesses = 0;
         let hintsRemaining = 1; // Default
         let maxHints = 1; // Default
+        let hasHintShaken = false; // New variable to track if hint has shaken
+        let letterGuessedInRound = false; // New variable to track if a letter has been guessed
 
         let timerInterval;
         let totalSeconds = 0;
         const gameTimeDisplayEl = document.getElementById('game-time-display');
+        let inactivityTimer; // Declare inactivity timer
+        let shakeInterval; // Declare shake interval
 
         // Function to set hints based on difficulty
         function setHintsForDifficulty(difficulty) {
@@ -713,29 +741,50 @@
 
 
         function handleHintClick(event) {
-            const clickedBulb = event.target; 
+            const clickedBulb = event.target;
 
             if (hintsRemaining <= 0 || !currentWord || clickedBulb.classList.contains('used')) {
-                return; 
+                return;
             }
 
-            clickedBulb.classList.add('used'); 
+            clickedBulb.classList.add('used');
+            resetInactivityTimer(); // Reset timer on hint click
+
+            const oldRevealedWord = [...revealedWord]; // Store current state
             revealedWord = giveHint(currentWord, revealedWord);
-            
+
+            const newlyRevealedLetters = new Set();
             for (let i = 0; i < currentWord.length; i++) {
-                if (currentWord[i] === revealedWord[i]) {
-                    const hintedLetter = currentWord[i].toUpperCase();
-                    if (!guessedLetters.includes(hintedLetter)) {
-                        guessedLetters.push(hintedLetter);
-                        disableKeyboardButton(hintedLetter); // Disable the button for the hinted letter
-                    }
+                if (oldRevealedWord[i] === '_' && revealedWord[i] !== '_') {
+                    newlyRevealedLetters.add({ letter: revealedWord[i], index: i });
                 }
             }
-            hintsRemaining--; 
-            updateWordDisplay();
+
+            hintsRemaining--;
+            updateWordDisplay(); // Update display to show the new letter
+
+            // Apply animation to the keyboard button for the hinted letter
+            newlyRevealedLetters.forEach(({ letter }) => {
+                if (!guessedLetters.includes(letter)) {
+                    guessedLetters.push(letter);
+                }
+
+                const keyboardButton = Array.from(keyboardEl.children).find(button => button.textContent === letter);
+                if (keyboardButton) {
+                    keyboardButton.classList.add('hinted-letter-animation');
+                    // Remove the animation class after it completes, then disable the button
+                    keyboardButton.addEventListener('animationend', () => {
+                        keyboardButton.classList.remove('hinted-letter-animation');
+                        disableKeyboardButton(letter); // Disable the button after animation
+                    }, { once: true });
+                } else {
+                    // If for some reason the button isn't found or animation doesn't run, disable it immediately
+                    disableKeyboardButton(letter);
+                }
+            });
+
             updateKeyboard();
             checkWinCondition();
-
             updateHintsDisplay();
             event.stopPropagation();
         }
@@ -795,6 +844,8 @@
             revealedWord = Array(currentWord.length).fill('_');
             guessedLetters = [];
             incorrectGuesses = 0;
+            hasHintShaken = false; // Reset for new game
+            letterGuessedInRound = false; // Reset for new game
             
             updateWordDisplay();
             updateGuessesLeftDisplay();
@@ -803,6 +854,7 @@
             resetCanvas();
             updateHintsDisplay();
             startCountdownTimer();
+            startInactivityTimer(); // Start inactivity timer
         }
 
         function startCountdownTimer() {
@@ -821,14 +873,60 @@
 
         function stopTimer() {
             clearInterval(timerInterval);
-        }
-
-        function stopTimer() {
-            clearInterval(timerInterval);
+            clearInterval(shakeInterval); // Also clear the shake interval
+            clearTimeout(inactivityTimer); // Clear inactivity timer on game end
+            const hintBulbs = hintIconContainer.querySelectorAll('.hint-bulb');
+            hintBulbs.forEach(bulb => bulb.classList.remove('shake-animation')); // Remove shake class
         }
 
         function updateTimerDisplay() {
             gameTimeDisplayEl.textContent = `Time: ${totalSeconds}`;
+        }
+
+        function startInactivityTimer() {
+            clearTimeout(inactivityTimer); // Clear any existing timeout
+            clearInterval(shakeInterval); // Clear any existing shake interval
+
+            const hintBulbs = hintIconContainer.querySelectorAll('.hint-bulb');
+            hintBulbs.forEach(bulb => bulb.classList.remove('shake-animation')); // Remove shake class initially
+
+            inactivityTimer = setTimeout(() => {
+                // Only shake if hints are available and no letter has been guessed in this round
+                if (hintsRemaining > 0 && !letterGuessedInRound) {
+                    hintBulbs.forEach(bulb => {
+                        if (!bulb.classList.contains('used')) {
+                            bulb.classList.add('shake-animation');
+                        }
+                    });
+                    hasHintShaken = true; // Mark that it has shaken at least once
+
+                    // Start interval to repeat shake every 5 seconds
+                    shakeInterval = setInterval(() => {
+                        if (hintsRemaining > 0 && !letterGuessedInRound) {
+                            hintBulbs.forEach(bulb => {
+                                if (!bulb.classList.contains('used')) {
+                                    bulb.classList.remove('shake-animation'); // Remove to re-trigger
+                                    void bulb.offsetWidth; // Trigger reflow
+                                    bulb.classList.add('shake-animation');
+                                }
+                            });
+                        } else {
+                            clearInterval(shakeInterval); // Stop shaking if conditions are no longer met
+                            hintBulbs.forEach(bulb => bulb.classList.remove('shake-animation'));
+                        }
+                    }, 5000); // Repeat every 5 seconds
+                }
+            }, 5000); // Initial 5-second delay
+        }
+
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            clearInterval(shakeInterval);
+            const hintBulbs = hintIconContainer.querySelectorAll('.hint-bulb');
+            hintBulbs.forEach(bulb => bulb.classList.remove('shake-animation'));
+            hasHintShaken = false; // Reset shake flag
+            letterGuessedInRound = false; // Reset letter guessed flag
+            startInactivityTimer(); // Restart the timer
         }
 
         document.addEventListener('DOMContentLoaded', () => {            
@@ -899,7 +997,13 @@
         }
 
         function updateWordDisplay() {
-            wordDisplayEl.textContent = revealedWord.join(' ');
+            wordDisplayEl.innerHTML = revealedWord.map(char => {
+                if (char === '_') {
+                    return `<span class="hidden-letter">${char}</span>`;
+                } else {
+                    return `<span class="revealed-letter">${char}</span>`;
+                }
+            }).join(' ');
         }
 
         function updateGuessesLeftDisplay() {
@@ -929,6 +1033,8 @@
         }
 
         function handleGuess(letter) {
+            letterGuessedInRound = true; // A letter has been guessed
+            resetInactivityTimer(); // Reset timer on guess
             if (guessedLetters.includes(letter) || incorrectGuesses >= MAX_INCORRECT_GUESSES || revealedWord.join('') === currentWord) {
                 return; 
             }
@@ -941,7 +1047,7 @@
                     }
                 }
                 updateWordDisplay();
-                updateHintsDisplay(); // Add this line
+                updateHintsDisplay(); 
                 checkWinCondition();
             } else {
                 incorrectGuesses++;
