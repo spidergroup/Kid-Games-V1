@@ -654,7 +654,12 @@
             }
             if (hiddenIndices.length === 0) return revealed;
             const randomIndex = hiddenIndices[Math.floor(Math.random() * hiddenIndices.length)];
-            revealed[randomIndex] = word[randomIndex].toUpperCase();
+            const hintedLetter = word[randomIndex].toUpperCase();
+            for (let i = 0; i < word.length; i++) {
+                if (word[i].toUpperCase() === hintedLetter) {
+                    revealed[i] = hintedLetter;
+                }
+            }
             return revealed;
         }
  
@@ -664,19 +669,21 @@
 
         function updateHintsDisplay() {
             if (!hintIconContainer) return;
-            hintIconContainer.innerHTML = ''; 
+            hintIconContainer.innerHTML = '';
 
-            if (hintsRemaining > 0) {
-                hintIconContainer.style.display = 'inline-block'; 
+            const hiddenLettersCount = revealedWord.filter(char => char === '_').length;
+
+            if (hintsRemaining > 0 && hiddenLettersCount > hintsRemaining) {
+                hintIconContainer.style.display = 'inline-block';
                 for (let i = 0; i < hintsRemaining; i++) {
                     const bulbSpan = document.createElement('span');
                     bulbSpan.classList.add('hint-bulb');
                     bulbSpan.textContent = '💡';
-                    bulbSpan.addEventListener('click', handleHintClick); 
+                    bulbSpan.addEventListener('click', handleHintClick);
                     hintIconContainer.appendChild(bulbSpan);
                 }
             } else {
-                hintIconContainer.style.display = 'none'; 
+                hintIconContainer.style.display = 'none';
             }
 
             if (hintsLeftTextEl) { // Optional text display
@@ -701,8 +708,10 @@
             
             for (let i = 0; i < currentWord.length; i++) {
                 if (currentWord[i] === revealedWord[i]) {
-                    if (!guessedLetters.includes(currentWord[i])) {
-                        guessedLetters.push(currentWord[i]);
+                    const hintedLetter = currentWord[i].toUpperCase();
+                    if (!guessedLetters.includes(hintedLetter)) {
+                        guessedLetters.push(hintedLetter);
+                        disableKeyboardButton(hintedLetter); // Disable the button for the hinted letter
                     }
                 }
             }
@@ -711,9 +720,7 @@
             updateKeyboard();
             checkWinCondition();
 
-            setTimeout(() => {
-                updateHintsDisplay(); 
-            }, 300); 
+            updateHintsDisplay();
             event.stopPropagation();
         }
 
@@ -874,6 +881,7 @@
                     }
                 }
                 updateWordDisplay();
+                updateHintsDisplay(); // Add this line
                 checkWinCondition();
             } else {
                 incorrectGuesses++;
@@ -1021,7 +1029,10 @@
         // initializeGame(); // Moved to DOMContentLoaded
 
         // --- EVENT LISTENERS ---        
-        playAgainButton.addEventListener('click', initializeGame);
+        playAgainButton.addEventListener('click', () => {
+            messagePopupEl.classList.remove('show'); // Hide the popup
+            initializeGame();
+        });
         categorySelect.addEventListener('change', function(e) {
             currentCategory = e.target.value;
             initializeGame();
