@@ -617,13 +617,6 @@
             // Populate category dropdown
             const categorySelect = document.getElementById('categorySelect');
             categorySelect.innerHTML = '<option value="all">All Categories</option>';
-            // Add common category first and select it by default
-            const commonOption = document.createElement('option');
-            commonOption.value = 'everyday';
-            commonOption.textContent = 'Everyday';
-            commonOption.selected = true;
-            categorySelect.appendChild(commonOption);
-            
             // Get categories and sort them alphabetically
             const categories = Object.keys(window.hangmanData.categories).sort();
             
@@ -632,6 +625,9 @@
                 const option = document.createElement('option');
                 option.value = category;
                 option.textContent = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+                if (category === 'everyday') { // Set 'everyday' as selected if it exists
+                    option.selected = true;
+                }
                 categorySelect.appendChild(option);
             });
         });
