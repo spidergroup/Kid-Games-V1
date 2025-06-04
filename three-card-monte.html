@@ -207,20 +207,20 @@
         .game-board-shell.three-cards {
             display: flex;
             flex-direction: row;
-            width: 100%;
-            max-width: 360px;
-            height: 160px;
-            gap: 10px;
-            padding: 10px;
+            width: 100%; /* Allow it to take full width */
+            max-width: 400px; /* Max width for larger screens */
+            height: auto; /* Allow height to adjust based on card height */
+            gap: 8px;
+            padding: 8px;
             margin: 15px auto;
             justify-content: center;
         }
 
         .game-board-shell.three-cards .card-shell {
-            width: 140px;
-            height: 140px;
-            min-width: 140px;
-            max-width: 140px;
+            flex: 1 1 auto; /* Allow cards to grow and shrink */
+            max-width: 120px; /* Max width for individual cards */
+            height: 160px; /* Fixed height for rectangular shape (120 * 4/3) */
+            min-width: 80px; /* Minimum width for very small screens */
         }
 
         /* Media queries for iPhone SE and similar devices */
@@ -228,13 +228,12 @@
             .game-board-shell.three-cards {
                 gap: 4px;
                 padding: 4px;
-                height: 120px;
             }
 
             .game-board-shell.three-cards .card-shell {
-                width: 119px;
-                height: 119px;
-                min-width: 110px;
+                max-width: 100px; /* Slightly smaller max-width for 375px screens */
+                height: 133px; /* Maintain aspect ratio (100 * 4/3) */
+                min-width: 80px; /* Adjust min-width for 375px screens */
             }
             
             .game-title-main {
@@ -251,21 +250,6 @@
             #num-cards-selection {
                 margin-bottom: 8px;
                 gap: 12px;
-            }
-        }
-
-        /* Extra small screens */
-        @media (max-width: 320px) {
-            .game-board-shell.three-cards {
-                gap: 6px;
-                padding: 6px;
-            }
-
-            .game-board-shell.three-cards .card-shell {
-                width: 80px;
-                height: 112px;
-                min-width: 80px;
-                max-width: 80px;
             }
         }
 
