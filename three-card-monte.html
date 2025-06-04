@@ -57,6 +57,7 @@
             --black: #000000;
             --card-purple: #8A2BE2;
             --card-blue: #007BFF;
+            --white-card-bg: #FFFFFF;
         }
 
         body {
@@ -366,6 +367,7 @@
         .card-svg { width: 90%; height: 90%; object-fit: contain; }
         .bg-purple { background-color: var(--card-purple); } 
         .bg-blue { background-color: var(--card-blue); }
+        .bg-white-card { background-color: var(--white-card-bg); }
 
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -631,7 +633,7 @@
 <body>    
     <h1 class="game-title-main">Three (4 & 6) Card Monte</h1>
     <h2 class="game-desc" style="max-width: 500px; margin: 0 auto 18px auto; color: #f0e68c; font-size: .9rem; text-align: center;">
-        Test your brain with this fun memory challenge! Play the classic Three Card Monte game online for free, featuring 3, 4, or 6 cards. Watch closely as the cards shuffle, then find the hidden pet—no downloads or sign-ups required.
+        Test your brain with this fun memory challenge! Play the classic Three Card Monte game online for free, featuring 3, 4, or 6 cards. Watch closely as the cards shuffle, then find the hidden object—no downloads or sign-ups required.
     </h2>
     
     </div>        <div id="num-cards-selection" style="margin-bottom: 10px; display: flex; align-items: center; gap: 18px;">
@@ -698,7 +700,7 @@
         const winModalOverlay = document.getElementById('winModalOverlay');
         const winModalMessage = document.getElementById('winModalMessage');
         let cardsOnBoard = [];
-        let targetPet = null;
+        let targetCard = null;
         let canClickCard = false;
         let gameActive = false;
 
@@ -773,22 +775,34 @@
         updateGameBoardClass();
 
         // --- GAME LOGIC REPLACEMENT START ---
-        const petDefinitions = [
-            { id: 'bird', name: 'Bird', imageSrc: 'memory-game-assets/pets/bird.jpg' },
-            { id: 'bunny', name: 'Bunny', imageSrc: 'memory-game-assets/pets/bunny.jpg' },
-            { id: 'cat', name: 'Cat', imageSrc: 'memory-game-assets/pets/cat.jpg' },
-            { id: 'dog', name: 'Dog', imageSrc: 'memory-game-assets/pets/dog.jpg' },
-            { id: 'ferret', name: 'Ferret', imageSrc: 'memory-game-assets/pets/ferret.jpg' },                                                                                                                                                                                                                                                                                                                                     
-            { id: 'fish', name: 'Fish', imageSrc: 'memory-game-assets/pets/fish.jpg' },
-            { id: 'guinea-pig', name: 'Guinea Pig', imageSrc: 'memory-game-assets/pets/guinea-pig.jpg' },
-            { id: 'hamster', name: 'Hamster', imageSrc: 'memory-game-assets/pets/hamster.jpg' },
-            { id: 'lizard', name: 'Lizard', imageSrc: 'memory-game-assets/pets/lizard.jpg' },
-            { id: 'mouse', name: 'Mouse', imageSrc: 'memory-game-assets/pets/mouse.jpg' },
-            { id: 'parrot', name: 'Parrot', imageSrc: 'memory-game-assets/pets/parrot.jpg' },
-            { id: 'turtle', name: 'Turtle', imageSrc: 'memory-game-assets/pets/turtle.jpg' }
-        ];
+        const cardDefinitions = {
+            pets: [
+                { id: 'bird', name: 'Bird', imageSrc: 'memory-game-assets/pets/bird.jpg', type: 'pet' },
+                { id: 'bunny', name: 'Bunny', imageSrc: 'memory-game-assets/pets/bunny.jpg', type: 'pet' },
+                { id: 'cat', name: 'Cat', imageSrc: 'memory-game-assets/pets/cat.jpg', type: 'pet' },
+                { id: 'dog', name: 'Dog', imageSrc: 'memory-game-assets/pets/dog.jpg', type: 'pet' },
+                { id: 'ferret', name: 'Ferret', imageSrc: 'memory-game-assets/pets/ferret.jpg', type: 'pet' },
+                { id: 'fish', name: 'Fish', imageSrc: 'memory-game-assets/pets/fish.jpg', type: 'pet' },
+                { id: 'guinea-pig', name: 'Guinea Pig', imageSrc: 'memory-game-assets/pets/guinea-pig.jpg', type: 'pet' },
+                { id: 'hamster', name: 'Hamster', imageSrc: 'memory-game-assets/pets/hamster.jpg', type: 'pet' },
+                { id: 'lizard', name: 'Lizard', imageSrc: 'memory-game-assets/pets/lizard.jpg', type: 'pet' },
+                { id: 'mouse', name: 'Mouse', imageSrc: 'memory-game-assets/pets/mouse.jpg', type: 'pet' },
+                { id: 'parrot', name: 'Parrot', imageSrc: 'memory-game-assets/pets/parrot.jpg', type: 'pet' },
+                { id: 'turtle', name: 'Turtle', imageSrc: 'memory-game-assets/pets/turtle.jpg', type: 'pet' }
+            ],
+            fruits: [
+                { id: 'apple', name: 'Apple', imageSrc: 'memory-game-assets/fruits/apple.jpg', type: 'fruit' },
+                { id: 'banana', name: 'Banana', imageSrc: 'memory-game-assets/fruits/banana.jpg', type: 'fruit' },
+                { id: 'grapes', name: 'Grapes', imageSrc: 'memory-game-assets/fruits/grapes.jpg', type: 'fruit' },
+                { id: 'kiwi', name: 'Kiwi', imageSrc: 'memory-game-assets/fruits/kiwi.jpg', type: 'fruit' },
+                { id: 'orange', name: 'Orange', imageSrc: 'memory-game-assets/fruits/orange.jpg', type: 'fruit' },
+                { id: 'pineapple', name: 'Pineapple', imageSrc: 'memory-game-assets/fruits/pineapple.jpg', type: 'fruit' },
+                { id: 'strawberry', name: 'Strawberry', imageSrc: 'memory-game-assets/fruits/strawberry.jpg', type: 'fruit' },
+                { id: 'watermelon', name: 'Watermelon', imageSrc: 'memory-game-assets/fruits/watermelon.jpg', type: 'fruit' }
+            ]
+        };
 
-        // LEVELS now depend on number of cards selected        
+        // LEVELS now depend on number of cards selected
         function getLevelsByNumCards(numCards) {
             if (numCards === 3) {
                 return {
@@ -864,7 +878,7 @@
 
             const cardInner = document.createElement('div');
             cardInner.className = 'card-shell-inner';            const cardFront = document.createElement('div');
-            cardFront.className = 'card-shell-face card-shell-front bg-blue';
+            cardFront.className = `card-shell-face card-shell-front ${pet.type === 'fruit' ? 'bg-white-card' : 'bg-blue'}`;
             const img = document.createElement('img');
             img.src = pet.imageSrc;
             img.alt = pet.name;
@@ -921,19 +935,20 @@
 
             const numCards = getSelectedNumCards();
             const { cols, rows } = setupGameGrid();
-            const availablePets = shuffleArray([...petDefinitions]);
-            const petsForGame = availablePets.slice(0, numCards);
-            targetPet = petsForGame[Math.floor(Math.random() * petsForGame.length)];
+            const definitionsToUse = numCards === 3 ? cardDefinitions.fruits : cardDefinitions.pets;
+            const availableCards = shuffleArray([...definitionsToUse]);
+            const cardsForGame = availableCards.slice(0, numCards);
+            targetCard = cardsForGame[Math.floor(Math.random() * cardsForGame.length)];
 
             gameBoard.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
             gameBoard.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
 
-            petsForGame.forEach((pet, idx) => {
-                const card = createCardElement(pet, idx);
+            cardsForGame.forEach((cardData, idx) => {
+                const card = createCardElement(cardData, idx);
                 cardsOnBoard.push(card);
                 gameBoard.appendChild(card);
             });
-            
+
             cardsOnBoard.forEach(card => card.classList.remove('flipped'));
             setTimeout(() => highlightTargetCard(), 1200);
         }
@@ -941,21 +956,22 @@
         function setupBoard_for_Init() {
             const numCards = getSelectedNumCards();
             const { cols, rows } = setupGameGrid();
-            
+
             messageArea.textContent = "Getting ready...";
             actionButton.disabled = true;
             gameBoard.innerHTML = '';
             cardsOnBoard = [];
 
-            const availablePets = shuffleArray([...petDefinitions]);
-            const petsForGame = availablePets.slice(0, numCards);
-            targetPet = petsForGame[Math.floor(Math.random() * petsForGame.length)];
+            const definitionsToUse = numCards === 3 ? cardDefinitions.fruits : cardDefinitions.pets;
+            const availableCards = shuffleArray([...definitionsToUse]);
+            const cardsForGame = availableCards.slice(0, numCards);
+            targetCard = cardsForGame[Math.floor(Math.random() * cardsForGame.length)];
 
             gameBoard.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
             gameBoard.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
 
-            petsForGame.forEach((pet, idx) => {
-                const card = createCardElement(pet, idx);
+            cardsForGame.forEach((cardData, idx) => {
+                const card = createCardElement(cardData, idx);
                 cardsOnBoard.push(card);
                 gameBoard.appendChild(card);
             });
@@ -964,15 +980,15 @@
         }
 
         function highlightTargetCard() {
-            messageArea.textContent = `Find the ${targetPet.name}!`;
-            const targetCard = cardsOnBoard.find(card => card.dataset.id === targetPet.id);
-            if (targetCard) {
-                
-                targetCard.classList.add('highlight-mc-target');
+            messageArea.textContent = `Find the ${targetCard.name}!`;
+            const targetElement = cardsOnBoard.find(card => card.dataset.id === targetCard.id);
+            if (targetElement) {
+
+                targetElement.classList.add('highlight-mc-target');
             }
             setTimeout(() => {
-                if (targetCard) {
-                    targetCard.classList.remove('highlight-mc-target');
+                if (targetElement) {
+                    targetElement.classList.remove('highlight-mc-target');
                 }
                 flipAllToBackAndPrepareShuffle();
             }, 2000);
@@ -1030,17 +1046,17 @@
                 gameBoard.appendChild(card);
             });
             canClickCard = true;
-            messageArea.textContent = `Where is the ${targetPet.name}? Click a card!`;
+            messageArea.textContent = `Where is the ${targetCard.name}? Click a card!`;
         }
 
         function handleCardClick(card) {
             if (!canClickCard) return;
             canClickCard = false;
             card.classList.remove('flipped');
-            if (card.dataset.id === targetPet.id) {
+            if (card.dataset.id === targetCard.id) {
                 card.classList.add('target-revealed');
-                messageArea.textContent = `Yeah! You found the ${targetPet.name}!`;
-                winModalMessage.textContent = `You found the ${targetPet.name}!`;
+                messageArea.textContent = `Yeah! You found the ${targetCard.name}!`;
+                winModalMessage.textContent = `You found the ${targetCard.name}!`;
                 // Firework animation
                 const fireworks = [];
                 for (let i = 0; i < 3; i++) {
@@ -1059,9 +1075,9 @@
                 }, 2500);
             } else {
                 card.classList.add('incorrect-revealed');
-                messageArea.textContent = `Oops! That's not the ${targetPet.name}.`;
+                messageArea.textContent = `Oops! That's not the ${targetCard.name}.`;
                 setTimeout(() => {
-                    const correctCard = cardsOnBoard.find(c => c.dataset.id === targetPet.id && c !== card);
+                    const correctCard = cardsOnBoard.find(c => c.dataset.id === targetCard.id && c !== card);
                     if (correctCard) {
                         correctCard.classList.remove('flipped');
                         correctCard.classList.add('target-revealed', 'highlight-mc-target');
@@ -1069,7 +1085,7 @@
                     setTimeout(() => {
                         if (correctCard) {
                             correctCard.classList.remove('highlight-mc-target');
-                            if(card.dataset.id !== targetPet.id) {
+                            if(card.dataset.id !== targetCard.id) {
                                 correctCard.classList.add('flipped');
                                 correctCard.classList.remove('target-revealed');
                             }
@@ -1084,7 +1100,7 @@
             gameActive = false;
             canClickCard = false;
             actionButton.textContent = buttonText;
-            
+
             // Always enable the button when resetting UI with these messages
             if (buttonText === "Start Game" || buttonText === "Play Again?" || buttonText === "Try Again?") {
                 messageArea.textContent = buttonText === "Try Again?" ? "Give it another go!" : "Select difficulty and click Start!";
