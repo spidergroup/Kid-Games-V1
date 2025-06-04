@@ -1049,6 +1049,22 @@
             messageArea.textContent = `Where is the ${targetCard.name}? Click a card!`;
         }
 
+        // --- Firework celebration function ---
+        function showFireworks(times = 3) {
+            const fireworks = [];
+            for (let i = 0; i < times; i++) {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.innerHTML = '<div class="before"></div><div class="after"></div>';
+                firework.style.animationDelay = `${i * 0.2}s`;
+                document.body.appendChild(firework);
+                fireworks.push(firework);
+            }
+            setTimeout(() => {
+                fireworks.forEach(fw => { if (fw.parentNode) fw.parentNode.removeChild(fw); });
+            }, 2500);
+        }
+
         function handleCardClick(card) {
             if (!canClickCard) return;
             canClickCard = false;
@@ -1057,20 +1073,13 @@
                 card.classList.add('target-revealed');
                 messageArea.textContent = `Yeah! You found the ${targetCard.name}!`;
                 winModalMessage.textContent = `You found the ${targetCard.name}!`;
-                // Firework animation
-                const fireworks = [];
-                for (let i = 0; i < 3; i++) {
-                    const firework = document.createElement('div');
-                    firework.className = 'firework';
-                    firework.innerHTML = '<div class="before"></div><div class="after"></div>';
-                    firework.style.animationDelay = `${i * 0.2}s`;
-                    document.body.appendChild(firework);
-                    fireworks.push(firework);
-                }
+                
+                // Show fireworks celebration
+                showFireworks(3);
+
                 winModalOverlay.classList.add('show');
                 setTimeout(() => {
                     winModalOverlay.classList.remove('show');
-                    fireworks.forEach(fw => { if (fw.parentNode) fw.parentNode.removeChild(fw); });
                     resetGameUI('Play Again?');
                 }, 2500);
             } else {

@@ -72,7 +72,85 @@
             --white: #FFFFFF;
             --black: #000000;
         }      
-        /* Firework Animation and Modal CSS REMOVED */
+    /* --- Firework Animation --- */
+    .firework {
+        position: fixed;
+        left: 0; top: 0; width: 100vw; height: 100vh;
+        pointer-events: none;
+        z-index: 2000;
+    }
+    .firework > .before, .firework > .after {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        content: '';
+        box-shadow: 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff;
+        animation: bang 1s ease-out forwards, gravity 1s ease-in forwards, position 5s linear forwards;
+    }
+    .firework > .after {
+        animation-delay: 1.25s, 1.25s, 1.25s;
+        animation-duration: 1.25s, 1.25s, 6.25s;
+    }
+    @keyframes bang {
+        to {
+            box-shadow:
+                0 0 #fff,
+                50px -80px hsl(0,100%,50%),
+                -60px -60px hsl(30,100%,50%),
+                80px 0 hsl(60,100%,50%),
+                -80px 0 hsl(90,100%,50%),
+                60px 60px hsl(120,100%,50%),
+                -50px 80px hsl(150,100%,50%),
+                0 90px hsl(180,100%,50%),
+                0 -90px hsl(210,100%,50%),
+                90px 0 hsl(240,100%,50%),
+                -90px 0 hsl(270,100%,50%),
+                70px 70px hsl(300,100%,50%),
+                -70px 70px hsl(330,100%,50%),
+                30px -100px hsl(45,100%,50%),
+                -30px -100px hsl(75,100%,50%),
+                100px 30px hsl(105,100%,50%),
+                -100px 30px hsl(135,100%,50%),
+                100px -30px hsl(165,100%,50%),
+                -100px -30px hsl(195,100%,50%),
+                30px 100px hsl(225,100%,50%),
+                -30px 100px hsl(255,100%,50%),
+                60px -90px hsl(285,100%,50%),
+                -60px -90px hsl(315,100%,50%),
+                90px 60px hsl(345,100%,50%),
+                -90px 60px hsl(15,100%,50%),
+                0 0 #fff;
+        }
+    }
+    @keyframes gravity {
+        to {
+            transform: translateY(200px);
+            opacity: 0;
+        }
+    }
+    @keyframes position {
+        0%, 19.9% {
+            margin-top: 10%;
+            margin-left: 40%;
+        }
+        20%, 39.9% {
+            margin-top: 40%;
+            margin-left: 30%;
+        }
+        40%, 59.9% {
+            margin-top: 20%;
+            margin-left: 70%;
+        }
+        60%, 79.9% {
+            margin-top: 30%;
+            margin-left: 20%;
+        }
+        80%, 99.9% {
+            margin-top: 30%;
+            margin-left: 80%;
+        }
+    }
 
         body {
             font-family: var(--font-family-main);
@@ -588,7 +666,8 @@
             <p id="popupMessage"></p>            <button id="playAgainButton">Play Again</button>
             
         </div>
-    </div>    
+    </div>
+    <div class="fireworks-container" id="fireworksContainer"></div>    
     <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
         <div id="game-time-display" style="
             font-size: 0.9rem;
@@ -1028,6 +1107,17 @@
             }
         }
 
+        function updateKeyboard() {
+            const buttons = keyboardEl.getElementsByTagName('button');
+            for (let button of buttons) {
+                if (guessedLetters.includes(button.textContent)) {
+                    button.disabled = true;
+                } else {
+                    button.disabled = false;
+                }
+            }
+        }
+
         function handleGuess(letter) {
             letterGuessedInRound = true; // A letter has been guessed
             resetInactivityTimer(); // Reset timer on guess
@@ -1067,8 +1157,7 @@
         function checkWinCondition() {
             if (revealedWord.join('') === currentWord) {
                 stopTimer();
-                // Fireworks and temporary modal removed
-                // Show main popup with a short delay (or no delay)
+                showFireworks(3); // Launch fireworks on win
                 setTimeout(() => {
                     showPopup("You Win! 🎉", `The word was: ${currentWord}`);
                 }, 100); // Adjusted delay
@@ -1186,7 +1275,21 @@
                 Draw(draws[incorrectGuesses - 1]);
             }
         }        
-        // Firework celebration function REMOVED
+        // --- Firework celebration function ---
+        function showFireworks(times = 3) {
+            const fireworks = [];
+            for (let i = 0; i < times; i++) {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.innerHTML = '<div class="before"></div><div class="after"></div>';
+                firework.style.animationDelay = `${i * 0.2}s`;
+                document.body.appendChild(firework);
+                fireworks.push(firework);
+            }
+            setTimeout(() => {
+                fireworks.forEach(fw => { if (fw.parentNode) fw.parentNode.removeChild(fw); });
+            }, 2500);
+        }
 
         // --- INITIALIZE ---
         createKeyboard();
