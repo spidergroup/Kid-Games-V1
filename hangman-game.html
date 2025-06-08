@@ -682,7 +682,7 @@
             max-width: 110px;
         ">Time: 00:00</div>
         <button class="new-word-button" id="newWordBtn">New Word</button>
-        <a href="index.html" class="home-button">🏠 Back to Main Menu</a>
+        <a href="index.html" class="home-button">🏠 Main Menu</a>
     </div><!-- Load word list first -->    <script src="js/hangman-game.js"></script>
     <script>
         // --- CONFIGURATION ---
@@ -1312,6 +1312,14 @@
 
         document.getElementById('newWordBtn').addEventListener('click', initializeGame); // Added listener for new word button
         
+        // Add keyboard input handling
+        document.addEventListener('keydown', (event) => {
+            const pressedKey = event.key.toUpperCase();
+            // Check if the pressed key is a single letter from A-Z
+            if (pressedKey.length === 1 && pressedKey >= 'A' && pressedKey <= 'Z') {
+                handleGuess(pressedKey);
+            }
+        });
     </script>
 </body>
 </html>
