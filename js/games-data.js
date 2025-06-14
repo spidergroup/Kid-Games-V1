@@ -6,8 +6,8 @@ const allGames = [
         title: "Matching Game Mania",
         image: "matching-game.svg",
         url: "matching-game.html",
-        description: "Train your brain with Picture Perfect Pairs! Flip the cards and find the matching images. A classic memory game for kids to improve focus, concentration, and memory skills.",
-        keywords: ["memory game for kids", "matching game for children", "brain training game", "cognitive skills game", "preschool memory game", "concentration game"]
+        description: "Train your brain with Picture Perfect Pairs! Flip the cards and find the matching images. A classic memory game to improve focus, concentration, and memory skills.",
+        keywords: ["memory game", "matching game", "brain training game", "cognitive skills game", "preschool memory game", "concentration game"]
     },
     {
         id: 2,        
