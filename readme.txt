@@ -34,3 +34,6 @@ Welcome to Playful Wonders! This project is a collection of interactive, web-bas
 
 ## License
 This project is open source and free to use for educational and non-commercial purposes.
+
+
+## Minify command: npm run build
