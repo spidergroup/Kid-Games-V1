@@ -78,4 +78,10 @@ function processDirectory(dir) {
 
 console.log('🚀 Starting build process...');
 processDirectory(path.join(__dirname, '..'));
+
+// Copy root files to dist
+copyAsset(path.join(__dirname, '..', 'ads.txt'), path.join(distDir, 'ads.txt'));
+copyAsset(path.join(__dirname, '..', 'robots.txt'), path.join(distDir, 'robots.txt'));
+copyAsset(path.join(__dirname, '..', 'sitemap.xml'), path.join(distDir, 'sitemap.xml'));
+
 console.log('✨ Build complete! Check the dist folder.')
