@@ -5,7 +5,24 @@
      crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cookie Clicker Game</title>
+    <title>Free Cookie Clicker Game | Fun Idle Game Online</title>
+    <meta name="description" content="Play the free Cookie Clicker Mania game online! Click to bake cookies, buy upgrades, and become a cookie tycoon in this fun, addictive browser game.">
+    <meta name="keywords" content="cookie clicker, free online games, idle games, clicking games, fun browser games, cookie mania">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Free Cookie Clicker Game | Fun Idle Game Online">
+    <meta property="og:description" content="Play the free Cookie Clicker Mania game online! Click to bake cookies, buy upgrades, and become a cookie tycoon in this fun, addictive browser game.">
+    <meta property="og:type" content="game">
+    <meta property="og:url" content="https://www.freeplayfulgames.com/cookie-clicker.html">
+    <meta property="og:image" content="https://www.freeplayfulgames.com/free-playful-games.png">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free Cookie Clicker Game | Idle Fun">
+    <meta name="twitter:description" content="Click to bake cookies and buy upgrades! Play the free Cookie Clicker Mania game online.">
+    <meta name="twitter:image" content="https://www.freeplayfulgames.com/free-playful-games.png">
+    
+    <link rel="canonical" href="https://www.freeplayfulgames.com/cookie-clicker.html">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap');
         body {
@@ -107,6 +124,7 @@
 </head>
 <body>
     <h1>🍪 Cookie Clicker Mania! 🍪</h1>
+    <p style="max-width: 600px; margin: 0 auto 20px auto; font-size: 1.1rem; line-height: 1.4;">Welcome to Cookie Clicker Mania! Click the giant cookie to bake as many cookies as you can. Use your cookies to buy powerful upgrades like Auto Clickers and Grandmas to boost your cookie production automatically. Can you become the ultimate cookie tycoon? Play for free, no download required!</p>
     <div id="game-area">
         <button id="cookie-button" aria-label="Click the cookie"></button>
         <div id="score-display">Cookies: <span id="cookies">0</span></div>
@@ -189,6 +207,32 @@
 
         // Initial display update
         updateCookiesDisplay();
+    </script>
+    <!-- Footer -->
+    <footer style="width:100%; padding:20px 0; text-align:center; margin-top:40px; border-top:1px solid rgba(0,0,0,0.1);">
+        <div style="display:flex; justify-content:center; gap:15px; margin-bottom:10px; font-size:14px; color:#5C3317;">
+            <a href="privacy-policy.html" style="color:inherit; text-decoration:none;">Privacy Policy</a>
+            <span>|</span>
+            <a href="terms-of-service.html" style="color:inherit; text-decoration:none;">Terms of Service</a>
+        </div>
+        <p style="color:#7A4A3A; font-size:12px;">© <span id="copyright-year"></span> Free Playful Games. Create & Play with ❤️🎉</p>
+        <script>document.getElementById('copyright-year').textContent = new Date().getFullYear();</script>
+    </footer>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-consent-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; background:rgba(255,255,255,0.95); padding:15px; box-shadow:0 -2px 10px rgba(0,0,0,0.2); z-index:9999; text-align:center; font-family:sans-serif; color:#333; backdrop-filter:blur(5px);">
+        This website uses cookies to personalize content and ads, and to analyze our traffic. 
+        <a href="privacy-policy.html" style="color:#2563eb; text-decoration:underline;">Learn more</a>.
+        <button onclick="acceptCookies()" style="margin-left:15px; padding:8px 20px; background:#2ecc71; color:white; font-weight:bold; border:none; border-radius:20px; cursor:pointer; transition:background 0.2s;">Got it!</button>
+    </div>
+    <script>
+        if (!localStorage.getItem('cookiesAccepted')) {
+            document.getElementById('cookie-consent-banner').style.display = 'block';
+        }
+        function acceptCookies() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            document.getElementById('cookie-consent-banner').style.display = 'none';
+        }
     </script>
 </body>
 </html>

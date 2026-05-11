@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3426688164521845" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - Free Playful Games</title>
+    <meta name="description" content="Terms of Service for Free Playful Games. Read our rules and guidelines for using our free online games.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap');
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background-image: linear-gradient(145deg, #e9defa 0%, #d9e4f5 100%);
+            color: #374151;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="w-full mb-6 pt-6">
+        <nav class="container mx-auto flex justify-center items-center px-4">
+            <ul class="flex space-x-3 sm:space-x-6 bg-white/80 backdrop-blur-md p-2 rounded-full shadow-lg">
+                <li><a href="index.html" class="menu-item text-sm sm:text-base font-semibold text-pink-500 hover:text-pink-600 px-3 py-1.5 sm:px-5 sm:py-2 rounded-full hover:bg-pink-50 transition-colors duration-200">🏠 Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 flex-grow max-w-4xl bg-white/60 rounded-2xl shadow-md mb-8">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Terms of Service</h1>
+        <p class="mb-4">Last updated: <span id="date"></span></p>
+
+        <h2 class="text-2xl font-semibold mb-3 mt-6 text-gray-800">1. Acceptance of Terms</h2>
+        <p class="mb-4">By accessing and using Free Playful Games (freeplayfulgames.com), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by these terms, please do not use this service.</p>
+
+        <h2 class="text-2xl font-semibold mb-3 mt-6 text-gray-800">2. Use of License</h2>
+        <p class="mb-4">Permission is granted to temporarily play the games on Free Playful Games' website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+        <ul class="list-disc pl-8 mb-4">
+            <li>modify or copy the materials;</li>
+            <li>use the materials for any commercial purpose, or for any public display (commercial or non-commercial);</li>
+            <li>attempt to decompile or reverse engineer any software contained on Free Playful Games' website;</li>
+            <li>remove any copyright or other proprietary notations from the materials; or</li>
+            <li>transfer the materials to another person or "mirror" the materials on any other server.</li>
+        </ul>
+
+        <h2 class="text-2xl font-semibold mb-3 mt-6 text-gray-800">3. Disclaimer</h2>
+        <p class="mb-4">The materials on Free Playful Games' website are provided on an 'as is' basis. Free Playful Games makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</p>
+
+        <h2 class="text-2xl font-semibold mb-3 mt-6 text-gray-800">4. Limitations</h2>
+        <p class="mb-4">In no event shall Free Playful Games or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on Free Playful Games' website.</p>
+
+        <h2 class="text-2xl font-semibold mb-3 mt-6 text-gray-800">5. Revisions and Errata</h2>
+        <p class="mb-4">The materials appearing on Free Playful Games' website could include technical, typographical, or photographic errors. Free Playful Games does not warrant that any of the materials on its website are accurate, complete, or current. Free Playful Games may make changes to the materials contained on its website at any time without notice.</p>
+
+        <h2 class="text-2xl font-semibold mb-3 mt-6 text-gray-800">6. Links</h2>
+        <p class="mb-4">Free Playful Games has not reviewed all of the sites linked to its website and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by Free Playful Games of the site. Use of any such linked website is at the user's own risk.</p>
+
+        <h2 class="text-2xl font-semibold mb-3 mt-6 text-gray-800">7. Site Terms of Use Modifications</h2>
+        <p class="mb-4">Free Playful Games may revise these terms of service for its website at any time without notice. By using this website you are agreeing to be bound by the then current version of these terms of service.</p>
+    </main>
+
+    <footer class="w-full py-6 text-center mt-auto bg-white/50">
+        <div class="flex justify-center gap-4 mb-2 text-sm text-gray-600">
+            <a href="privacy-policy.html" class="hover:text-pink-500 transition-colors">Privacy Policy</a>
+            <span>|</span>
+            <a href="terms-of-service.html" class="hover:text-pink-500 transition-colors">Terms of Service</a>
+        </div>
+        <p class="text-gray-500 text-xs sm:text-sm">© <span id="copyright-year"></span> Free Playful Games. Create & Play with ❤️🎉</p>
+    </footer>
+
+    <script>
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+        document.getElementById('date').textContent = new Date().toLocaleDateString();
+    </script>
+</body>
+</html>
