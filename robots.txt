@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://freeplayfulgames.com/sitemap.xml
+Sitemap: https://www.freeplayfulgames.com/sitemap.xml
