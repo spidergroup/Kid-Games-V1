@@ -13,7 +13,24 @@
       gtag('js', new Date());
       gtag('config', 'G-J0PVJ95F71');
     </script>
-    <title>Star Catchers Adventure!</title>
+    <title>Free Star Catchers Adventure | Fun Reflex Game Online</title>
+    <meta name="description" content="Play the free Star Catchers Adventure game online! Catch falling stars, improve your reflexes, and get a high score. A fun, safe browser game for kids and adults.">
+    <meta name="keywords" content="star catchers game, reflex games online, free games for kids, fun browser games, educational action games">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Free Star Catchers Adventure | Fun Reflex Game Online">
+    <meta property="og:description" content="Play the free Star Catchers Adventure game online! Catch falling stars, improve your reflexes, and get a high score. A fun, safe browser game for kids and adults.">
+    <meta property="og:type" content="game">
+    <meta property="og:url" content="https://www.freeplayfulgames.com/star-catchers.html">
+    <meta property="og:image" content="https://www.freeplayfulgames.com/free-playful-games.png">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free Star Catchers Adventure">
+    <meta name="twitter:description" content="Catch falling stars, improve reflexes, and get a high score! Play online for free.">
+    <meta name="twitter:image" content="https://www.freeplayfulgames.com/free-playful-games.png">
+    
+    <link rel="canonical" href="https://www.freeplayfulgames.com/star-catchers.html">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -397,6 +414,32 @@
         createOptionsMenu(timeMenu, GAME_TIMES, currentGameTimeKey, selectGameTime, 'time');
         resetGameAndPrepare();
 
+    </script>
+    <!-- Footer -->
+    <footer style="width:100%; padding:20px 0; text-align:center; margin-top:40px; border-top:1px solid rgba(255,255,255,0.2);">
+        <div style="display:flex; justify-content:center; gap:15px; margin-bottom:10px; font-size:14px; color:#f0e68c;">
+            <a href="privacy-policy.html" style="color:inherit; text-decoration:none;">Privacy Policy</a>
+            <span>|</span>
+            <a href="terms-of-service.html" style="color:inherit; text-decoration:none;">Terms of Service</a>
+        </div>
+        <p style="color:#ccc; font-size:12px;">© <span id="copyright-year"></span> Free Playful Games. Create & Play with ❤️🎉</p>
+        <script>document.getElementById('copyright-year').textContent = new Date().getFullYear();</script>
+    </footer>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-consent-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; background:rgba(255,255,255,0.95); padding:15px; box-shadow:0 -2px 10px rgba(0,0,0,0.2); z-index:9999; text-align:center; font-family:sans-serif; color:#333; backdrop-filter:blur(5px);">
+        This website uses cookies to personalize content and ads, and to analyze our traffic. 
+        <a href="privacy-policy.html" style="color:#2563eb; text-decoration:underline;">Learn more</a>.
+        <button onclick="acceptCookies()" style="margin-left:15px; padding:8px 20px; background:#2ecc71; color:white; font-weight:bold; border:none; border-radius:20px; cursor:pointer; transition:background 0.2s;">Got it!</button>
+    </div>
+    <script>
+        if (!localStorage.getItem('cookiesAccepted')) {
+            document.getElementById('cookie-consent-banner').style.display = 'block';
+        }
+        function acceptCookies() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            document.getElementById('cookie-consent-banner').style.display = 'none';
+        }
     </script>
 </body>
 </html>

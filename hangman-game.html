@@ -5,16 +5,16 @@
      crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Online Hangman Game – Play with Multiple Categories and Difficulty Levels</title>
-    <meta name="description" content="Play the enhanced Hangman word game online for free! Features multiple categories including animals, places, movies, and more. Choose from easy, medium, or hard difficulty levels. Perfect for vocabulary building and entertainment.">
-    <meta name="keywords" content="hangman game, word game, vocabulary game, free online game, word puzzle, educational game, browser game, animals game, places game, movies game, difficulty levels">
+    <title>Free Online Hangman Game | Fun Word Puzzle for Kids & Adults</title>
+    <meta name="description" content="Play the classic Hangman word game online for free! Choose from categories like animals, places, and movies. Fun educational game for kids and adults to boost vocabulary without downloads.">
+    <meta name="keywords" content="free hangman game, online hangman, word games for kids, educational word puzzles, browser games, hangman categories, vocabulary games, fun spelling games">
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://www.freeplayfulgames.com/hangman-game.html">
     
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Free Online Hangman Game – Multiple Categories and Difficulty Levels">
-    <meta property="og:description" content="Play the enhanced Hangman game with various categories (animals, places, movies) and difficulty levels. Perfect for all ages and skill levels. Test your vocabulary with this fun, free word puzzle game!">
+    <meta property="og:title" content="Free Online Hangman Game | Fun Word Puzzle for Kids & Adults">
+    <meta property="og:description" content="Play the classic Hangman word game online for free! Choose from categories like animals, places, and movies. Fun educational game for kids and adults to boost vocabulary without downloads.">
     <meta property="og:type" content="game">
     <meta property="og:url" content="https://www.freeplayfulgames.com/hangman-game.html">
     <meta property="og:image" content="https://www.freeplayfulgames.com/hangman-game.png">
@@ -22,7 +22,7 @@
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Free Online Hangman Game – Multiple Categories">
+    <meta name="twitter:title" content="Free Online Hangman Game | Fun Word Puzzles">
     <meta name="twitter:description" content="Play Hangman with animals, places, movies, and more! Choose your difficulty level and expand your vocabulary while having fun.">
     <meta name="twitter:image" content="https://www.freeplayfulgames.com/hangman-game.png">
     
@@ -1324,6 +1324,32 @@
                 handleGuess(pressedKey);
             }
         });
+    </script>
+    <!-- Footer -->
+    <footer style="width:100%; padding:20px 0; text-align:center; margin-top:40px; border-top:1px solid rgba(255,255,255,0.2);">
+        <div style="display:flex; justify-content:center; gap:15px; margin-bottom:10px; font-size:14px; color:#f0e68c;">
+            <a href="privacy-policy.html" style="color:inherit; text-decoration:none;">Privacy Policy</a>
+            <span>|</span>
+            <a href="terms-of-service.html" style="color:inherit; text-decoration:none;">Terms of Service</a>
+        </div>
+        <p style="color:#ccc; font-size:12px;">© <span id="copyright-year"></span> Free Playful Games. Create & Play with ❤️🎉</p>
+        <script>document.getElementById('copyright-year').textContent = new Date().getFullYear();</script>
+    </footer>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-consent-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; background:rgba(255,255,255,0.95); padding:15px; box-shadow:0 -2px 10px rgba(0,0,0,0.2); z-index:9999; text-align:center; font-family:sans-serif; color:#333; backdrop-filter:blur(5px);">
+        This website uses cookies to personalize content and ads, and to analyze our traffic. 
+        <a href="privacy-policy.html" style="color:#2563eb; text-decoration:underline;">Learn more</a>.
+        <button onclick="acceptCookies()" style="margin-left:15px; padding:8px 20px; background:#2ecc71; color:white; font-weight:bold; border:none; border-radius:20px; cursor:pointer; transition:background 0.2s;">Got it!</button>
+    </div>
+    <script>
+        if (!localStorage.getItem('cookiesAccepted')) {
+            document.getElementById('cookie-consent-banner').style.display = 'block';
+        }
+        function acceptCookies() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            document.getElementById('cookie-consent-banner').style.display = 'none';
+        }
     </script>
 </body>
 </html>

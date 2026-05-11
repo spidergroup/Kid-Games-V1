@@ -7,6 +7,7 @@
     "minify:css": "cleancss",
     "minify:html": "html-minifier --collapse-whitespace --remove-comments --remove-redundant-attributes --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype --minify-css true --minify-js true",
     "build": "node scripts/build.js",
+    "dev": "vite",
     "install-tools": "npm install --save-dev terser clean-css-cli html-minifier"
   },
   "keywords": [
@@ -21,6 +22,7 @@
   "devDependencies": {
     "clean-css-cli": "^5.6.3",
     "html-minifier": "^4.0.0",
-    "terser": "^5.40.0"
+    "terser": "^5.40.0",
+    "vite": "^5.0.0"
   }
 }
